@@ -29,7 +29,6 @@ const CharacterCountMarker: React.FC<CharacterCountProps> = ({ current, limit, d
                 return null;
         }
     };
-
     return (
         <div className={`character-count ${current === limit ? 'character-count--warning' : ''}`}>
             <svg
@@ -48,7 +47,7 @@ const CharacterCountMarker: React.FC<CharacterCountProps> = ({ current, limit, d
                     cx="10"
                     cy="10"
                     fill="transparent"
-                    stroke="currentColor"
+                    stroke={current > limit ? '#2dd4bf' : '#00FF00'}
                     strokeWidth="10"
                     strokeDasharray={`calc(${percentage} * 31.4 / 100) 31.4`}
                     transform="rotate(-90) translate(-20)"

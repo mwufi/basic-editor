@@ -34,7 +34,7 @@ const Tiptap = ({ editable = true, font = 'serif' }) => {
 
     return (
         <div className="h-full">
-            <div className="absolute top-0 left-0 p-6">
+            <div className="fixed top-0 left-0 p-6">
                 <CharacterCountMarker
                     current={editor?.storage.characterCount.words()}
                     limit={500}
