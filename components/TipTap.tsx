@@ -21,7 +21,11 @@ const jetBrainsMono = JetBrains_Mono({
     display: 'swap',
 });
 
-const Tiptap = ({ editable = true, font = 'serif' }) => {
+const Center = ({ children }: { children: React.ReactNode }) => {
+    return <div className='relative h-full'><div className="mx-auto max-w-[600px] py-6">{children}</div></div>
+}
+
+const Tiptap = ({ editable = true, font = 'serif', wordcount = false }) => {
     const editor = useEditor({
         extensions: [StarterKit, CharacterCount],
         content: '<p>Hello World! 🌎️</p>',
@@ -35,13 +39,13 @@ const Tiptap = ({ editable = true, font = 'serif' }) => {
 
 
     return (
-        <div className="h-full">
-            <div className="fixed top-0 left-0 p-6">
-                <CharacterCountMarker
+        <Center>
+            <div className="absolute top-0 left-0">
+                {wordcount && <CharacterCountMarker
                     current={editor?.storage.characterCount.words()}
                     limit={500}
                     display="words"
-                />
+                />}
                 <SaveDialog onSave={(title) => {
                     const notesManager = new IndexedDBNotesManager();
                     notesManager.addNote({
@@ -64,7 +68,8 @@ const Tiptap = ({ editable = true, font = 'serif' }) => {
                 editor={editor}
                 className="h-full [&_.ProseMirror-focused]:caret-[#4b494b] [&_.ProseMirror-focused]:caret-[4px]"
             />
-        </div>
+        </Center>
+
     )
 }
 
