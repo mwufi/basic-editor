@@ -67,3 +67,8 @@
     @apply bg-background text-foreground;
   }
 }
+/* Scoped to the editor */
+.tiptap {
+  padding: 1em;
+}
+
