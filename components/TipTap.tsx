@@ -1,9 +1,11 @@
 'use client'
 
+import CharacterCount from '@tiptap/extension-character-count';
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
+import CharacterCountMarker from './CharacterCountMarker';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -19,7 +21,7 @@ const jetBrainsMono = JetBrains_Mono({
 
 const Tiptap = ({ editable = true, font = 'serif' }) => {
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [StarterKit, CharacterCount],
         content: '<p>Hello World! 🌎️</p>',
         editorProps: {
             attributes: {
@@ -29,8 +31,16 @@ const Tiptap = ({ editable = true, font = 'serif' }) => {
         editable: editable,
     })
 
+
     return (
         <div className="h-full">
+            <div className="absolute top-0 left-0 p-6">
+                <CharacterCountMarker
+                    current={editor?.storage.characterCount.words()}
+                    limit={500}
+                    display="words"
+                />
+            </div>
             <EditorContent
                 editor={editor}
                 className="h-full [&_.ProseMirror-focused]:caret-[#4b494b] [&_.ProseMirror-focused]:caret-[4px]"
