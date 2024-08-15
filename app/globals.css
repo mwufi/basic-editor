@@ -76,7 +76,6 @@
   }
 }
 
-
 .tiptap h1 {
   @apply text-4xl font-bold leading-tight mb-6;
 }
@@ -102,6 +101,14 @@
 .tiptap ul,
 .tiptap ol {
   @apply mb-4 pl-6;
+}
+
+.tiptap ul {
+  @apply list-disc;
+}
+
+.tiptap ol {
+  @apply list-decimal;
 }
 
 .tiptap li {

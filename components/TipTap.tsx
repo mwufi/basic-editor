@@ -17,22 +17,23 @@ const jetBrainsMono = JetBrains_Mono({
     display: 'swap',
 });
 
-const Tiptap = () => {
+const Tiptap = ({ editable = true, font = 'serif' }) => {
     const editor = useEditor({
         extensions: [StarterKit],
         content: '<p>Hello World! 🌎️</p>',
         editorProps: {
             attributes: {
-                class: `${libreBaskerville.className} h-full focus:outline-none`,
+                class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
             },
         },
+        editable: editable,
     })
 
     return (
         <div className="h-full">
-            <EditorContent 
-                editor={editor} 
-                className="h-full [&_.ProseMirror-focused]:caret-[#FF00FF] [&_.ProseMirror-focused]:caret-[4px]" 
+            <EditorContent
+                editor={editor}
+                className="h-full [&_.ProseMirror-focused]:caret-[#4b494b] [&_.ProseMirror-focused]:caret-[4px]"
             />
         </div>
     )
