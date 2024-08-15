@@ -40,6 +40,11 @@ const Tiptap = ({ editable = true, font = 'serif' }) => {
                     limit={500}
                     display="words"
                 />
+                <button className="bg-gray-200 p-2 rounded-md" onClick={() => {
+                    navigator.clipboard.writeText(editor?.getHTML() ?? '')
+                }}>
+                    Copy as HTML
+                </button>
             </div>
             <EditorContent
                 editor={editor}
