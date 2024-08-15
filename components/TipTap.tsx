@@ -3,13 +3,20 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import { Libre_Baskerville } from 'next/font/google';
+import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
     subsets: ['latin'],
     display: 'swap',
 });
+
+const jetBrainsMono = JetBrains_Mono({
+    weight: ['400', '700'],
+    subsets: ['latin'],
+    display: 'swap',
+});
+
 const Tiptap = () => {
     const editor = useEditor({
         extensions: [StarterKit],

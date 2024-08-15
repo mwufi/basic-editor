@@ -67,8 +67,55 @@
     @apply bg-background text-foreground;
   }
 }
+
 /* Scoped to the editor */
-.tiptap {
-  padding: 1em;
+
+@layer base {
+  html {
+    font-size: 14.4px;
+  }
 }
 
+
+.tiptap h1 {
+  @apply text-4xl font-bold leading-tight mb-6;
+}
+
+.tiptap h2 {
+  @apply text-3xl font-semibold leading-snug mb-5;
+}
+
+.tiptap h3 {
+  @apply text-2xl font-medium leading-normal mb-4;
+}
+
+.tiptap p {
+  @apply text-base leading-loose mb-4;
+}
+/* Add top margin to headings when they follow any other element */
+.tiptap * + h1,
+.tiptap * + h2,
+.tiptap * + h3 {
+  @apply mt-8;
+}
+
+.tiptap ul,
+.tiptap ol {
+  @apply mb-4 pl-6;
+}
+
+.tiptap li {
+  @apply mb-2;
+}
+
+.tiptap a {
+  @apply text-blue-600 hover:underline;
+}
+
+.tiptap blockquote {
+  @apply pl-4 border-l-4 border-gray-300 italic my-6;
+}
+
+.tiptap pre {
+  @apply bg-zinc-100 p-4 my-6;
+}
