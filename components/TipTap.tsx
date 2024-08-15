@@ -6,6 +6,8 @@ import StarterKit from '@tiptap/starter-kit'
 
 import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
 import CharacterCountMarker from './CharacterCountMarker';
+import IndexedDBNotesManager from '@/lib/IndexedDBNotesManager';
+import SaveDialog from '@/components/blocks/SaveDialog';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -40,11 +42,23 @@ const Tiptap = ({ editable = true, font = 'serif' }) => {
                     limit={500}
                     display="words"
                 />
-                <button className="bg-gray-200 p-2 rounded-md" onClick={() => {
-                    navigator.clipboard.writeText(editor?.getHTML() ?? '')
+                <SaveDialog onSave={(title) => {
+                    const notesManager = new IndexedDBNotesManager();
+                    notesManager.addNote({
+                        title: title,
+                        content: editor?.getHTML() ?? '',
+                    });
+                }} />
+                {/* <button className="bg-gray-200 p-2 rounded-md" onClick={() => {
+                    // navigator.clipboard.writeText(editor?.getHTML() ?? '')
+                    const notesManager = new IndexedDBNotesManager();
+                    notesManager.addNote({
+                        title: 'Untitled',
+                        content: editor?.getHTML() ?? '',
+                    });
                 }}>
-                    Copy as HTML
-                </button>
+                    Save
+                </button> */}
             </div>
             <EditorContent
                 editor={editor}
