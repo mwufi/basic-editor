@@ -7,7 +7,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
 import CharacterCountMarker from './CharacterCountMarker';
 import IndexedDBNotesManager from '@/lib/IndexedDBNotesManager';
-import SaveDialog from '@/components/blocks/SaveDialog';
+import { toast } from 'sonner'
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -27,12 +27,10 @@ const Center = ({ children }: { children: React.ReactNode }) => {
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Save, Share } from "lucide-react"
 
 const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) => {
-
-
     return (
         <div className="sticky top-0 z-10 flex items-center justify-center p-2 rounded">
             {true ? (
@@ -68,10 +66,10 @@ const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) 
     )
 }
 
-const Tiptap = ({ editable = true, font = 'serif', wordcount = true }) => {
+const Tiptap = ({ initialContent = '<p>Hello World! 🌎️</p>', editable = true, font = 'serif', wordcount = true }) => {
     const editor = useEditor({
         extensions: [StarterKit, CharacterCount],
-        content: '<p>Hello World! 🌎️</p>',
+        content: '',
         editorProps: {
             attributes: {
                 class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
@@ -79,6 +77,10 @@ const Tiptap = ({ editable = true, font = 'serif', wordcount = true }) => {
         },
         editable: editable,
     })
+
+    useEffect(() => {
+        editor?.commands.setContent(initialContent)
+    }, [editor, initialContent])
 
     const [title, setTitle] = useState("Untitled")
     const [isEditing, setIsEditing] = useState(false)
@@ -104,8 +106,10 @@ const Tiptap = ({ editable = true, font = 'serif', wordcount = true }) => {
                         title: title,
                         content: editor?.getHTML() ?? '',
                     });
+                    toast.success('Document saved! ' + title);
                 }} onShare={() => {
                     navigator.clipboard.writeText(editor?.getHTML() ?? '')
+                    toast.success('Document copied to clipboard!');
                 }} />
 
             <div className="fixed left-4 bottom-4">

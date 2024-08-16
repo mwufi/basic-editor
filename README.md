@@ -10,10 +10,11 @@ Supports different kinds of formatting (h1, h2, )
 BUT: no pictures
 
 
+It saves your work to IndexedDB, so it's not lost when you close the browser.
 
-things it needs to have:
-- [ ] Settings page
-- [ ] Save your work
+
+## Todos
+
 
 
 Writing experience:
