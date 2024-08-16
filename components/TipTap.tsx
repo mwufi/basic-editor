@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
 import { Save, Share } from "lucide-react"
+import { WelcomeMessage } from './introText';
 
 const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) => {
     return (
@@ -69,7 +70,7 @@ const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) 
 const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount = true }) => {
     const editor = useEditor({
         extensions: [StarterKit, CharacterCount],
-        content: '<p>Hello World! 🌎️</p>',
+        content: WelcomeMessage,
         editorProps: {
             attributes: {
                 class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
