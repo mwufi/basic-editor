@@ -11,10 +11,27 @@ BUT: no pictures
 
 
 It saves your work to IndexedDB, so it's not lost when you close the browser.
+You can see your previous docs!
 
 
 ## Todos
 
+Give each doc a unique ID!! so that it doesn't save another copy when you save it again.
+
+I'd like a document structure -- so every doc can have something like
+
+@globalspace/mwufi/intro
+
+
+## Out there....
+
+Every page is a database of stuff! So, I can have a page called Books and it'll just have an attached DB. isnt that cool?
+
+You can create a DB just via one line...
+
+and you can use this page as an API too.
+
+eoverse.org/@globalspace/books
 
 
 Writing experience:

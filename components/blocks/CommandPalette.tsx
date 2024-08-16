@@ -4,6 +4,21 @@ import { useEffect, useState } from 'react'
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import IndexedDBNotesManager from '@/lib/IndexedDBNotesManager'
 
+import { formatDistanceToNow, format } from 'date-fns';
+
+const formatCreatedAt = (createdAt: Date) => {
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60));
+
+    if (diffInMinutes < 60) {
+        return `${diffInMinutes}min ago`;
+    } else if (diffInMinutes < 24 * 60) {
+        return formatDistanceToNow(createdAt, { addSuffix: true });
+    } else {
+        return format(createdAt, 'M/d h:mma');
+    }
+};
+
 const CommandPalette = ({ onLoadDocument }) => {
     const [open, setOpen] = useState(false)
 
@@ -41,24 +56,6 @@ const CommandPalette = ({ onLoadDocument }) => {
             <CommandInput placeholder="Hey! What're you looking for?" />
             <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup heading="Actions">
-                    <CommandItem onSelect={() => {
-                        // Implement save functionality
-                        console.log('Save document');
-                        alert('Gotta click the save button to save the document!');
-                        setOpen(false);
-                    }}>
-                        Save document
-                    </CommandItem>
-                    <CommandItem onSelect={() => {
-                        // Implement share functionality
-                        console.log('Share document');
-                        alert('Gotta click the share button to share the document!');
-                        setOpen(false);
-                    }}>
-                        Share document
-                    </CommandItem>
-                </CommandGroup>
                 <CommandGroup heading="In this browser">
                     {documents.map((doc) => (
                         <CommandItem key={doc.id} onSelect={() => {
@@ -68,7 +65,7 @@ const CommandPalette = ({ onLoadDocument }) => {
                             <div className="flex flex-col">
                                 <div className="font-semibold">{doc.title}</div>
                                 <div className="text-sm text-gray-500">
-                                    Created: {new Date(doc.createdAt).toLocaleDateString()} | Words: {doc.wordCount}
+                                    Created: {formatCreatedAt(doc.createdAt)} | Words: {doc.wordCount}
                                 </div>
                             </div>
                         </CommandItem>

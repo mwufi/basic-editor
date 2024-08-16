@@ -124,6 +124,13 @@ export default function Test() {
                             <div key={note.id} className="mb-2 p-2 border rounded">
                                 <h3 className="font-bold">{note.title}</h3>
                                 <p className="text-sm">{note.content.substring(0, 50)}...</p>
+                                <div className="text-xs text-gray-500 mt-1">
+                                    <span>{note.content.length} characters</span>
+                                    <span className="mx-2">•</span>
+                                    <span>Created: {new Date(note.createdAt).toLocaleString()}</span>
+                                    <span className="mx-2">•</span>
+                                    <span>Updated: {new Date(note.updatedAt).toLocaleString()}</span>
+                                </div>
                                 <div className="mt-2">
                                     <Button variant="outline" size="sm" onClick={() => selectNote(note)} className="mr-2">
                                         Edit

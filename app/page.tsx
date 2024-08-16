@@ -5,14 +5,14 @@ import Tiptap from "@/components/TipTap";
 import { useState } from "react";
 
 export default function Home() {
-  const [document, setDocument] = useState('<p>Hello World! 🌎️</p>')
+  const [document, setDocument] = useState(undefined)
   return (
     <>
       <CommandPalette onLoadDocument={(doc) => {
         console.log(doc)
-        setDocument(doc.content)
+        setDocument(doc)
       }} />
-      <Tiptap initialContent={document} editable={true} font="serif" />
+      <Tiptap note={document} editable={true} font="serif" />
     </>
   );
 }

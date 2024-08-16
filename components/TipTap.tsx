@@ -66,10 +66,10 @@ const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) 
     )
 }
 
-const Tiptap = ({ initialContent = '<p>Hello World! 🌎️</p>', editable = true, font = 'serif', wordcount = true }) => {
+const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount = true }) => {
     const editor = useEditor({
         extensions: [StarterKit, CharacterCount],
-        content: '',
+        content: '<p>Hello World! 🌎️</p>',
         editorProps: {
             attributes: {
                 class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
@@ -78,12 +78,16 @@ const Tiptap = ({ initialContent = '<p>Hello World! 🌎️</p>', editable = tru
         editable: editable,
     })
 
-    useEffect(() => {
-        editor?.commands.setContent(initialContent)
-    }, [editor, initialContent])
 
-    const [title, setTitle] = useState("Untitled")
+    const [title, setTitle] = useState(note?.title ?? "Untitled")
     const [isEditing, setIsEditing] = useState(false)
+
+    useEffect(() => {
+        if (note) {
+            editor?.commands.setContent(note.content)
+            setTitle(note.title)
+        }
+    }, [editor, note])
 
     const handleRetitle = () => {
         if (isEditing) {
@@ -93,6 +97,8 @@ const Tiptap = ({ initialContent = '<p>Hello World! 🌎️</p>', editable = tru
         }
     }
 
+    const [createdId, setCreatedId] = useState(undefined)
+
     return (
         <div className="flex flex-col px-6">
             <TopBar
@@ -100,13 +106,23 @@ const Tiptap = ({ initialContent = '<p>Hello World! 🌎️</p>', editable = tru
                 title={title}
                 setTitle={setTitle}
                 handleRetitle={handleRetitle}
-                onSave={() => {
+                onSave={async () => {
                     const notesManager = new IndexedDBNotesManager();
-                    notesManager.addNote({
-                        title: title,
-                        content: editor?.getHTML() ?? '',
-                    });
-                    toast.success('Document saved! ' + title);
+                    const noteId = note?.id ?? createdId
+                    if (noteId) {
+                        notesManager.updateNote(noteId, {
+                            title: title,
+                            content: editor?.getHTML() ?? '',
+                        });
+                        toast.success('Document saved! ' + title);
+                    } else {
+                        const id = await notesManager.addNote({
+                            title: title,
+                            content: editor?.getHTML() ?? '',
+                        });
+                        setCreatedId(id)
+                        toast.success('Document created! ' + title);
+                    }
                 }} onShare={() => {
                     navigator.clipboard.writeText(editor?.getHTML() ?? '')
                     toast.success('Document copied to clipboard!');
