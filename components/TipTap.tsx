@@ -83,6 +83,14 @@ const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount =
     const [title, setTitle] = useState(note?.title ?? "Untitled")
     const [isEditing, setIsEditing] = useState(false)
 
+    // for interactive fun :)
+    useEffect(() => {
+        if (editor) {
+            console.log("Use window.editor to interact with the editor. Have fun!")
+            window.editor = editor;
+        }
+    }, [editor])
+
     useEffect(() => {
         if (note) {
             editor?.commands.setContent(note.content)
