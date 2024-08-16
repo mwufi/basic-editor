@@ -34,29 +34,30 @@
 // example();
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import IndexedDBNotesManager from '@/lib/IndexedDBNotesManager';
 
+const notesManager = new IndexedDBNotesManager();
+
 export default function Test() {
     const [notes, setNotes] = useState([]);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedNoteId, setSelectedNoteId] = useState(null);
-    const notesManager = new IndexedDBNotesManager();
 
-    useEffect(() => {
-        loadNotes();
-    }, []);
-
-    const loadNotes = async () => {
+    const loadNotes = useCallback(async () => {
         // it's easy to get all notes!!
         const allNotes = await notesManager.getAllNotes();
         setNotes(allNotes);
-    };
+    }, []);
+
+    useEffect(() => {
+        loadNotes();
+    }, [loadNotes]);
 
     const handleAddNote = async () => {
         await notesManager.addNote({ title, content });
