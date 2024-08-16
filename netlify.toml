@@ -1,0 +1,11 @@
+[[redirects]]
+from = "/api/plausible/js/script.js"
+to = "https://plausible.io/js/script.js"
+status = 200                             # ok code
+force = true                             # ensure to always redirect
+
+[[redirects]]
+from = "/plausible/api/event"
+to = "https://plausible.io/api/event"
+status = 200                          # ok code
+force = true                          # ensure to always redirect

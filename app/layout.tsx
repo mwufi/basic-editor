@@ -18,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script defer data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.js"></script>
+        <script defer data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+          data-api="/api/plausible/api/event"
+          src="/api/plausible/js/script.js"
+        ></script>
       </head>
       <body className={inter.className}>
         <Toaster richColors position="top-center" expand={true} />
