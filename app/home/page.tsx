@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { continueConversation } from './actions';
+import { continueConversation } from '@/app/home/actions';
 import { readStreamableValue } from 'ai/rsc';
 
 interface InteractiveElementProps {
