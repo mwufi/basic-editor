@@ -52,13 +52,16 @@ interface KeyStroke {
     key: string;
     timestamp: number;
 }
-import typingPattern from './typingpattern2.json';
+import typingPattern from './typingpattern.json';
 
 interface TypingPatternDisplayProps {
     pattern: KeyStroke[];
 }
+interface TypingPatternReplayProps extends TypingPatternDisplayProps {
+    accelerationFactor?: number;
+}
 
-const TypingPatternReplay: React.FC<TypingPatternDisplayProps> = ({ pattern }) => {
+const TypingPatternReplay: React.FC<TypingPatternReplayProps> = ({ pattern, accelerationFactor = 1 }) => {
     const [displayText, setDisplayText] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -74,11 +77,11 @@ const TypingPatternReplay: React.FC<TypingPatternDisplayProps> = ({ pattern }) =
                     return prev;
                 });
                 setCurrentIndex((prev) => prev + 1);
-            }, pattern[currentIndex].timestamp - (currentIndex > 0 ? pattern[currentIndex - 1].timestamp : 0));
+            }, (pattern[currentIndex].timestamp - (currentIndex > 0 ? pattern[currentIndex - 1].timestamp : 0)) / accelerationFactor);
 
             return () => clearTimeout(timer);
         }
-    }, [currentIndex, pattern]);
+    }, [currentIndex, pattern, accelerationFactor]);
 
     return (
         <div>
@@ -135,6 +138,10 @@ const TypingPatternCapture: React.FC<{ quote: string }> = ({ quote }) => {
             const typingPattern = JSON.stringify(keyStrokes);
             navigator.clipboard.writeText(typingPattern);
             toast.success('Typing pattern saved to clipboard');
+
+            // reset
+            setStartTime(null);
+            setKeyStrokes([]);
             return;
         }
 
