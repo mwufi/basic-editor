@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const formSchema = z.object({
     prompt: z.string().min(2, {
@@ -223,11 +224,18 @@ const PhotoPage: React.FC = () => {
             <div className="flex flex-1">
                 {/* Left Panel - Form */}
                 <div className="w-1/3 pr-4">
-                    <SettingsForm defaultSettings={defaultSettings} />
+                    <Accordion type="single" collapsible>
+                        <AccordionItem value="settings">
+                            <AccordionTrigger>Settings</AccordionTrigger>
+                            <AccordionContent>
+                                <SettingsForm defaultSettings={defaultSettings} />
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </div>
 
                 {/* Right Panel - Images */}
-                <div className="w-2/3 pl-4">
+                <div className="w-2/3 pl-4 overflow-y-auto max-h-screen">
                     <h2 className="text-2xl font-bold mb-4">Input Images</h2>
                     <div className="grid grid-cols-4 gap-4 mb-8">
                         {inputImages.map((image, index) => (
