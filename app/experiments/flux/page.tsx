@@ -24,19 +24,19 @@ const FluxPage: React.FC = () => {
                 aspect_ratio: "1:1",
                 output_format: "webp",
                 output_quality: 90,
-                disable_safety_checker: false
+                disable_safety_checker: true
             });
 
             toast.promise(imagePromise, {
                 loading: 'Generating images...',
                 success: 'Images generated successfully!',
-                error: 'Failed to generate images',
+                error: (e) => `Failed to generate images: ${e.message}`,
             });
 
             const images = await imagePromise;
             setGeneratedImages(images);
         } catch (error) {
-            console.error('Error generating images:', error);
+            console.error('Error generating images:', error.message);
         }
     };
 
@@ -51,7 +51,10 @@ const FluxPage: React.FC = () => {
                     onChange={(e) => setPrompt(e.target.value)}
                     className="w-full mb-2"
                 />
-                <Button onClick={handleGenerate}>Generate Images</Button>
+                <div className="flex gap-2">
+                    <Button onClick={handleGenerate}>Generate Images</Button>
+                    <Button onClick={() => setGeneratedImages([])} variant="outline">Clear Images</Button>
+                </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
                 {generatedImages.map((image, index) => (
