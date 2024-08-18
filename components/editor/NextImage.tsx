@@ -38,10 +38,10 @@ const NextImage = Image.extend({
                         src={src}
                         alt={alt || ''}
                         title={title}
-                        width={width || 600}
+                        width={600}
                         height={height || 400}
                         loader={loader}
-                        style={{ width: 'auto', height: 'auto' }}
+                        style={{ height: 'auto' }}
                     />
                 </NodeViewWrapper>
             )

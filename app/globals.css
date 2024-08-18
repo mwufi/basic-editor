@@ -91,6 +91,11 @@
 .tiptap p {
   @apply text-base leading-loose mb-4;
 }
+
+.tiptap img {
+  @apply w-full mb-4;
+}
+
 /* Add top margin to headings when they follow any other element */
 .tiptap * + h1,
 .tiptap * + h2,

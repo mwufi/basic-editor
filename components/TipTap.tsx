@@ -72,48 +72,46 @@ const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) 
 }
 
 
+function getPos(editor) {
+    return editor.state.selection.anchor
+}
+
+async function uploadAndInsertImage(editor, file, pos = null) {
+    toast.info("Uploading image to cloud....")
+    try {
+        const supabasePath = await uploadImageToSupabase(file)
+        console.log("Supabase path", supabasePath)
+
+        editor.chain().insertContentAt(pos ?? getPos(editor), {
+            type: 'image',
+            attrs: {
+                src: supabasePath,
+            },
+        }).focus().run()
+    } catch (error) {
+        toast.error('Error uploading image:', error.message);
+    }
+}
+
 const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount = true }) => {
     const editor = useEditor({
         extensions: [StarterKit, CharacterCount, NextImage, FileHandler.configure({
             allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
             onDrop: (currentEditor, files, pos) => {
-                files.forEach(file => {
-                    const fileReader = new FileReader()
-
-                    fileReader.readAsDataURL(file)
-                    fileReader.onload = () => {
-                        currentEditor.chain().insertContentAt(pos, {
-                            type: 'image',
-                            attrs: {
-                                src: fileReader.result,
-                            },
-                        }).focus().run()
-                    }
+                files.forEach(async file => {
+                    uploadAndInsertImage(currentEditor, file, pos)
                 })
             },
             onPaste: (currentEditor, files, htmlContent) => {
+                if (htmlContent) {
+                    // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
+                    // you could extract the pasted file from this url string and upload it to a server for example
+                    console.log("you pasted", htmlContent) // eslint-disable-line no-console
+                    return false
+                }
+
                 files.forEach(async file => {
-                    if (htmlContent) {
-                        // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
-                        // you could extract the pasted file from this url string and upload it to a server for example
-                        console.log("you pasted", htmlContent) // eslint-disable-line no-console
-                        return false
-                    }
-
-                    toast.info("Uploading image to cloud....")
-                    try {
-                        const supabasePath = await uploadImageToSupabase(file)
-                        console.log("Supabase path", supabasePath)
-
-                        currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
-                            type: 'image',
-                            attrs: {
-                                src: supabasePath,
-                            },
-                        }).focus().run()
-                    } catch (error) {
-                        toast.error('Error uploading image:', error.message);
-                    }
+                    uploadAndInsertImage(currentEditor, file)
                 })
             },
         }),
