@@ -3,6 +3,7 @@
 import CharacterCount from '@tiptap/extension-character-count';
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Youtube from '@tiptap/extension-youtube'
 
 import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
 import CharacterCountMarker from './CharacterCountMarker';
@@ -29,11 +30,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
 import { Save, Share } from "lucide-react"
-import { WelcomeMessage } from './introText';
+import { WelcomeMessage } from './WelcomeText';
 import FileHandler from '@/components/editor/FileHandler'
 import NextImage from '@/components/editor/NextImage';
 import Image from '@tiptap/extension-image'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
+import SimpleDialog from './blocks/SimpleDialog';
 
 const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) => {
     return (
@@ -95,26 +97,34 @@ async function uploadAndInsertImage(editor, file, pos = null) {
 
 const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount = true }) => {
     const editor = useEditor({
-        extensions: [StarterKit, CharacterCount, NextImage, FileHandler.configure({
-            allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-            onDrop: (currentEditor, files, pos) => {
-                files.forEach(async file => {
-                    uploadAndInsertImage(currentEditor, file, pos)
-                })
-            },
-            onPaste: (currentEditor, files, htmlContent) => {
-                if (htmlContent) {
-                    // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
-                    // you could extract the pasted file from this url string and upload it to a server for example
-                    console.log("you pasted", htmlContent) // eslint-disable-line no-console
-                    return false
-                }
+        extensions: [
+            StarterKit,
+            CharacterCount,
+            NextImage,
+            Youtube.configure({
+                controls: false,
+                nocookie: true,
+            }),
+            FileHandler.configure({
+                allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+                onDrop: (currentEditor, files, pos) => {
+                    files.forEach(async file => {
+                        uploadAndInsertImage(currentEditor, file, pos)
+                    })
+                },
+                onPaste: (currentEditor, files, htmlContent) => {
+                    if (htmlContent) {
+                        // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
+                        // you could extract the pasted file from this url string and upload it to a server for example
+                        console.log("you pasted", htmlContent) // eslint-disable-line no-console
+                        return false
+                    }
 
-                files.forEach(async file => {
-                    uploadAndInsertImage(currentEditor, file)
-                })
-            },
-        }),
+                    files.forEach(async file => {
+                        uploadAndInsertImage(currentEditor, file)
+                    })
+                },
+            }),
         ],
         content: WelcomeMessage,
         editorProps: {
@@ -183,12 +193,30 @@ const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount =
                     toast.success('Document copied to clipboard!');
                 }} />
 
-            <div className="fixed left-4 bottom-4">
+            <div className="fixed left-4 bottom-4 z-10">
                 {wordcount && <CharacterCountMarker
                     current={editor?.storage.characterCount.words()}
                     limit={500}
                     display="words"
                 />}
+                <SimpleDialog
+                    schema={[{ url: 'text' }]}
+                    onSubmit={({ url }) => {
+                        if (url) {
+                            editor?.commands.setYoutubeVideo({ src: url });
+                        }
+                    }}
+                    title="Insert YouTube Video"
+                >
+
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2"
+                    >
+                        Insert YouTube Video
+                    </Button>
+                </SimpleDialog>
             </div>
             <Center>
                 <EditorContent

@@ -131,3 +131,29 @@
 .tiptap pre {
   @apply bg-zinc-100 p-4 my-6;
 }
+
+.tiptap hr {
+  @apply my-6;
+}
+
+/* Youtube embed */
+.tiptap div[data-youtube-video] {
+  cursor: move;
+  padding-right: 1.5rem;
+  @apply mb-6;
+}
+
+/* .tiptap div[data-youtube-video] iframe {
+  border: 0.5rem solid var(--black-contrast);
+  display: block;
+  min-height: 200px;
+  min-width: 200px;
+  outline: 0px solid transparent;
+  } */
+  
+.tiptap div[data-youtube-video].ProseMirror-selectednode iframe {
+  @apply rounded-xl;
+  outline: 3px solid gold;
+  @apply rounded-xl;
+  transition: outline 0.15s;
+}
