@@ -7,7 +7,7 @@ export interface FileHandlerOptions {
     onPaste: (editor: any, files: File[], htmlContent: string | null) => void
 }
 
-export const FileHandler = Extension.create<FileHandlerOptions>({
+const FileHandler = Extension.create<FileHandlerOptions>({
     name: 'fileHandler',
 
     addOptions() {
@@ -75,3 +75,5 @@ export const FileHandler = Extension.create<FileHandlerOptions>({
         ]
     },
 })
+
+export default FileHandler

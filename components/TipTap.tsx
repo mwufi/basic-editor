@@ -30,8 +30,10 @@ import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
 import { Save, Share } from "lucide-react"
 import { WelcomeMessage } from './introText';
+import FileHandler from '@/components/editor/FileHandler'
+import NextImage from '@/components/editor/NextImage';
 import Image from '@tiptap/extension-image'
-import { FileHandler } from './editor/nodes/FileHandler'
+import { uploadImageToSupabase } from '@/lib/uploadImage';
 
 const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) => {
     return (
@@ -69,9 +71,10 @@ const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) 
     )
 }
 
+
 const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount = true }) => {
     const editor = useEditor({
-        extensions: [StarterKit, CharacterCount, Image, FileHandler.configure({
+        extensions: [StarterKit, CharacterCount, NextImage, FileHandler.configure({
             allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
             onDrop: (currentEditor, files, pos) => {
                 files.forEach(file => {
@@ -89,7 +92,7 @@ const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount =
                 })
             },
             onPaste: (currentEditor, files, htmlContent) => {
-                files.forEach(file => {
+                files.forEach(async file => {
                     if (htmlContent) {
                         // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
                         // you could extract the pasted file from this url string and upload it to a server for example
@@ -97,16 +100,19 @@ const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount =
                         return false
                     }
 
-                    const fileReader = new FileReader()
+                    toast.info("Uploading image to cloud....")
+                    try {
+                        const supabasePath = await uploadImageToSupabase(file)
+                        console.log("Supabase path", supabasePath)
 
-                    fileReader.readAsDataURL(file)
-                    fileReader.onload = () => {
                         currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
                             type: 'image',
                             attrs: {
-                                src: fileReader.result,
+                                src: supabasePath,
                             },
                         }).focus().run()
+                    } catch (error) {
+                        toast.error('Error uploading image:', error.message);
                     }
                 })
             },
