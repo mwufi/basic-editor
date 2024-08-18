@@ -126,6 +126,7 @@ const Tiptap = ({ note = undefined, editable = true, font = 'serif', wordcount =
                 },
             }),
         ],
+        immediatelyRender: true,
         content: WelcomeMessage,
         editorProps: {
             attributes: {
