@@ -22,7 +22,7 @@ export default function RootLayout({
           <script
             defer
             data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-            data-api="/api/plausible/api/event"
+            data-api="/plausible/api/event"
             src="/api/plausible/js/script.js"
           ></script>
         )}
