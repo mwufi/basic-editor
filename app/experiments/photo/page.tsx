@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import SettingsForm from './SettingsForm';
+import Image from 'next/image';
 
 
 const PhotoPage: React.FC = () => {
@@ -100,7 +101,7 @@ const PhotoPage: React.FC = () => {
                     <h2 className="text-2xl font-bold mb-4">Input Images</h2>
                     <div className="grid grid-cols-4 gap-4 mb-8">
                         {inputImages.map((image, index) => (
-                            <img
+                            <Image
                                 key={index}
                                 src={image}
                                 alt={`Input ${index + 1}`}
@@ -126,7 +127,7 @@ const PhotoPage: React.FC = () => {
                     <h2 className="text-2xl font-bold mb-4">Selected Image</h2>
                     <div className="w-full h-96 flex items-center justify-center mb-8">
                         {selectedImage ? (
-                            <img
+                            <Image
                                 src={selectedImage}
                                 alt="Selected Image"
                                 className="max-w-full max-h-full object-contain rounded"
@@ -169,7 +170,7 @@ const PhotoPage: React.FC = () => {
                     <h2 className="text-2xl font-bold mb-4">Generated Images</h2>
                     <div className="grid grid-cols-2 gap-4">
                         {imgOutputs.map((output, index) => (
-                            <img
+                            <Image
                                 key={index}
                                 src={output}
                                 alt={`Output ${index}`}

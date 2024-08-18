@@ -51,7 +51,7 @@ const InteractiveElement: React.FC<InteractiveElementProps> = ({
 const HomePage = () => {
     const [isEditMode, setIsEditMode] = useState(false);
 
-    const [conversation, setConversation] = useState<>([]);
+    const [conversation, setConversation] = useState([]);
     const [input, setInput] = useState('');
 
     const getAIResponse = async () => {

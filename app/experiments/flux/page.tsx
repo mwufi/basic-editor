@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { fluxSchnell } from '@/app/experiments/photo/models';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 const FluxPage: React.FC = () => {
     const [prompt, setPrompt] = useState('black forest gateau cake spelling out the words \"FLUX SCHNELL\", tasty, food photography, dynamic shot');
@@ -58,7 +59,7 @@ const FluxPage: React.FC = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
                 {generatedImages.map((image, index) => (
-                    <img 
+                    <Image
                         key={index} 
                         src={image} 
                         alt={`Generated image ${index + 1}`} 
