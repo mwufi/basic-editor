@@ -36,6 +36,7 @@ import NextImage from '@/components/editor/NextImage';
 import Image from '@tiptap/extension-image'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
 import SimpleDialog from './blocks/SimpleDialog';
+import BottomMenu from './BottomMenu';
 
 const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) => {
     return (
@@ -64,10 +65,13 @@ const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) 
                     <Save className="mr-2 h-4 w-4" />
                     Save
                 </Button>
-                <Button size="sm" variant="ghost" onClick={onShare}>
-                    <Share className="mr-2 h-4 w-4" />
-                    Share
-                </Button>
+
+                <BottomMenu>
+                    <Button size="sm" variant="ghost">
+                        <Share className="mr-2 h-4 w-4" />
+                        Share
+                    </Button>
+                </BottomMenu>
             </div>
         </div>
     )
