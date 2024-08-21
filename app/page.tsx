@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Link from 'next/link'
 import MinimalPostStyle from '@/components/blocks/MinimalPostStyle'
+import TopNav from '@/components/blocks/TopNav'
+import BottomFooter from '@/components/blocks/BottomFooter'
+import BackgroundImageHeader from '@/components/blocks/BackgroundImageHeader'
 
 const EmptyState = () => {
     return (
@@ -19,6 +22,7 @@ const EmptyState = () => {
         </Card>
     )
 }
+
 
 const BlogHome = () => {
     const [name, setName] = useState("Your Name")
@@ -35,10 +39,25 @@ const BlogHome = () => {
         fetchBlogPosts()
     }, [])
 
+    const navItems = [
+        { href: "/", name: "Home" },
+        { href: "/about", name: "About" },
+        { href: "/contact", name: "Contact" },
+        { href: "https://github.com/instantdb", name: "InstantDB" },
+    ]
 
     return (
-        <div className="">
+        <div className="min-h-screen w-full">
+            <TopNav items={navItems} />
+            <BackgroundImageHeader height="h-96">
+                <div className="flex flex-col justify-end h-full pb-12 px-4 max-w-3xl mx-auto">
+                    <h1 className="text-6xl font-bold text-white leading-tight mb-4 max-w-3xl">
+                        Writing
+                    </h1>
+                </div>
+            </BackgroundImageHeader>
             <MinimalPostStyle />
+            <BottomFooter />
         </div>
     )
 }

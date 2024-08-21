@@ -7,44 +7,6 @@ type Post = {
     description: string
 }
 
-type NavItem = {
-    href: string
-    name: string
-}
-
-function Nav({ items }: { items: NavItem[] }) {
-    return (
-        <nav className="border-b">
-            <ul className="flex space-x-8 mx-auto max-w-3xl p-4">
-                {items.map((item, index) =>
-                    item.href.startsWith("http") ? (
-                        <li key={index}>
-                            <a
-                                href={item.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-600 font-medium"
-                            >
-                                {item.name}
-                            </a>
-                        </li>
-                    ) : (
-                        <li key={index}>
-                            <NavLink
-                                href={item.href}
-                                exact
-                                className="text-gray-600 font-medium transition-colors duration-300"
-                            >
-                                {item.name}
-                            </NavLink>
-                        </li>
-                    )
-                )}
-            </ul>
-        </nav>
-    )
-}
-
 function MobileFriendlyContainer({ children }: { children: React.ReactNode }) {
     return (
         <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-8">
@@ -124,35 +86,20 @@ const PersonalBlogPage = () => {
         }
     ]
 
-    const navItems = [
-        { href: "/", name: "Home" },
-        { href: "/about", name: "About" },
-        { href: "/contact", name: "Contact" },
-        { href: "https://github.com/instantdb", name: "InstantDB" },
-    ]
 
     return (
-        <div className="min-h-screen w-full">
-            <Nav items={navItems} />
-            <MobileFriendlyContainer>
-
-                <section className="mb-16">
-                    <h1 className="mt-16 text-4xl font-black text-zinc-900 dark:text-zinc-100">
-                        writing
-                    </h1>
-                    <div className="mb-8 mt-6 space-y-8">
-                        {postGroups.map((group, index) => (
-                            <>
-                                <div className="mb-3 font-mono text-xs font-medium tracking-wide text-zinc-400">
-                                    {group.tag}
-                                </div>
-                                <BlogPostList posts={group.posts} />
-                            </>
-                        ))}
-                    </div>
-                </section>
-            </MobileFriendlyContainer>
-        </div>
+        <MobileFriendlyContainer>
+            <section className="mb-16 space-y-8">
+                {postGroups.map((group, index) => (
+                    <>
+                        <div className="mb-3 font-mono text-xs font-medium tracking-wide text-zinc-400">
+                            {group.tag}
+                        </div>
+                        <BlogPostList posts={group.posts} />
+                    </>
+                ))}
+            </section>
+        </MobileFriendlyContainer>
     )
 }
 
