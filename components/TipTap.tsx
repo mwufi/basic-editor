@@ -75,7 +75,7 @@ const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) 
                     Save
                 </Button>
 
-                <BottomMenu>
+                <BottomMenu onShare={onShare}>
                     <Button size="sm" variant="ghost">
                         <Share className="mr-2 h-4 w-4" />
                         Share

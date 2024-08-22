@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Input } from "@/components/ui/input"
 
-const BottomMenu = ({ children }) => {
+const BottomMenu = ({ children, onShare }) => {
     const [isPublic, setIsPublic] = useState(false)
     const [shareableLink, setShareableLink] = useState('')
 
@@ -50,7 +50,10 @@ const BottomMenu = ({ children }) => {
                         </div>
                     </div>
                     <Button onClick={handleSaveToSupabase} className="w-full">
-                        Save to Supabase
+                        Save to Owri Cloud
+                    </Button>
+                    <Button onClick={onShare} className="w-full">
+                        Copy to Clipboard
                     </Button>
                 </div>
             </DrawerContent>
