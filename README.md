@@ -1,4 +1,8 @@
 
+<div style="display: flex; justify-content: center; height: 300px;">
+  <img src="./public/logo.jpg" alt="screenshot" />
+</div>
+
 # Main Editor
 
 The goal of this editor is to have a simple, distraction-free writing experience.
