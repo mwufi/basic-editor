@@ -33,7 +33,6 @@ import { ArrowLeft, Save, Share } from "lucide-react"
 import { WelcomeMessage } from './WelcomeText';
 import FileHandler from '@/components/editor/FileHandler'
 import NextImage from '@/components/editor/NextImage';
-import Image from '@tiptap/extension-image'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
 import SimpleDialog from './blocks/SimpleDialog';
 import BottomMenu from './BottomMenu';

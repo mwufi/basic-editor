@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { init } from '@instantdb/react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import Profile from './Profile';
 
 const APP_ID = '71186fbd-29c5-4d5f-bc04-68f6120e63c1';
 
@@ -13,8 +14,10 @@ const GOOGLE_CLIENT_ID = '913178836523-8afnre2lps045l979h1qrntufvceiqlj.apps.goo
 // Use the google client name in the Instant dashboard auth tab
 const GOOGLE_CLIENT_NAME = 'owri-web-dev';
 
+
 function App() {
     const { isLoading, user, error } = db.useAuth();
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -25,11 +28,7 @@ function App() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-background">
                 <div className="p-8 space-y-4 bg-card rounded-lg shadow-lg">
-                    <h1 className="text-3xl font-bold text-center text-foreground">Hello, {user.email}!</h1>
-                    <h2 className="text-xl text-center text-foreground">Welcome to our app!</h2>
-                    <pre className="bg-gray-100 p-4 rounded-md overflow-auto w-[700px]">
-                        {JSON.stringify(user, null, 2)}
-                    </pre>
+                    {user && <Profile user={user}/>}
                     <button
                         onClick={() => db.auth.signOut()}
                         className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
@@ -60,8 +59,9 @@ function Login() {
             <GoogleLogin
                 nonce={nonce}
                 onError={() => alert('Login failed')}
-                onSuccess={({ credential }) => {
-                    db.auth
+                onSuccess={async ({ credential }) => {
+                    console.log("credential", credential)
+                    await db.auth
                         .signInWithIdToken({
                             clientName: GOOGLE_CLIENT_NAME,
                             idToken: credential,
