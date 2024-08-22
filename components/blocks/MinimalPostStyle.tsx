@@ -1,5 +1,5 @@
 import React from "react"
-import { NavLink } from "./NavLink"
+import Link from "next/link"
 
 type Post = {
     title: string
@@ -17,7 +17,7 @@ function MobileFriendlyContainer({ children }: { children: React.ReactNode }) {
 
 function BlogPost({ title, date, description }: Post) {
     return (
-        <a href={`/blog/${title.toLowerCase().replace(/\s+/g, '-')}`}>
+        <Link href={`/blog/${title.toLowerCase().replace(/\s+/g, '-')}`}>
             <div className="px-4 py-2 transition-bg duration-500 hover:bg-green-50">
                 <div className="mb-1 inline-flex items-baseline gap-3">
                     <h3 className="font-mono font-bold">
@@ -31,7 +31,7 @@ function BlogPost({ title, date, description }: Post) {
                     {description}
                 </p>
             </div>
-        </a>
+        </Link>
     )
 }
 

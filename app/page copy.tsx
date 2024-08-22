@@ -38,32 +38,25 @@ const BlogHome = () => {
 
         fetchBlogPosts()
     }, [])
+
+    const navItems = [
+        { href: "/", name: "Home" },
+        { href: "/about", name: "About" },
+        { href: "/contact", name: "Contact" },
+        { href: "https://github.com/instantdb", name: "InstantDB" },
+    ]
+
     return (
-        <div className="overflow-y-scroll min-h-screen w-full">
-            <TopNav items={[
-                { href: "/", name: "Home" },
-                { href: "/about", name: "About" },
-                { href: "/new", name: "New Post" },
-            ]} />
-            <main className="max-w-3xl mx-auto p-4">
-                <h1 className="text-2xl font-bold mb-4">Your Blog Posts</h1>
-                {blogPosts.length === 0 ? (
-                    <EmptyState />
-                ) : (
-                    <ul className="space-y-2">
-                        {blogPosts.map((post, index) => (
-                            <li key={index} className="flex justify-between items-center hover:bg-gray-100 p-2">
-                                <Link href={`/blog/${post.id}`} className="flex-1">
-                                    <span className="font-medium">{post.title}</span>
-                                </Link>
-                                <span className="text-gray-500">
-                                    {new Date(post.createdAt).toLocaleDateString()}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </main>
+        <div className="min-h-screen w-full">
+            <TopNav items={navItems} />
+            <BackgroundImageHeader height="h-96">
+                <div className="flex flex-col justify-end h-full pb-12 px-4 max-w-3xl mx-auto">
+                    <h1 className="text-6xl font-bold text-white leading-tight mb-4 max-w-3xl">
+                        Writing
+                    </h1>
+                </div>
+            </BackgroundImageHeader>
+            <MinimalPostStyle />
             <BottomFooter />
         </div>
     )

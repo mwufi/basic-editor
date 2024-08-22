@@ -29,7 +29,7 @@ const Center = ({ children }: { children: React.ReactNode }) => {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
-import { Save, Share } from "lucide-react"
+import { ArrowLeft, Save, Share } from "lucide-react"
 import { WelcomeMessage } from './WelcomeText';
 import FileHandler from '@/components/editor/FileHandler'
 import NextImage from '@/components/editor/NextImage';
@@ -37,10 +37,19 @@ import Image from '@tiptap/extension-image'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
 import SimpleDialog from './blocks/SimpleDialog';
 import BottomMenu from './BottomMenu';
+import Link from 'next/link';
 
 const TopBar = ({ onSave, onShare, isEditing, title, setTitle, handleRetitle }) => {
     return (
         <div className="sticky top-0 z-10 flex items-center justify-center p-2 rounded">
+            <div className="absolute left-0">
+                <Button size="sm" variant="ghost" asChild>
+                    <Link href="/">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Home
+                    </Link>
+                </Button>
+            </div>
             {true ? (
                 <form onSubmit={(e) => {
                     e.preventDefault();

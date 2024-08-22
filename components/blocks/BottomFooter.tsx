@@ -2,7 +2,7 @@ import { Heart } from "lucide-react"
 
 function Footer() {
     return (
-        <nav className="border-b sticky bottom-0 w-full bg-white">
+        <nav className="border-b fixed bottom-0 w-full bg-white">
             <div className="flex justify-between items-center">
                 <div className="flex justify-between items-center w-full max-w-3xl mx-auto p-4">
                     <span className="text-sm text-gray-600">© 2024</span>
