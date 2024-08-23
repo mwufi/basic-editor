@@ -18,6 +18,7 @@ async function createUserIfNotExists(user: any) {
 }
 
 export default function Profile({ user }: { user: any }) {
+    console.log("user", user)
     const { data, isLoading } = db.useQuery({
         users: {
             $: {
@@ -38,12 +39,12 @@ export default function Profile({ user }: { user: any }) {
     return (
         <div>
             {data && data.users && data.users.length > 0 ? (
-                <div className="">
-                    <div className="mb-4">
+                <div className="flex flex-col items-center max-w-3xl mx-auto mt-14">
+                    <div className="mb-8 text-center">
                         <p className="text-3xl font-semibold">Welcome, {data.users[0].handle}!</p>
                     </div>
-                    <div className="mb-4">
-                        <label htmlFor="handle" className="block text-sm font-medium text-gray-700 mb-1">
+                    <div className="w-full mb-8">
+                        <label htmlFor="handle" className="block text-sm font-medium text-gray-700 mb-2">
                             Change username:
                         </label>
                         <div className="flex items-center">
@@ -64,6 +65,18 @@ export default function Profile({ user }: { user: any }) {
                                 Update
                             </Button>
                         </div>
+                    </div>
+                    <div className="w-full my-8">
+                        <h2 className="text-xl font-semibold mb-2">Auth User Data:</h2>
+                        <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+                            {JSON.stringify(user, null, 2)}
+                        </pre>
+                    </div>
+                    <div className="w-full my-8">
+                        <h2 className="text-xl font-semibold mb-2">Profile Data:</h2>
+                        <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+                            {JSON.stringify(data.users[0], null, 2)}
+                        </pre>
                     </div>
                 </div>
             ) : (
