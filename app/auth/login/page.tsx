@@ -26,17 +26,7 @@ function App() {
     }
     if (user) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-background">
-                <div className="p-8 space-y-4 bg-card rounded-lg shadow-lg">
-                    {user && <Profile user={user}/>}
-                    <button
-                        onClick={() => db.auth.signOut()}
-                        className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                    >
-                        Log Out
-                    </button>
-                </div>
-            </div>
+            <Profile user={user} />
         );
     }
 

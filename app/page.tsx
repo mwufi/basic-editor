@@ -2,13 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Link from 'next/link'
-import MinimalPostStyle from '@/components/blocks/MinimalPostStyle'
-import TopNav from '@/components/blocks/TopNav'
 import BottomFooter from '@/components/blocks/BottomFooter'
-import BackgroundImageHeader from '@/components/blocks/BackgroundImageHeader'
 
 const EmptyState = () => {
     return (
@@ -25,7 +22,6 @@ const EmptyState = () => {
 
 
 const BlogHome = () => {
-    const [name, setName] = useState("Your Name")
     const [blogPosts, setBlogPosts] = useState([])
 
     useEffect(() => {
@@ -40,13 +36,8 @@ const BlogHome = () => {
     }, [])
     return (
         <div className="overflow-y-scroll min-h-screen w-full">
-            <TopNav items={[
-                { href: "/", name: "Home" },
-                { href: "/about", name: "About" },
-                { href: "/new", name: "New Post" },
-            ]} />
             <main className="max-w-3xl mx-auto p-4">
-                <h1 className="text-2xl font-bold mb-4">Your Blog Posts</h1>
+                <h1 className="text-2xl font-bold my-14">Your Blog Posts</h1>
                 {blogPosts.length === 0 ? (
                     <EmptyState />
                 ) : (
@@ -64,7 +55,6 @@ const BlogHome = () => {
                     </ul>
                 )}
             </main>
-            <BottomFooter />
         </div>
     )
 }

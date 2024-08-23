@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
-import TopNav from '@/components/blocks/TopNav'
 import BottomFooter from '@/components/blocks/BottomFooter'
 import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 
@@ -28,11 +27,6 @@ const BlogPost = () => {
 
     return (
         <div className="overflow-y-scroll min-h-screen w-full">
-            <TopNav items={[
-                { href: "/", name: "Home" },
-                { href: "/about", name: "About" },
-                { href: "/new", name: "New Post" },
-            ]} />
             <main className="max-w-3xl mx-auto p-4">
                 <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
                 <p className="text-gray-500 mb-4">

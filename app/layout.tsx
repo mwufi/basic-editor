@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'sonner'
+import JotaiProvider from "@/components/providers/JotaiProvider";
+import Avatar from "./Avatar";
+import PageHeader from "@/components/blocks/PageHeader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,8 +31,11 @@ export default function RootLayout({
         )}
       </head>
       <body className={inter.className}>
-        <Toaster richColors position="top-center" expand={true} />
-        {children}
+        <JotaiProvider>
+          <PageHeader />
+          <Toaster richColors position="top-center" expand={true} />
+          {children}
+        </JotaiProvider>
       </body>
     </html>
   );
