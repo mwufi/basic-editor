@@ -9,10 +9,10 @@ const APP_ID = '71186fbd-29c5-4d5f-bc04-68f6120e63c1';
 
 const db = init({ appId: APP_ID });
 
-const GOOGLE_CLIENT_ID = '913178836523-8afnre2lps045l979h1qrntufvceiqlj.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
 // Use the google client name in the Instant dashboard auth tab
-const GOOGLE_CLIENT_NAME = 'owri-web-dev';
+const GOOGLE_CLIENT_NAME = process.env.NEXT_PUBLIC_INSTANT_APP_NAME;
 
 
 function App() {
