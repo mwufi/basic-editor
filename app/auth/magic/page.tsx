@@ -68,7 +68,7 @@ function Email({ setSentEmail }) {
 
     return (
         <form onSubmit={handleSubmit} style={authStyles.form}>
-            <h2 style={{ color: '#333', marginBottom: '20px' }}>Let's log you in!</h2>
+            <h2 style={{ color: '#333', marginBottom: '20px' }}>Let&apos;s log you in!</h2>
             <div>
                 <input
                     style={authStyles.input}
