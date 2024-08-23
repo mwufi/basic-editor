@@ -51,7 +51,7 @@ export default function Avatar() {
                     <Link href="/settings">{user ? "Settings" : "Local Settings"}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <Link href="/new">New Note</Link>
+                    <Link href="/create">New Note</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {user ? (

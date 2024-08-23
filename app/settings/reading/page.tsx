@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
 
 /*
 security
@@ -62,7 +62,7 @@ export default function Dashboard() {
                         <div className="flex items-center space-x-2">
                             <input type="radio" id="style1" name="blog-style" className="form-radio" />
                             <div>
-                                <img src="https://picsum.photos/200/100?random=1" alt="Style 1" className="mb-2 rounded" />
+                                <Image src="https://picsum.photos/200/100?random=1" alt="Style 1" width={200} height={100} className="mb-2 rounded" />
                                 <label htmlFor="style1" className="font-medium">Minimalist</label>
                                 <p className="text-sm text-gray-500">Clean and simple design for a focused reading experience.</p>
                             </div>
@@ -70,7 +70,7 @@ export default function Dashboard() {
                         <div className="flex items-center space-x-2">
                             <input type="radio" id="style2" name="blog-style" className="form-radio" />
                             <div>
-                                <img src="https://picsum.photos/200/100?random=2" alt="Style 2" className="mb-2 rounded" />
+                                <Image src="https://picsum.photos/200/100?random=2" alt="Style 2" width={200} height={100} className="mb-2 rounded" />
                                 <label htmlFor="style2" className="font-medium">Modern</label>
                                 <p className="text-sm text-gray-500">Sleek and contemporary look with bold typography.</p>
                             </div>
@@ -78,7 +78,7 @@ export default function Dashboard() {
                         <div className="flex items-center space-x-2">
                             <input type="radio" id="style3" name="blog-style" className="form-radio" />
                             <div>
-                                <img src="https://picsum.photos/200/100?random=3" alt="Style 3" className="mb-2 rounded" />
+                                <Image src="https://picsum.photos/200/100?random=3" alt="Style 3" width={200} height={100} className="mb-2 rounded" />
                                 <label htmlFor="style3" className="font-medium">Classic</label>
                                 <p className="text-sm text-gray-500">Traditional blog layout with a timeless feel.</p>
                             </div>

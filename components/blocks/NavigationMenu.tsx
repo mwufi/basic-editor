@@ -13,7 +13,7 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { Package2 } from "lucide-react"
+import { FileText, Package2 } from "lucide-react"
 
 const components: { title: string; href: string; description: string }[] = [
     {
@@ -53,6 +53,27 @@ const components: { title: string; href: string; description: string }[] = [
     },
 ]
 
+function ComponentHeader() {
+    return (
+        <NavigationMenuItem>
+            <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+            <NavigationMenuContent>
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                    {components.map((component) => (
+                        <ListItem
+                            key={component.title}
+                            title={component.title}
+                            href={component.href}
+                        >
+                            {component.description}
+                        </ListItem>
+                    ))}
+                </ul>
+            </NavigationMenuContent>
+        </NavigationMenuItem>
+    )
+}
+
 export function NavigationMenuDemo() {
     return (
         <NavigationMenu>
@@ -67,46 +88,29 @@ export function NavigationMenuDemo() {
                                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                                         href="/"
                                     >
-                                        <Package2 className="h-6 w-6" />
+                                        <FileText className="h-6 w-6" />
                                         <div className="mb-2 mt-4 text-lg font-medium">
-                                            shadcn/ui
+                                            Owri Editor
                                         </div>
                                         <p className="text-sm leading-tight text-muted-foreground">
-                                            Beautifully designed components that you can copy and
-                                            paste into your apps. Accessible. Customizable. Open
-                                            Source.
+                                            A powerful and intuitive editor for creating, publishing, and sharing your notes online. Streamline your workflow and collaborate effortlessly.
                                         </p>
                                     </a>
                                 </NavigationMenuLink>
                             </li>
-                            <ListItem href="/docs" title="Introduction">
-                                Re-usable components built using Radix UI and Tailwind CSS.
+                            <ListItem href="/create" title="Creating Notes">
+                                Learn how to create and organize your notes efficiently with Owri Editor.
                             </ListItem>
-                            <ListItem href="/docs/installation" title="Installation">
-                                How to install dependencies and structure your app.
+                            <ListItem href="/publish" title="Publishing Your Page">
+                                Discover the process of publishing your notes and creating a personalized page.
                             </ListItem>
-                            <ListItem href="/docs/primitives/typography" title="Typography">
-                                Styles for headings, paragraphs, lists...etc
+                            <ListItem href="/share" title="Share Online">
+                                Explore options for sharing your published notes and collaborating with others.
                             </ListItem>
                         </ul>
                     </NavigationMenuContent>
                 </NavigationMenuItem>
-                <NavigationMenuItem>
-                    <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                            {components.map((component) => (
-                                <ListItem
-                                    key={component.title}
-                                    title={component.title}
-                                    href={component.href}
-                                >
-                                    {component.description}
-                                </ListItem>
-                            ))}
-                        </ul>
-                    </NavigationMenuContent>
-                </NavigationMenuItem>
+
                 <NavigationMenuItem>
                     <Link href="/docs" legacyBehavior passHref>
                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>

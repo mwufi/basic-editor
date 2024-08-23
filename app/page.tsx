@@ -12,7 +12,7 @@ const EmptyState = () => {
         <Card className="col-span-full">
             <CardContent className="flex flex-col items-center justify-center py-12">
                 <p className="text-xl text-gray-500 mb-4">You haven&apos;t created any blog posts yet.</p>
-                <Link href="/new">
+                <Link href="/create">
                     <Button variant="outline">Create Your First Post</Button>
                 </Link>
             </CardContent>
