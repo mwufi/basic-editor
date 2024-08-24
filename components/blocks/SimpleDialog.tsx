@@ -34,7 +34,7 @@ const SimpleDialog: React.FC<SimpleDialogProps> = ({ schema, onSubmit, title = "
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>{children}</DialogTrigger>
+            <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>

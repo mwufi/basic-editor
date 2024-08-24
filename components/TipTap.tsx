@@ -54,12 +54,12 @@ const TopBar = ({ onShare }) => {
             <div className="absolute right-0">
                 <SaveButton />
 
-                <BottomMenu onShare={onShare}>
+                <BottomMenu button={
                     <Button size="sm" variant="ghost">
                         <Share className="mr-2 h-4 w-4" />
                         Share
                     </Button>
-                </BottomMenu>
+                } />
             </div>
         </div>
     )
