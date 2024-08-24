@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 import JotaiProvider from "@/components/providers/JotaiProvider";
 import Avatar from "./Avatar";
 import PageHeader from "@/components/blocks/PageHeader";
+import { EditorProvider } from "@/components/editor/EditorContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,9 +33,11 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <JotaiProvider>
-          <PageHeader />
-          <Toaster richColors position="top-center" expand={true} />
-          {children}
+          <EditorProvider>
+            <PageHeader />
+            <Toaster richColors position="top-center" expand={true} />
+            {children}
+          </EditorProvider>
         </JotaiProvider>
       </body>
     </html>
