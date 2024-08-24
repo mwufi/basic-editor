@@ -56,13 +56,17 @@ export const insertCustomButton = (editor, label, onClick) => {
     editor
         .chain()
         .focus()
-        .insertContent({
+        .insertContent([{
             type: 'customButton',
             attrs: {
                 label,
                 onClick: onClick ? onClick.toString() : null,
             },
-        })
+        },
+        {
+            type: 'paragraph'
+        }
+        ])
         .run();
 };
 
@@ -70,14 +74,18 @@ export const insertGallery = (editor) => {
     editor
         .chain()
         .focus()
-        .insertContent({
+        .insertContent([{
             type: 'customImageGallery',
             attrs: {
                 layout: 'carousel',
                 images: [],
                 caption: '',
             },
-        })
+        },
+        {
+            type: 'paragraph'
+        }
+        ])
         .run();
 };
 

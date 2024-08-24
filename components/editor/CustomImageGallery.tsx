@@ -8,18 +8,20 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import Image from 'next/image'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
-    console.log("node attrs", node.attrs)
     const [layout, setLayout] = useState(node.attrs.layout)
     const [images, setImages] = useState(Array.isArray(node.attrs.images) ? node.attrs.images : [])
     const [caption, setCaption] = useState(node.attrs.caption)
+    const [maxHeight, setMaxHeight] = useState(node.attrs.maxHeight || 600)
     const editable = editor.isEditable
 
     useEffect(() => {
         setLayout(node.attrs.layout)
         setImages(Array.isArray(node.attrs.images) ? node.attrs.images : [])
         setCaption(node.attrs.caption)
+        setMaxHeight(node.attrs.maxHeight || 600)
     }, [node.attrs])
 
     const toggleLayout = () => {
@@ -29,9 +31,7 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
     }
 
     const handleImageSelection = () => {
-        // For demonstration, we're just adding a new image URL
-        // In a real application, you'd implement an image selection process here
-        const newImage = `https://picsum.photos/200/300?random=${Math.random()}`
+        const newImage = `https://picsum.photos/800/600?random=${Math.random()}`
         const updatedImages = [...images, newImage]
         setImages(updatedImages)
         updateAttributes({ images: updatedImages })
@@ -50,15 +50,19 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
             return (
                 <div className="flex overflow-x-auto space-x-4 p-4">
                     {images.map((src, index) => (
-                        <Image key={index} src={src} alt={`Gallery image ${index + 1}`} width={200} height={300} className="rounded-lg" />
+                        <div key={index} className="flex-shrink-0 w-4/5 max-w-[800px]">
+                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="rounded-lg object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
+                        </div>
                     ))}
                 </div>
             )
         } else {
             return (
-                <div className="grid grid-cols-3 gap-4 p-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
                     {images.map((src, index) => (
-                        <Image key={index} src={src} alt={`Gallery image ${index + 1}`} width={200} height={300} className="rounded-lg" />
+                        <div key={index}>
+                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="rounded-lg object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
+                        </div>
                     ))}
                 </div>
             )
@@ -67,39 +71,60 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
 
     if (!editable) {
         return (
-            <NodeViewWrapper className="custom-image-gallery-wrapper">
-                {renderImages()}
-                {caption && <p className="text-center mt-2">{caption}</p>}
+            <NodeViewWrapper>
+                <div className="custom-image-gallery-wrapper">
+                    {renderImages()}
+                    {caption && <p className="text-center mt-2">{caption}</p>}
+                </div>
             </NodeViewWrapper>
         )
     }
 
     return (
-        <NodeViewWrapper className="custom-image-gallery-wrapper border rounded p-4 my-4">
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-2">
-                    <Switch id="layout-switch" checked={layout === 'grid'} onCheckedChange={toggleLayout} />
-                    <Label htmlFor="layout-switch">
-                        {layout === 'carousel' ? 'Carousel' : 'Grid'} Layout
-                    </Label>
+        <NodeViewWrapper>
+            <div className="custom-image-gallery-wrapper border rounded p-4 my-4">
+                <div className="control mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                            <Switch id="layout-switch" checked={layout === 'grid'} onCheckedChange={toggleLayout} />
+                            <Label htmlFor="layout-switch">
+                                {layout === 'carousel' ? 'Carousel' : 'Grid'} Layout
+                            </Label>
+                        </div>
+                        <Button onClick={handleImageSelection}>Add Image</Button>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Label htmlFor="max-height">Max Height (px):</Label>
+                        <Input
+                            id="max-height"
+                            type="number"
+                            value={maxHeight}
+                            onChange={(e) => {
+                                const newMaxHeight = parseInt(e.target.value, 10)
+                                setMaxHeight(newMaxHeight)
+                                updateAttributes({ maxHeight: newMaxHeight })
+                            }}
+                            className="w-20"
+                        />
+                    </div>
                 </div>
-                <Button onClick={handleImageSelection}>Add Image</Button>
+                <div className="gallery">
+                    {renderImages()}
+                </div>
+                <Input
+                    type="text"
+                    value={caption}
+                    onChange={(e) => {
+                        setCaption(e.target.value)
+                        updateAttributes({ caption: e.target.value })
+                    }}
+                    placeholder="Gallery Caption"
+                    className="mt-4"
+                />
             </div>
-            {renderImages()}
-            <Input
-                type="text"
-                value={caption}
-                onChange={(e) => {
-                    setCaption(e.target.value)
-                    updateAttributes({ caption: e.target.value })
-                }}
-                placeholder="Gallery Caption"
-                className="mt-4"
-            />
         </NodeViewWrapper>
     )
 }
-
 const CustomImageGallery = Node.create({
     name: 'customImageGallery',
 
@@ -123,6 +148,9 @@ const CustomImageGallery = Node.create({
             },
             caption: {
                 default: '',
+            },
+            maxHeight: {
+                default: 400,
             }
         }
     },
@@ -137,6 +165,7 @@ const CustomImageGallery = Node.create({
                         layout: element.getAttribute('data-layout') || 'carousel',
                         images: JSON.parse(element.getAttribute('data-images') || '[]'),
                         caption: element.getAttribute('data-caption') || '',
+                        maxHeight: parseInt(element.getAttribute('data-max-height') || '400', 10),
                     })
                 },
             },
@@ -144,7 +173,7 @@ const CustomImageGallery = Node.create({
     },
 
     renderHTML({ HTMLAttributes }) {
-        const { layout, images, caption, ...rest } = HTMLAttributes;
+        const { layout, images, caption, maxHeight, ...rest } = HTMLAttributes;
         return ['div', mergeAttributes(
             rest,
             {
@@ -152,6 +181,7 @@ const CustomImageGallery = Node.create({
                 'data-layout': layout,
                 'data-images': JSON.stringify(images),
                 'data-caption': caption,
+                'data-max-height': maxHeight,
             }
         ), 0]
     },
