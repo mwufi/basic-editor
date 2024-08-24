@@ -47,9 +47,9 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
 
         if (layout === 'carousel') {
             return (
-                <div className="flex overflow-x-auto space-x-1 p-2">
+                <div className="flex overflow-x-hidden space-x-4 p-2 snap-x snap-mandatory">
                     {images.map((src, index) => (
-                        <div key={index} className="flex-shrink-0 w-4/5 max-w-[800px]">
+                        <div key={index} className="flex-shrink-0 w-4/5 max-w-[800px] snap-center">
                             <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
                         </div>
                     ))}
@@ -71,7 +71,7 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
     if (!editable) {
         return (
             <NodeViewWrapper>
-                <div className="custom-image-gallery-wrapper">
+                <div className="custom-image-gallery-wrapper relative left-1/2 right-1/2 -mx-[45vw] w-[90vw]">
                     {renderImages()}
                     {caption && <p className="text-center mt-2">{caption}</p>}
                 </div>
