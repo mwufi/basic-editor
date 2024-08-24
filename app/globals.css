@@ -93,7 +93,7 @@
   @apply text-base leading-loose mb-4;
 }
 
-.tiptap img {
+.tiptap .next-image {
   @apply w-full mb-4;
 }
 

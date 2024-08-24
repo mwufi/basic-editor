@@ -36,11 +36,10 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
         setImages(updatedImages)
         updateAttributes({ images: updatedImages })
     }
-
     const renderImages = () => {
         if (!images || images.length === 0) {
             return (
-                <div className="flex justify-center items-center h-40 bg-gray-100 rounded-lg">
+                <div className="flex justify-center items-center h-40 bg-gray-100">
                     <p className="text-gray-500">No images in gallery</p>
                 </div>
             )
@@ -48,20 +47,20 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
 
         if (layout === 'carousel') {
             return (
-                <div className="flex overflow-x-auto space-x-4 p-4">
+                <div className="flex overflow-x-auto space-x-1 p-2">
                     {images.map((src, index) => (
                         <div key={index} className="flex-shrink-0 w-4/5 max-w-[800px]">
-                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="rounded-lg object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
+                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
                         </div>
                     ))}
                 </div>
             )
         } else {
             return (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-1 p-2">
                     {images.map((src, index) => (
                         <div key={index}>
-                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="rounded-lg object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
+                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
                         </div>
                     ))}
                 </div>
@@ -108,7 +107,7 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
                         />
                     </div>
                 </div>
-                <div className="gallery">
+                <div className="gallery relative left-1/2 right-1/2 -mx-[45vw] w-[90vw]">
                     {renderImages()}
                 </div>
                 <Input
