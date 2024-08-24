@@ -16,6 +16,7 @@ import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
 import { toast } from 'sonner'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
 import CustomButton from './CustomButton';
+import CustomImageGallery from './CustomImageGallery';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -65,6 +66,22 @@ export const insertCustomButton = (editor, label, onClick) => {
         .run();
 };
 
+export const insertGallery = (editor) => {
+    editor
+        .chain()
+        .focus()
+        .insertContent({
+            type: 'customImageGallery',
+            attrs: {
+                layout: 'carousel',
+                images: [],
+                caption: '',
+            },
+        })
+        .run();
+};
+
+
 const Editor = ({ editable = true, content = '<p>Hello</p>', font = 'serif' }) => {
     const { setEditor } = useEditor(); // Use the context
 
@@ -74,9 +91,8 @@ const Editor = ({ editable = true, content = '<p>Hello</p>', font = 'serif' }) =
             CharacterCount,
             NextImage,
             Link,
-            CustomButton.configure({
-                editable: editable,
-            }), // Configure CustomButton extension
+            CustomButton,
+            CustomImageGallery,
             Youtube.configure({
                 controls: false,
                 nocookie: true,
