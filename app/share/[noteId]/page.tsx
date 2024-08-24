@@ -22,7 +22,10 @@ export default function ShareNotePage({ params }: PageProps) {
     return (
         <Card className="max-w-3xl mx-auto mt-8">
             <CardHeader>
-                <CardTitle>{note.title || 'Untitled Note'}</CardTitle>
+                <CardTitle className="text-4xl font-light">{note.title || 'Untitled Note'}</CardTitle>
+                <p className="text-gray-500 mb-14">
+                    {new Date(note.createdAt).toLocaleDateString()}
+                </p>
             </CardHeader>
             <CardContent>
                 <ReadOnlyEditor content={note.text} font="serif" />
