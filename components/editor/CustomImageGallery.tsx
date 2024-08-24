@@ -80,7 +80,7 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
 
         if (layout === 'carousel') {
             return (
-                <Carousel className="w-full">
+                <Carousel className="w-full" opts={{ dragFree: true }}>
                     <CarouselContent>
                         {images.map((src, index) => (
                             <CarouselItem key={index} className="md:basis-2/5">
@@ -208,7 +208,6 @@ const CustomImageGallery = Node.create({
             {
                 tag: 'div[data-custom-image-gallery]',
                 getAttrs: (element) => {
-                    console.log("parseHTML", element.getAttribute('data-images'))
                     return ({
                         layout: element.getAttribute('data-layout') || 'carousel',
                         images: JSON.parse(element.getAttribute('data-images') || '[]'),
