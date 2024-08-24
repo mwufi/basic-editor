@@ -3,6 +3,7 @@
 import CharacterCount from '@tiptap/extension-character-count';
 import StarterKit from '@tiptap/starter-kit'
 import Youtube from '@tiptap/extension-youtube'
+import Link from '@tiptap/extension-link'
 
 import FileHandler from '@/components/editor/FileHandler'
 import NextImage from '@/components/editor/NextImage';
@@ -57,6 +58,7 @@ const Editor = ({ editable = true, font = 'serif' }) => {
             StarterKit,
             CharacterCount,
             NextImage,
+            Link,
             Youtube.configure({
                 controls: false,
                 nocookie: true,
