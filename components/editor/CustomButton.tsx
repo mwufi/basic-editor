@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 
 const CustomButtonComponent = ({ node, updateAttributes, editor }) => {
     const [label, setLabel] = useState(node.attrs.label)
-    const { onClick } = node.attrs
+    const { onClick, editable } = node.attrs
 
     useEffect(() => {
         setLabel(node.attrs.label)
@@ -15,7 +15,7 @@ const CustomButtonComponent = ({ node, updateAttributes, editor }) => {
 
     return (
         <NodeViewWrapper className="custom-button-wrapper">
-            <div className="flex justify-center w-full my-2 relative group">
+            <div className={`flex justify-center w-full my-2 relative ${editable ? 'group' : ''}`}>
                 <Button
                     contentEditable={false}
                     onClick={() => {
@@ -26,16 +26,20 @@ const CustomButtonComponent = ({ node, updateAttributes, editor }) => {
                 >
                     {label}
                 </Button>
-                <input
-                    type="text"
-                    value={label}
-                    onChange={(e) => {
-                        setLabel(e.target.value)
-                        updateAttributes({ label: e.target.value })
-                    }}
-                    className="absolute inset-0 opacity-0 cursor-text"
-                />
-                <div className="absolute inset-0 pointer-events-none border-2 border-transparent group-hover:border-blue-500 group-focus-within:border-blue-500 rounded transition-colors" />
+                {editable && (
+                    <>
+                        <input
+                            type="text"
+                            value={label}
+                            onChange={(e) => {
+                                setLabel(e.target.value)
+                                updateAttributes({ label: e.target.value })
+                            }}
+                            className="absolute inset-0 opacity-0 cursor-text"
+                        />
+                        <div className="absolute inset-0 pointer-events-none border-2 border-transparent group-hover:border-blue-500 group-focus-within:border-blue-500 rounded transition-colors" />
+                    </>
+                )}
             </div>
         </NodeViewWrapper>
     )
@@ -57,6 +61,9 @@ const CustomButton = Node.create({
             },
             onClick: {
                 default: null,
+            },
+            editable: {
+                default: false,
             },
         }
     },

@@ -52,20 +52,20 @@ async function uploadAndInsertImage(editor, file, pos = null) {
 }
 
 export const insertCustomButton = (editor, label, onClick) => {
-  editor
-    .chain()
-    .focus()
-    .insertContent({
-      type: 'customButton',
-      attrs: {
-        label,
-        onClick: onClick ? onClick.toString() : null,
-      },
-    })
-    .run();
+    editor
+        .chain()
+        .focus()
+        .insertContent({
+            type: 'customButton',
+            attrs: {
+                label,
+                onClick: onClick ? onClick.toString() : null,
+            },
+        })
+        .run();
 };
 
-const Editor = ({ editable = true, font = 'serif' }) => {
+const Editor = ({ editable = true, content = '<p>Hello</p>', font = 'serif' }) => {
     const { setEditor } = useEditor(); // Use the context
 
     const editor = useTiptapEditor({
@@ -74,7 +74,9 @@ const Editor = ({ editable = true, font = 'serif' }) => {
             CharacterCount,
             NextImage,
             Link,
-            CustomButton.configure({}), // Configure CustomButton extension
+            CustomButton.configure({
+                editable: editable,
+            }), // Configure CustomButton extension
             Youtube.configure({
                 controls: false,
                 nocookie: true,
@@ -100,7 +102,7 @@ const Editor = ({ editable = true, font = 'serif' }) => {
                 },
             }),
         ],
-        content: '<p>Hello</p>',
+        content: content,
         editorProps: {
             attributes: {
                 class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
@@ -116,6 +118,10 @@ const Editor = ({ editable = true, font = 'serif' }) => {
     }, [editor, setEditor]);
 
     return <div>{editor && <EditorContent editor={editor} />}</div>;
+}
+
+export function ReadOnlyEditor({ content, font = 'serif' }) {
+    return <Editor content={content} editable={false} font={font} />
 }
 
 export default Editor
