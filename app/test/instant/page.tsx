@@ -32,7 +32,7 @@ export default function InstantNoteReader() {
                 await db.transact([
                     tx.posts[id()].update({
                         text: newPostText,
-                        createdAt: Date.now(),
+                        createdAt: Date.now()
                     }).link({
                         author: currentUserId
                     })
@@ -80,7 +80,7 @@ export default function InstantNoteReader() {
                     <pre className="whitespace-pre-wrap overflow-x-auto">
                         {JSON.stringify(profile?.users[0], null, 2)}
                     </pre>
-                    {!profile?.users[0]?.authIds && (
+                    {!profile?.users[0]?.authId && (
                         <Button
                             onClick={async () => {
                                 try {

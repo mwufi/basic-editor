@@ -6,7 +6,7 @@ type Schema = {
         email: string;
         handle: string;
         createdAt: number;
-        authIds: Array<string>;
+        authId: string;
         posts: Array<Schema['posts']>;
         pin: Schema['pins'];
     };
