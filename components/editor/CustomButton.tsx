@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 const CustomButtonComponent = ({ node, updateAttributes, editor }) => {
     const [label, setLabel] = useState(node.attrs.label)
@@ -37,9 +38,15 @@ const CustomButtonComponent = ({ node, updateAttributes, editor }) => {
         return (
             <NodeViewWrapper className="custom-button-wrapper">
                 <div className="flex justify-center w-full my-2">
-                    <Button onClick={handleAction}>
-                        {label}
-                    </Button>
+                    {action === 'link' ? (
+                        <Link href={actionValue} target="_blank" passHref>
+                            <Button>{label}</Button>
+                        </Link>
+                    ) : (
+                        <Button onClick={handleAction}>
+                            {label}
+                        </Button>
+                    )}
                 </div>
             </NodeViewWrapper>
         )
@@ -82,7 +89,7 @@ const CustomButtonComponent = ({ node, updateAttributes, editor }) => {
                     className="mb-2"
                 />
                 <Button onClick={handleAction}>
-                    Preview: {label}
+                    {label}
                 </Button>
             </div>
         </NodeViewWrapper>

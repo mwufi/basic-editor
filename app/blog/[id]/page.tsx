@@ -3,23 +3,28 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
-import BottomFooter from '@/components/blocks/BottomFooter'
-import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
+import Tiptap from "@/components/TipTap"
+import { Button } from '@/components/ui/button'
+import Editor from '@/components/editor/Editor'
 
 const BlogPost = () => {
     const [post, setPost] = useState(null)
+    const [isEditing, setIsEditing] = useState(false)
     const { id } = useParams()
 
-    useEffect(() => {
-        console.log("id", id)
-        const fetchPost = async () => {
-            const notesManager = new IndexedDBNotesManager()
-            const fetchedPost = await notesManager.getNote(parseInt(id))
-            setPost(fetchedPost)
-        }
+    const fetchPost = async () => {
+        const notesManager = new IndexedDBNotesManager()
+        const fetchedPost = await notesManager.getNote(parseInt(id as string))
+        setPost(fetchedPost)
+    }
 
+    useEffect(() => {
         fetchPost()
-    }, [id])
+    }, [id, isEditing])
+
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing)
+    }
 
     if (!post) {
         return <div>Loading...</div>
@@ -28,13 +33,26 @@ const BlogPost = () => {
     return (
         <div className="overflow-y-scroll min-h-screen w-full">
             <main className="max-w-3xl mx-auto p-4">
-                <h1 className="text-4xl font-bold my-14">{post.title}</h1>
-                <p className="text-gray-500 mb-4">
-                    {new Date(post.createdAt).toLocaleDateString()}
-                </p>
-                <ReadOnlyEditor content={post.content} font="serif" />
+                {!isEditing ? (
+                    <>
+                        <div className="flex justify-between items-center mb-4">
+                            <h1 className="text-4xl font-bold">{post.title}</h1>
+                            <Button onClick={handleEditToggle}>Edit</Button>
+                        </div>
+                        <p className="text-gray-500 mb-4">
+                            {new Date(post.createdAt).toLocaleDateString()}
+                        </p>
+                        <Editor content={post.content} font="serif" editable={false} />
+                    </>
+                ) : (
+                    <>
+                        <div className="flex justify-end mb-4">
+                            <Button onClick={handleEditToggle}>View</Button>
+                        </div>
+                        <Tiptap note={post} />
+                    </>
+                )}
             </main>
-            <BottomFooter />
         </div>
     )
 }
