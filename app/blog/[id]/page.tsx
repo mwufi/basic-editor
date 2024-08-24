@@ -6,6 +6,7 @@ import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Tiptap from "@/components/TipTap"
 import { Button } from '@/components/ui/button'
 import Editor from '@/components/editor/Editor'
+import NoteHeader from '@/components/editor/NoteHeader'
 
 const BlogPost = () => {
     const [post, setPost] = useState(null)
@@ -31,26 +32,20 @@ const BlogPost = () => {
     }
 
     return (
-        <div className="overflow-y-scroll min-h-screen w-full">
+        <div className="overflow-y-scroll min-h-screen w-full relative">
+            <div className="absolute top-4 right-4 z-10">
+                <Button onClick={handleEditToggle}>
+                    {isEditing ? 'View' : 'Edit'}
+                </Button>
+            </div>
             <main className="max-w-3xl mx-auto p-4">
                 {!isEditing ? (
                     <>
-                        <div className="flex justify-between items-center mb-4">
-                            <h1 className="text-4xl font-bold">{post.title}</h1>
-                            <Button onClick={handleEditToggle}>Edit</Button>
-                        </div>
-                        <p className="text-gray-500 mb-4">
-                            {new Date(post.createdAt).toLocaleDateString()}
-                        </p>
+                        <NoteHeader title={post.title} createdAt={post.createdAt} author={post.author?.handle} />
                         <Editor content={post.content} font="serif" editable={false} />
                     </>
                 ) : (
-                    <>
-                        <div className="flex justify-end mb-4">
-                            <Button onClick={handleEditToggle}>View</Button>
-                        </div>
-                        <Tiptap note={post} />
-                    </>
+                    <Tiptap note={post} />
                 )}
             </main>
         </div>
