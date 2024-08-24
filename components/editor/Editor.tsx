@@ -9,6 +9,7 @@ import NextImage from '@/components/editor/NextImage';
 
 import { EditorContent, useEditor as useTiptapEditor } from '@tiptap/react';
 import { useEditor } from './EditorContext'; // Import the custom hook
+import { useEffect } from 'react';
 
 import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
 import { toast } from 'sonner'
@@ -90,9 +91,12 @@ const Editor = ({ editable = true, font = 'serif' }) => {
         editable: editable,
     })
 
-    if (editor) {
-        setEditor(editor); // Set the editor in the context when it's created
-    }
+    useEffect(() => {
+        if (editor) {
+            setEditor(editor); // Set the editor in the context when it's created
+        }
+    }, [editor, setEditor]);
+
     return <div>{editor && <EditorContent editor={editor} />}</div>;
 }
 
