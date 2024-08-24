@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/instantdb/client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 
 interface PageProps {
     params: {
@@ -16,15 +17,15 @@ export default function ShareNotePage({ params }: PageProps) {
 
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>{error.message}</div>
+    if (!note) return <div>Note not found</div>
 
-    console.log("note", note)
     return (
         <Card className="max-w-2xl mx-auto mt-8">
             <CardHeader>
-                <CardTitle>{note?.title || 'Untitled Note'}</CardTitle>
+                <CardTitle>{note.title || 'Untitled Note'}</CardTitle>
             </CardHeader>
             <CardContent>
-                <p>{note?.text}</p>
+                <ReadOnlyEditor content={note.text} font="serif" />
             </CardContent>
         </Card>
     )
