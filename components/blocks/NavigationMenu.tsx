@@ -98,13 +98,13 @@ export function NavigationMenuDemo() {
                                     </a>
                                 </NavigationMenuLink>
                             </li>
-                            <ListItem href="/create" title="Creating Notes">
+                            <ListItem href="/docs" title="Creating Notes">
                                 Learn how to create and organize your notes efficiently with Owri Editor.
                             </ListItem>
-                            <ListItem href="/publish" title="Publishing Your Page">
+                            <ListItem href="/docs" title="Publishing Your Page">
                                 Discover the process of publishing your notes and creating a personalized page.
                             </ListItem>
-                            <ListItem href="/share" title="Share Online">
+                            <ListItem href="/docs" title="Share Online">
                                 Explore options for sharing your published notes and collaborating with others.
                             </ListItem>
                         </ul>
@@ -112,9 +112,9 @@ export function NavigationMenuDemo() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                    <Link href="/docs" legacyBehavior passHref>
+                    <Link href="/create" legacyBehavior passHref>
                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                            Documentation
+                            New Note
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
