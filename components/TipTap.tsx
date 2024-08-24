@@ -1,67 +1,25 @@
 'use client'
 
 import { useEditor } from '@/components/editor/EditorContext';
-
-import CharacterCountMarker from './CharacterCountMarker';
-import IndexedDBNotesManager from '@/lib/IndexedDBNotesManager';
 import { toast } from 'sonner'
-
-const Center = ({ children }: { children: React.ReactNode }) => {
-    return <div className='relative h-full'><div className="mx-auto max-w-[600px] py-6">{children}</div></div>
-}
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useEffect, useState } from "react"
-import { ArrowLeft, Save, Share } from "lucide-react"
+import { useEffect } from "react"
+import { ArrowLeft, Share } from "lucide-react"
 import SimpleDialog from './blocks/SimpleDialog';
 import BottomMenu from './BottomMenu';
 import Link from 'next/link';
-import Editor from './editor/Editor';
-import { atom, useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
+
+import Editor from '@/components/editor/Editor';
+import SaveButton from '@/components/editor/SaveButton';
+import EditorCharacterCount from '@/components/editor/CharacterCount';
+import { noteAtom, noteTitleAtom } from '@/components/editor/atoms';
 
 
-const noteAtom = atom({
-    id: null,
-    title: 'Untitled',
-    text: '',
-    published: false,
-});
-
-const noteTitleAtom = atom(
-    (get) => get(noteAtom).title,
-    (get, set, newTitle: string) => set(noteAtom, { ...get(noteAtom), title: newTitle })
-);
-
-const SaveButton = () => {
-    const { editor } = useEditor()
-    const [currentNote, setNote] = useAtom(noteAtom);
-    return (
-        <Button size="sm" variant="ghost" onClick={async () => {
-            const notesManager = new IndexedDBNotesManager();
-            const noteId = currentNote.id
-            if (noteId) {
-                notesManager.updateNote(noteId, {
-                    title: currentNote.title,
-                    content: editor?.getHTML() ?? '',
-                });
-                toast.success('Document saved! ' + currentNote.title);
-            } else {
-                const id = await notesManager.addNote({
-                    title: currentNote.title,
-                    content: editor?.getHTML() ?? '',
-                });
-                setNote({
-                    ...currentNote,
-                    id: id,
-                });
-                toast.success('Document created! ' + currentNote.title);
-            }
-        }}>
-            <Save className="mr-2 h-4 w-4" />
-            Save
-        </Button>
-    )
+const Center = ({ children }: { children: React.ReactNode }) => {
+    return <div className='relative h-full'><div className="mx-auto max-w-[600px] py-6">{children}</div></div>
 }
 
 const TopBar = ({ onShare }) => {
@@ -108,29 +66,10 @@ const TopBar = ({ onShare }) => {
 }
 
 
+
 const Tiptap = ({ note = undefined, wordcount = true }) => {
     const { editor } = useEditor();
-
-    const [characterCount, setCharacterCount] = useState(0);
-
-    useEffect(() => {
-        if (editor) {
-            const updateCharacterCount = () => {
-                setCharacterCount(editor.storage.characterCount.words());
-            };
-
-            editor.on('update', updateCharacterCount);
-
-            // Initial count
-            updateCharacterCount();
-
-            return () => {
-                editor.off('update', updateCharacterCount);
-            };
-        }
-    }, [editor]);
-
-    const [currentNote, setNote] = useAtom(noteAtom);
+    const setNote = useSetAtom(noteAtom);
 
     useEffect(() => {
         if (note) {
@@ -148,10 +87,6 @@ const Tiptap = ({ note = undefined, wordcount = true }) => {
 
     const setNoteContent = (newContent) => {
         setNote((prevNote) => ({ ...prevNote, text: newContent }));
-    };
-
-    const setNotePublishStatus = (published) => {
-        setNote((prevNote) => ({ ...prevNote, published: published }));
     };
 
     // for interactive fun :)
@@ -179,11 +114,7 @@ const Tiptap = ({ note = undefined, wordcount = true }) => {
                 }} />
 
             <div className="fixed left-4 bottom-4 z-10">
-                {wordcount && <CharacterCountMarker
-                    current={characterCount}
-                    limit={500}
-                    display="words"
-                />}
+                {wordcount && <EditorCharacterCount limit={500} display="words" />}
                 <SimpleDialog
                     schema={[{ url: 'text' }]}
                     onSubmit={({ url }) => {
