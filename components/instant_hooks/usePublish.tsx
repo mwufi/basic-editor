@@ -19,6 +19,7 @@ export const usePublish = () => {
                 const postId = id()
                 await db.transact([
                     tx.posts[postId].update({
+                        title: note.title,
                         text: note.text,
                         createdAt: Date.now()
                     }).link({

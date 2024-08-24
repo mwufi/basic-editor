@@ -20,7 +20,7 @@ export default function ShareNotePage({ params }: PageProps) {
     if (!note) return <div>Note not found</div>
 
     return (
-        <Card className="max-w-2xl mx-auto mt-8">
+        <Card className="max-w-3xl mx-auto mt-8">
             <CardHeader>
                 <CardTitle>{note.title || 'Untitled Note'}</CardTitle>
             </CardHeader>
