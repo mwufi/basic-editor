@@ -9,6 +9,12 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import Image from 'next/image'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Trash2 } from 'lucide-react'
+import { useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel'
+import { uploadImageToSupabase } from '@/lib/uploadImage'
+import { supabaseImageLoader } from '@/lib/imageLoader'
 
 const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
     const [layout, setLayout] = useState(node.attrs.layout)
@@ -30,12 +36,25 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
         updateAttributes({ layout: newLayout })
     }
 
-    const handleImageSelection = () => {
-        const newImage = `https://picsum.photos/800/600?random=${Math.random()}`
-        const updatedImages = [...images, newImage]
+    const removeImage = (index) => {
+        const updatedImages = images.filter((_, i) => i !== index)
         setImages(updatedImages)
         updateAttributes({ images: updatedImages })
     }
+
+    const onDrop = useCallback(async (acceptedFiles) => {
+        const newImages = await Promise.all(acceptedFiles.map(async (file) => {
+            const uploadedImage = await uploadImageToSupabase(file)
+            return uploadedImage
+        }));
+        const validNewImages = newImages.filter(img => img !== null);
+        const updatedImages = [...images, ...validNewImages]
+        setImages(updatedImages)
+        updateAttributes({ images: updatedImages })
+    }, [images, updateAttributes])
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
     const renderImages = () => {
         if (!images || images.length === 0) {
             return (
@@ -45,24 +64,38 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
             )
         }
 
+        const imageComponent = (src, index) => (
+            <div key={index} className="relative group">
+                <Image src={src} alt={`Gallery image ${index + 1}`} loader={supabaseImageLoader} width={800} height={600} className="object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
+                {editable && (
+                    <button
+                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => removeImage(index)}
+                    >
+                        <Trash2 size={16} />
+                    </button>
+                )}
+            </div>
+        )
+
         if (layout === 'carousel') {
             return (
-                <div className="flex overflow-x-hidden space-x-4 p-2 snap-x snap-mandatory">
-                    {images.map((src, index) => (
-                        <div key={index} className="flex-shrink-0 w-4/5 max-w-[800px] snap-center">
-                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
-                        </div>
-                    ))}
-                </div>
+                <Carousel className="w-full">
+                    <CarouselContent>
+                        {images.map((src, index) => (
+                            <CarouselItem key={index} className="md:basis-2/5">
+                                {imageComponent(src, index)}
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                </Carousel>
             )
         } else {
             return (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-1 p-2">
-                    {images.map((src, index) => (
-                        <div key={index}>
-                            <Image src={src} alt={`Gallery image ${index + 1}`} width={800} height={600} className="object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
-                        </div>
-                    ))}
+                    {images.map((src, index) => imageComponent(src, index))}
                 </div>
             )
         }
@@ -82,7 +115,10 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
     return (
         <NodeViewWrapper>
             <div className="custom-image-gallery-wrapper border rounded p-4 my-4">
-                <div className="control mb-4">
+                <h3 className="text-lg font-semibold mb-4">Gallery</h3>
+
+                {/* Settings section */}
+                <div className="settings-section mb-4">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
                             <Switch id="layout-switch" checked={layout === 'grid'} onCheckedChange={toggleLayout} />
@@ -90,7 +126,6 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
                                 {layout === 'carousel' ? 'Carousel' : 'Grid'} Layout
                             </Label>
                         </div>
-                        <Button onClick={handleImageSelection}>Add Image</Button>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Label htmlFor="max-height">Max Height (px):</Label>
@@ -107,9 +142,22 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
                         />
                     </div>
                 </div>
-                <div className="gallery relative left-1/2 right-1/2 -mx-[45vw] w-[90vw]">
+
+                {/* Dropzone section */}
+                <div {...getRootProps()} className="dropzone-section mb-4 border-2 border-dashed border-gray-300 p-4 text-center cursor-pointer">
+                    <input {...getInputProps()} />
+                    {isDragActive ? (
+                        <p>Drop the images here ...</p>
+                    ) : (
+                        <p>Drag 'n' drop some images here, or click to select files</p>
+                    )}
+                </div>
+
+                {/* Gallery preview */}
+                <div className="gallery-preview relative left-1/2 right-1/2 -mx-[45vw] w-[90vw]">
                     {renderImages()}
                 </div>
+
                 <Input
                     type="text"
                     value={caption}
@@ -124,6 +172,7 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
         </NodeViewWrapper>
     )
 }
+
 const CustomImageGallery = Node.create({
     name: 'customImageGallery',
 
