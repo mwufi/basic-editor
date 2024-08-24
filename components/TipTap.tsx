@@ -12,7 +12,7 @@ import BottomMenu from './BottomMenu';
 import Link from 'next/link';
 import { useAtom, useSetAtom } from 'jotai';
 
-import Editor from '@/components/editor/Editor';
+import Editor, { insertCustomButton } from '@/components/editor/Editor';
 import SaveButton from '@/components/editor/SaveButton';
 import EditorCharacterCount from '@/components/editor/CharacterCount';
 import { noteAtom, noteTitleAtom } from '@/components/editor/atoms';
@@ -133,6 +133,7 @@ const Tiptap = ({ note = undefined, wordcount = true }) => {
                         Insert YouTube Video
                     </Button>
                 </SimpleDialog>
+                <Button onClick={() => insertCustomButton(editor, 'Click me', () => alert('Button clicked!'))}>Insert Custom Button</Button>
             </div>
             <Center>
                 <Editor />

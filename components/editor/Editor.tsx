@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { Libre_Baskerville, JetBrains_Mono } from 'next/font/google';
 import { toast } from 'sonner'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
+import CustomButton from './CustomButton';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -50,6 +51,20 @@ async function uploadAndInsertImage(editor, file, pos = null) {
     }
 }
 
+export const insertCustomButton = (editor, label, onClick) => {
+  editor
+    .chain()
+    .focus()
+    .insertContent({
+      type: 'customButton',
+      attrs: {
+        label,
+        onClick: onClick ? onClick.toString() : null,
+      },
+    })
+    .run();
+};
+
 const Editor = ({ editable = true, font = 'serif' }) => {
     const { setEditor } = useEditor(); // Use the context
 
@@ -59,6 +74,7 @@ const Editor = ({ editable = true, font = 'serif' }) => {
             CharacterCount,
             NextImage,
             Link,
+            CustomButton.configure({}), // Configure CustomButton extension
             Youtube.configure({
                 controls: false,
                 nocookie: true,
