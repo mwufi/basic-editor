@@ -1,37 +1,3 @@
-
-// // Usage example
-// const notesManager = new IndexedDBNotesManager();
-
-// async function example() {
-//     try {
-//         // Add a note
-//         const newNoteId = await notesManager.addNote({
-//             title: 'My First Note',
-//             content: 'This is a test note with a lot of content...'
-//         });
-//         console.log('New note added with ID:', newNoteId);
-
-//         // Get the note
-//         const note = await notesManager.getNote(newNoteId);
-//         console.log('Retrieved note:', note);
-
-//         // Update the note
-//         await notesManager.updateNote(newNoteId, { title: 'Updated Note Title' });
-//         console.log('Note updated');
-
-//         // Get all notes
-//         const allNotes = await notesManager.getAllNotes();
-//         console.log('All notes:', allNotes);
-
-//         // Delete the note
-//         await notesManager.deleteNote(newNoteId);
-//         console.log('Note deleted');
-//     } catch (error) {
-//         console.error('An error occurred:', error);
-//     }
-// }
-
-// example();
 'use client'
 
 import { useState, useEffect, useCallback } from 'react';

@@ -8,7 +8,8 @@ async function createUserIfNotExists(user: any) {
             tx.users[id()].update({
                 email: user.email,
                 handle: user.email.split("@")[0],
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                authId: user.id
             })
         ])
         console.log("Created user!", result)

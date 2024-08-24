@@ -5,18 +5,7 @@ import { db } from '@/lib/instantdb/client';
 import Link from 'next/link';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-
-const UserProfile = email => (
-    {
-        users: {
-            $: {
-                where: {
-                    email: email
-                }
-            }
-        }
-    }
-)
+import { UserProfile } from '@/lib/instantdb/queries';
 
 export default function Avatar() {
     const { user } = db.useAuth();
