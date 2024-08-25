@@ -185,7 +185,7 @@ function assignIds(node: OutlineNode): OutlineNode {
 function assignParents(node: OutlineNode, parentTitles: string[] = []): OutlineNode {
     const newNode: OutlineNode = { ...node, parents: parentTitles };
     if (node.children) {
-        newNode.children = node.children.map(child => 
+        newNode.children = node.children.map(child =>
             assignParents(child, [...parentTitles, node.title])
         );
     }
@@ -196,9 +196,47 @@ function processOutline(outline: OutlineNode[]): OutlineNode[] {
     return outline.map(node => assignParents(assignIds(node)));
 }
 
+export const generateNodeView = (node: any, includeChildren: boolean = true) => {
+    if (!node) return '';
 
-export function loadOutline(): OutlineNode[] {
+    if (!node.parents || node.parents.length === 0) {
+        return node.title;
+    }
+
+    const parentTitle = node.parents[node.parents.length - 1];
+    const parentNode = node.parents.reduce((acc: any, title: string) => {
+        return acc.children?.find((child: any) => child.title === title) || acc;
+    }, { children: [node] });
+
+    const siblings = parentNode.children?.filter((child: any) => child.id !== node.id) || [];
+
+    let view = `${parentTitle}\n`;
+    parentNode.children?.forEach((child: any) => {
+        view += `- ${child.title}${child.id === node.id ? ' (current)' : ''}\n`;
+
+        if (includeChildren && child.id === node.id && child.children) {
+            child.children.forEach((grandchild: any) => {
+                view += `  - ${grandchild.title}\n`;
+            });
+        }
+    });
+
+    return view.trim();
+};
+
+
+interface Outline {
+    title: string;
+    id: string;
+    children: OutlineNode[];
+}
+
+export function loadOutline(): Outline {
     const newOutline = outline.map((node) => assignIds(node as OutlineNode));
     const processedOutline = processOutline(newOutline);
-    return processedOutline;
+    return {
+        title: "Dynamic Programming",
+        id: generateHash("Dynamic Programming"),
+        children: processedOutline
+    };
 }

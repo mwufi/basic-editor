@@ -19,6 +19,36 @@ type Schema = {
         author: Schema['users'];
         pin: Schema['pins'];
     };
+    outlines: {
+        id: string;
+        name: string;
+        content: object;
+        author: Schema['users'];
+        outlineNodes: Array<Schema['outlineNodes']>;
+    };
+    outlineNodes: {
+        id: string;
+        title: string;
+        content: string;
+        author: Schema['users'];
+        outline: Schema['outlines'];
+    };
+    textGeneration: {
+        id: string;
+        text: string;
+        createdAt: number;
+        outlineNode: Schema['outlineNodes'];
+        author: Schema['users'];
+        prompt: Schema['prompt'];
+        metadata: object;
+    };
+    prompt: {
+        id: string;
+        text: string;
+        createdAt: number;
+        author: Schema['users'];
+        generatedContent: Array<Schema['textGeneration']>;
+    };
     comments: {
         id: string;
         text: string;

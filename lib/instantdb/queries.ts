@@ -24,3 +24,23 @@ export const UserPosts = (userId) => (
         }
     }
 )
+
+export const UserOutline = (userId, outlineId) => (
+    {
+        outlines: {
+            $: {
+                where: {
+                    id: outlineId
+                }
+            },
+            outlineNodes: {},
+            author: {
+                $: {
+                    where: {
+                        id: userId
+                    }
+                }
+            }
+        }
+    }
+)
