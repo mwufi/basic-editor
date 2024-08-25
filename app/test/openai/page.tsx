@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { getNotifications } from './ai';
+import { streamNotifications } from './ai';
+import { readStreamableValue } from 'ai/rsc';
+
+export const maxDuration = 30;
 
 export default function OpenAITest() {
     const [input, setInput] = useState('');
@@ -14,9 +16,13 @@ export default function OpenAITest() {
     const handleGetNotifications = async () => {
         setLoading(true);
         try {
-            const result = await getNotifications(input);
-            console.log(result);
-            setNotifications(result.notifications);
+            const { object } = await streamNotifications(input);
+
+            for await (const partialObject of readStreamableValue(object)) {
+                if (partialObject) {
+                    setNotifications(partialObject.notifications);
+                }
+            }
         } catch (error) {
             setNotifications({ error: error.message });
         } finally {
@@ -26,18 +32,22 @@ export default function OpenAITest() {
 
     return (
         <div className="p-4 max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold mb-4">OpenAI Notification Generator</h1>
-            <div className="flex space-x-2 mb-4">
+            <h1 className="text-2xl font-bold mb-4">Streaming Notification Generator</h1>
+            <p className="mb-4">This is a test of the streaming structured content feature.</p>
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                handleGetNotifications();
+            }} className="flex space-x-2 mb-4">
                 <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Enter a prompt for notifications"
                     className="flex-grow"
                 />
-                <Button onClick={handleGetNotifications} disabled={loading}>
+                <Button type="submit" disabled={loading}>
                     {loading ? 'Generating...' : 'Generate'}
                 </Button>
-            </div>
+            </form>
             {notifications && (
                 <div className="mt-4">
                     {notifications.error ? (
@@ -45,11 +55,11 @@ export default function OpenAITest() {
                     ) : (
                         <>
                             <h2 className="text-xl font-semibold mb-2">Generated Notifications:</h2>
-                            {notifications.notifications.map((notification, index) => (
+                            {notifications.map((notification, index) => (
                                 <div key={index} className="mb-2 p-2 border rounded">
                                     <p><strong>{notification.name}</strong></p>
                                     <p>{notification.message}</p>
-                                    <p className="text-sm text-gray-500">{notification.minutesAgo} minutes ago</p>
+                                    {notification.minutesAgo && <p className="text-sm text-gray-500">{notification.minutesAgo} minutes ago</p>}
                                 </div>
                             ))}
                         </>
