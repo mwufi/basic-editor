@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { streamNotifications } from '@/app/test/openai/ai';
 import { readStreamableValue } from 'ai/rsc';
 import useIndexedDB from '@/hooks/useIndexedDB';
 import PromptComponent from './PromptComponent';
 import AddPromptModal from './AddPromptModal';
+import { streamOutlineSchema } from './ai';
 
 interface Prompt {
     id: string;
@@ -65,10 +65,10 @@ export default function PromptsPage() {
     const handleRunPrompt = async (prompt: Prompt) => {
         setResult(null);
         try {
-            const { object } = await streamNotifications(prompt.text);
+            const { object } = await streamOutlineSchema(prompt.text, prompt.outputSchema);
             for await (const partialObject of readStreamableValue(object)) {
                 if (partialObject) {
-                    setResult(partialObject.notifications);
+                    setResult(partialObject);
                 }
             }
         } catch (error) {
@@ -106,13 +106,7 @@ export default function PromptsPage() {
                         {result.error ? (
                             <p className="text-red-500">{result.error}</p>
                         ) : (
-                            result.map((notification, index) => (
-                                <div key={index} className="mb-2 p-2 border rounded">
-                                    <p><strong>{notification.name}</strong></p>
-                                    <p>{notification.message}</p>
-                                    {notification.minutesAgo && <p className="text-sm text-gray-500">{notification.minutesAgo} minutes ago</p>}
-                                </div>
-                            ))
+                            <pre>{JSON.stringify(result, null, 2)}</pre>
                         )}
                     </div>
                 )}

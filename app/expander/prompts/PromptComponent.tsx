@@ -1,12 +1,25 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronRight, ChevronDown } from 'lucide-react';
-import SchemaEditor from './SchemaEditor';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { fetchSchemas } from './ai';
+
+interface Schema {
+    name: string;
+    textDisplay: string;
+    zodObject?: any;
+}
 
 interface PromptComponentProps {
     prompt: {
@@ -14,11 +27,11 @@ interface PromptComponentProps {
         name: string;
         text: string;
         description: string;
-        outputSchema?: string;
+        outputSchema?: Schema;
     };
-    onUpdate: (updatedPrompt: { id: string; name: string; text: string; description: string; outputSchema?: string }) => void;
+    onUpdate: (updatedPrompt: { id: string; name: string; text: string; description: string; outputSchema?: Schema }) => void;
     onRemove: (id: string) => void;
-    onRun: (prompt: { id: string; name: string; text: string; description: string; outputSchema?: string }) => void;
+    onRun: (prompt: { id: string; name: string; text: string; description: string; outputSchema?: Schema }) => void;
 }
 
 const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onRemove, onRun }) => {
@@ -27,8 +40,21 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
     const [editedName, setEditedName] = useState(prompt.name);
     const [editedText, setEditedText] = useState(prompt.text);
     const [editedDescription, setEditedDescription] = useState(prompt.description);
-    const [editedOutputSchema, setEditedOutputSchema] = useState(prompt.outputSchema || '');
+    const [editedOutputSchema, setEditedOutputSchema] = useState(prompt.outputSchema || null);
     const [hasOutputSchema, setHasOutputSchema] = useState(!!prompt.outputSchema);
+    const [schemas, setSchemas] = useState<Schema[]>([]);
+    const [selectedSchema, setSelectedSchema] = useState<Schema | null>(prompt.outputSchema || null);
+
+    useEffect(() => {
+        const loadSchemas = async () => {
+            const fetchedSchemas = await fetchSchemas();
+            setSchemas(fetchedSchemas);
+            if (!selectedSchema && fetchedSchemas.length > 0) {
+                setSelectedSchema(fetchedSchemas[0]);
+            }
+        };
+        loadSchemas();
+    }, []);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -41,7 +67,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
             name: editedName,
             text: editedText,
             description: editedDescription,
-            outputSchema: hasOutputSchema ? editedOutputSchema : undefined,
+            outputSchema: hasOutputSchema ? selectedSchema : undefined,
         };
         onUpdate(updatedPrompt);
         setIsEditing(false);
@@ -51,8 +77,9 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
         setEditedName(prompt.name);
         setEditedText(prompt.text);
         setEditedDescription(prompt.description);
-        setEditedOutputSchema(prompt.outputSchema || '');
+        setEditedOutputSchema(prompt.outputSchema || null);
         setHasOutputSchema(!!prompt.outputSchema);
+        setSelectedSchema(prompt.outputSchema || null);
         setIsEditing(false);
     };
 
@@ -60,9 +87,11 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
         setIsExpanded(!isExpanded);
     };
 
-    const handleSchemaChange = (schema: string) => {
-        console.log('schema', schema);
-        setEditedOutputSchema(schema);
+    const handleSchemaChange = (schemaName: string) => {
+        const schema = schemas.find(s => s.name === schemaName);
+        if (schema) {
+            setSelectedSchema(schema);
+        }
     };
 
     if (isEditing) {
@@ -96,7 +125,25 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
                         <label htmlFor="hasOutputSchema">Has Output Schema</label>
                     </div>
                     {hasOutputSchema && (
-                        <SchemaEditor onSchemaChange={handleSchemaChange} />
+                        <div>
+                            <Select value={selectedSchema?.name} onValueChange={handleSchemaChange}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select a schema" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {schemas.map((schema) => (
+                                        <SelectItem key={schema.name} value={schema.name}>
+                                            {schema.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {selectedSchema && (
+                                <pre className="bg-gray-100 p-2 rounded mt-2">
+                                    {selectedSchema.textDisplay}
+                                </pre>
+                            )}
+                        </div>
                     )}
                     <div className="flex justify-end space-x-2">
                         <Button onClick={handleSave} size="sm">Save</Button>
@@ -127,7 +174,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
                     {prompt.outputSchema && (
                         <div className="mt-2">
                             <h4 className="font-semibold">Output Schema:</h4>
-                            <pre className="bg-gray-100 p-2 rounded mt-1">{prompt.outputSchema}</pre>
+                            <pre className="bg-gray-100 p-2 rounded mt-1">{prompt.outputSchema.textDisplay}</pre>
                         </div>
                     )}
                 </div>

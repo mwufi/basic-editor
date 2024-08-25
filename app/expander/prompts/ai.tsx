@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { stream } from '@/lib/ai';
 import { openai } from '@ai-sdk/openai';
+import outlineSchema from './OutlineSchema';
 
 export async function streamZodSchema(input: string) {
     return stream({
@@ -13,6 +14,34 @@ export async function streamZodSchema(input: string) {
             zodSchema: z.string().describe('The generated Zod schema as a string'),
         }),
     });
+}
+
+export async function fetchSchemas() {
+    return [
+        {
+            name: 'Outline', textDisplay: `import { z } from 'zod';
+
+const subsectionSchema = z.object({
+  name: z.string().optional(),
+  description: z.string().optional(),
+  difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional(),
+});
+
+const sectionSchema = z.object({
+  section: z.string(),
+  subsections: z.union([
+    z.array(z.string()),
+    z.array(subsectionSchema)
+  ]),
+});
+
+const outlineSchema = z.object({
+  topic: z.string(),
+  outline: z.array(sectionSchema),
+});
+
+export default outlineSchema;` },
+    ];
 }
 
 
@@ -40,7 +69,8 @@ function loadSchemaFromString(schemaString: string) {
 
 export async function streamOutlineSchema(input: string, schemaString: string) {
     try {
-        const schema = loadSchemaFromString(schemaString);
+        // const schema = loadSchemaFromString(schemaString);
+        const schema = outlineSchema;
         console.log('schema', schema);
         return stream({
             model: openai('gpt-4o-mini'),
