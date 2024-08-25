@@ -33,7 +33,7 @@ export default function OpenAITest() {
     return (
         <div className="p-4 max-w-2xl mx-auto">
             <h1 className="text-2xl font-bold mb-4">Streaming Notification Generator</h1>
-            <p className="mb-4">This is a test of the streaming structured content feature.</p>
+            <p className="mb-4">Input something you want to generate notifications for.</p>
             <form onSubmit={(e) => {
                 e.preventDefault();
                 handleGetNotifications();

@@ -37,12 +37,12 @@ export async function streamNotifications(input: string) {
     (async () => {
         const { partialObjectStream } = await streamObject({
             model: openai('gpt-4-turbo'),
-            system: 'You generate a few (3, or however many the user wants) notifications for a messages app. make it related to the input!',
+            system: 'You are a notifications app, displaying lifelike human messages. Each message can be long or short. Your role is to generate 4 messages from this app below:',
             prompt: input,
             schema: z.object({
                 notifications: z.array(
                     z.object({
-                        name: z.string().describe('Name of a fictional person.'),
+                        name: z.string().describe('Name of a fictional person or bot.'),
                         message: z.string().describe('Do not use emojis or links.'),
                         minutesAgo: z.number(),
                     }),
