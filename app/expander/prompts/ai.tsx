@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { stream } from '@/lib/ai';
 import { openai } from '@ai-sdk/openai';
 import outlineSchema from './OutlineSchema';
+import notificationsSchema from './NotificationSchema';
 
 export async function streamZodSchema(input: string) {
     return stream({
@@ -41,9 +42,21 @@ const outlineSchema = z.object({
 });
 
 export default outlineSchema;` },
+        {
+            name: 'Notifications', textDisplay: `const notificationsSchema = z.object({
+                notifications: z.array(
+                    z.object({
+                        name: z.string().describe('Name of a fictional person.'),
+                        message: z.string().describe('Do not use emojis or links.'),
+                        minutesAgo: z.number(),
+                    }),
+                ),
+            })`
+        }
     ];
 }
 
+type SchemaName = 'Outline' | 'Notifications';
 
 function loadSchemaFromString(schemaString: string) {
     // Create a new context with only the necessary globals
@@ -69,13 +82,33 @@ function loadSchemaFromString(schemaString: string) {
 
 export async function streamOutlineSchema(input: string, schemaString: string) {
     try {
-        // const schema = loadSchemaFromString(schemaString);
-        const schema = outlineSchema;
-        console.log('schema', schema);
+        console.log('schemaString', schemaString);
+        const schemaObj = JSON.parse(JSON.stringify(schemaString));
+        const schemaName = schemaObj.name as SchemaName;
+
+        const schemaConfig = {
+            Notifications: {
+                schema: notificationsSchema,
+                systemPrompt: 'You are a notifications app, displaying lifelike human messages.',
+                userPrompt: input
+            },
+            Outline: {
+                schema: outlineSchema,
+                systemPrompt: 'You are a helpful assistant that generates outlines based on input descriptions.',
+                userPrompt: input
+            }
+        };
+
+        const { schema, systemPrompt, userPrompt } = schemaConfig[schemaName] || {};
+
+        if (!schema || !systemPrompt || !userPrompt) {
+            throw new Error(`Invalid schema name: ${schemaName}`);
+        }
+
         return stream({
             model: openai('gpt-4o-mini'),
-            system: 'You are a helpful assistant that generates outlines based on input descriptions.',
-            prompt: `Generate an outline for the following description:\n\n${input}`,
+            system: systemPrompt,
+            prompt: userPrompt,
             schema
         });
     } catch (error) {
