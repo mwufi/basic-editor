@@ -18,10 +18,10 @@ const AddPromptModal: React.FC<AddPromptModalProps> = ({ onSave, onClose }) => {
 
     const handleSave = () => {
         if (name.trim() && description.trim() && text.trim()) {
-            onSave({ 
-                name: name.trim(), 
-                description: description.trim(), 
-                text: text.trim() 
+            onSave({
+                name: name.trim(),
+                description: description.trim(),
+                text: text.trim()
             });
             onClose();
         }

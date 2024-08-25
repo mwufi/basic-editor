@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronRight, ChevronDown } from 'lucide-react';
+import SchemaEditor from './SchemaEditor';
 
 interface PromptComponentProps {
     prompt: {
@@ -12,10 +14,11 @@ interface PromptComponentProps {
         name: string;
         text: string;
         description: string;
+        outputSchema?: string;
     };
-    onUpdate: (updatedPrompt: { id: string; name: string; text: string; description: string }) => void;
+    onUpdate: (updatedPrompt: { id: string; name: string; text: string; description: string; outputSchema?: string }) => void;
     onRemove: (id: string) => void;
-    onRun: (prompt: { id: string; name: string; text: string; description: string }) => void;
+    onRun: (prompt: { id: string; name: string; text: string; description: string; outputSchema?: string }) => void;
 }
 
 const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onRemove, onRun }) => {
@@ -24,6 +27,8 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
     const [editedName, setEditedName] = useState(prompt.name);
     const [editedText, setEditedText] = useState(prompt.text);
     const [editedDescription, setEditedDescription] = useState(prompt.description);
+    const [editedOutputSchema, setEditedOutputSchema] = useState(prompt.outputSchema || '');
+    const [hasOutputSchema, setHasOutputSchema] = useState(!!prompt.outputSchema);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -31,7 +36,14 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
     };
 
     const handleSave = () => {
-        onUpdate({ ...prompt, name: editedName, text: editedText, description: editedDescription });
+        const updatedPrompt = {
+            ...prompt,
+            name: editedName,
+            text: editedText,
+            description: editedDescription,
+            outputSchema: hasOutputSchema ? editedOutputSchema : undefined,
+        };
+        onUpdate(updatedPrompt);
         setIsEditing(false);
     };
 
@@ -39,11 +51,17 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
         setEditedName(prompt.name);
         setEditedText(prompt.text);
         setEditedDescription(prompt.description);
+        setEditedOutputSchema(prompt.outputSchema || '');
+        setHasOutputSchema(!!prompt.outputSchema);
         setIsEditing(false);
     };
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
+    };
+
+    const handleSchemaChange = (schema: string) => {
+        setEditedOutputSchema(schema);
     };
 
     if (isEditing) {
@@ -68,6 +86,17 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
                         placeholder="Prompt Text"
                         className="w-full h-32"
                     />
+                    <div className="flex items-center space-x-2">
+                        <Checkbox
+                            id="hasOutputSchema"
+                            checked={hasOutputSchema}
+                            onCheckedChange={(checked) => setHasOutputSchema(checked as boolean)}
+                        />
+                        <label htmlFor="hasOutputSchema">Has Output Schema</label>
+                    </div>
+                    {hasOutputSchema && (
+                        <SchemaEditor onSchemaChange={handleSchemaChange} />
+                    )}
                     <div className="flex justify-end space-x-2">
                         <Button onClick={handleSave} size="sm">Save</Button>
                         <Button onClick={handleCancel} variant="outline" size="sm">Cancel</Button>
@@ -94,6 +123,12 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
             {isExpanded && (
                 <div className="mt-2">
                     <p className="text-gray-600">{prompt.text}</p>
+                    {prompt.outputSchema && (
+                        <div className="mt-2">
+                            <h4 className="font-semibold">Output Schema:</h4>
+                            <pre className="bg-gray-100 p-2 rounded mt-1">{prompt.outputSchema}</pre>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

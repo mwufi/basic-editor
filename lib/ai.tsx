@@ -1,8 +1,9 @@
+'use server';
+
 import { streamObject } from 'ai';
 import { createStreamableValue } from 'ai/rsc';
 
 export async function stream({ model, system, prompt, schema }) {
-    'use server';
 
     const stream = createStreamableValue();
 

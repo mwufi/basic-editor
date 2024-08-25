@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { streamNotifications } from '@/app/test/openai/ai';
 import { readStreamableValue } from 'ai/rsc';
 import useIndexedDB from '@/hooks/useIndexedDB';
-import PromptComponent from '@/components/PromptComponent';
-import AddPromptModal from '@/components/AddPromptModal';
+import PromptComponent from './PromptComponent';
+import AddPromptModal from './AddPromptModal';
 
 interface Prompt {
     id: string;
