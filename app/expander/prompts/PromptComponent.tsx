@@ -61,6 +61,7 @@ const PromptComponent: React.FC<PromptComponentProps> = ({ prompt, onUpdate, onR
     };
 
     const handleSchemaChange = (schema: string) => {
+        console.log('schema', schema);
         setEditedOutputSchema(schema);
     };
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,22 +15,41 @@ const SchemaEditor: React.FC<SchemaEditorProps> = ({ onSchemaChange }) => {
     const [exampleData, setExampleData] = useState('');
     const [zodSchema, setZodSchema] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
+
+    useEffect(() => {
+        if (!isLoading && !isGenerating) {
+            onSchemaChange(zodSchema);
+        }
+    }, [zodSchema, isLoading, isGenerating, onSchemaChange]);
 
     const generateSchema = async () => {
         setIsLoading(true);
         try {
             const { object } = await streamZodSchema(exampleData);
+            setIsGenerating(true);
 
+            let finalSchema = '';
             for await (const partialObject of readStreamableValue(object)) {
                 if (partialObject && partialObject.zodSchema) {
-                    setZodSchema(partialObject.zodSchema);
+                    finalSchema = partialObject.zodSchema;
+                    setZodSchema(finalSchema);
                 }
             }
+            setIsGenerating(false);
         } catch (error) {
             console.error('Error generating schema:', error);
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleExampleDataChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setExampleData(e.target.value);
+    };
+
+    const handleZodSchemaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setZodSchema(e.target.value);
     };
 
     return (
@@ -42,7 +61,7 @@ const SchemaEditor: React.FC<SchemaEditorProps> = ({ onSchemaChange }) => {
                 <CardContent>
                     <Textarea
                         value={exampleData}
-                        onChange={(e) => setExampleData(e.target.value)}
+                        onChange={handleExampleDataChange}
                         placeholder="Paste your example JSON data here"
                         className="h-[300px]"
                     />
@@ -55,7 +74,7 @@ const SchemaEditor: React.FC<SchemaEditorProps> = ({ onSchemaChange }) => {
                 <CardContent>
                     <Textarea
                         value={zodSchema}
-                        readOnly
+                        onChange={handleZodSchemaChange}
                         placeholder="Generated Zod schema will appear here"
                         className="h-[300px]"
                     />

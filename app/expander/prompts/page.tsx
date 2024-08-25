@@ -13,6 +13,8 @@ interface Prompt {
     id: string;
     name: string;
     text: string;
+    description: string;
+    outputSchema: string;
 }
 
 export default function PromptsPage() {
