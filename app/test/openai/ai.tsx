@@ -1,40 +1,26 @@
-'use server'
+'use server';
 
+import { generateObject } from 'ai';
+import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
-import OpenAI from 'openai';
-import { zodResponseFormat } from "openai/helpers/zod";
 
-const Step = z.object({
-    explanation: z.string(),
-    output: z.string(),
-});
+export async function getNotifications(input: string) {
+    'use server';
 
-const MathReasoning = z.object({
-    steps: z.array(Step),
-    final_answer: z.string(),
-});
+    const { object: notifications } = await generateObject({
+        model: openai('gpt-4o-mini'),
+        system: 'You generate three notifications for a messages app.',
+        prompt: input,
+        schema: z.object({
+            notifications: z.array(
+                z.object({
+                    name: z.string().describe('Name of a fictional person.'),
+                    message: z.string().describe('Do not use emojis or links.'),
+                    minutesAgo: z.number(),
+                }),
+            ),
+        }),
+    });
 
-export async function solveMathEquation(equation: string) {
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-    try {
-        const completion = await openai.beta.chat.completions.parse({
-            model: "gpt-4o-2024-08-06",
-            messages: [
-                { role: "system", content: "You are a helpful math tutor. Guide the user through the solution step by step." },
-                { role: "user", content: `How can I solve ${equation}?` },
-            ],
-            response_format: zodResponseFormat(MathReasoning, "math_reasoning"),
-        });
-
-        const math_reasoning = completion.choices[0].message;
-
-        if (math_reasoning.refusal) {
-            return { error: math_reasoning.refusal };
-        } else {
-            return math_reasoning.parsed;
-        }
-    } catch (error) {
-        return { error: error.message };
-    }
+    return { notifications };
 }
