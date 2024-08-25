@@ -16,47 +16,26 @@ export async function streamZodSchema(input: string) {
         }),
     });
 }
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function fetchSchemas() {
-    return [
-        {
-            name: 'Outline', textDisplay: `import { z } from 'zod';
+    const schemaDir = path.join(process.cwd(), 'app', 'expander', 'prompts');
+    const schemaFiles = ['OutlineSchema.ts', 'NotificationSchema.ts'];
 
-const subsectionSchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  difficulty: z.enum(['Easy', 'Medium', 'Hard']).optional(),
-});
+    const schemas = await Promise.all(schemaFiles.map(async (file) => {
+        const filePath = path.join(schemaDir, file);
+        const content = await fs.readFile(filePath, 'utf-8');
+        return {
+            name: path.parse(file).name,
+            textDisplay: content
+        };
+    }));
 
-const sectionSchema = z.object({
-  section: z.string(),
-  subsections: z.union([
-    z.array(z.string()),
-    z.array(subsectionSchema)
-  ]),
-});
-
-const outlineSchema = z.object({
-  topic: z.string(),
-  outline: z.array(sectionSchema),
-});
-
-export default outlineSchema;` },
-        {
-            name: 'Notifications', textDisplay: `const notificationsSchema = z.object({
-                notifications: z.array(
-                    z.object({
-                        name: z.string().describe('Name of a fictional person.'),
-                        message: z.string().describe('Do not use emojis or links.'),
-                        minutesAgo: z.number(),
-                    }),
-                ),
-            })`
-        }
-    ];
+    return schemas;
 }
 
-type SchemaName = 'Outline' | 'Notifications';
+type SchemaName = 'OutlineSchema' | 'NotificationSchema';
 
 function loadSchemaFromString(schemaString: string) {
     // Create a new context with only the necessary globals
@@ -87,12 +66,12 @@ export async function streamOutlineSchema(input: string, schemaString: string) {
         const schemaName = schemaObj.name as SchemaName;
 
         const schemaConfig = {
-            Notifications: {
+            NotificationSchema: {
                 schema: notificationsSchema,
                 systemPrompt: 'You are a notifications app, displaying lifelike human messages.',
                 userPrompt: input
             },
-            Outline: {
+            OutlineSchema: {
                 schema: outlineSchema,
                 systemPrompt: 'You are a helpful assistant that generates outlines based on input descriptions.',
                 userPrompt: input
