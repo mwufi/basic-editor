@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
 import CustomButton from './CustomButton';
 import CustomImageGallery from './CustomImageGallery';
+import { WelcomeMessage } from '../WelcomeText';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -90,7 +91,7 @@ export const insertGallery = (editor) => {
 };
 
 
-const Editor = ({ editable = true, content = '<p>Hello</p>', font = 'serif' }) => {
+const Editor = ({ editable = true, content = null, font = 'serif' }) => {
     const { setEditor } = useEditor(); // Use the context
 
     const editor = useTiptapEditor({
@@ -126,7 +127,7 @@ const Editor = ({ editable = true, content = '<p>Hello</p>', font = 'serif' }) =
                 },
             }),
         ],
-        content: content,
+        content: content || WelcomeMessage,
         editorProps: {
             attributes: {
                 class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
