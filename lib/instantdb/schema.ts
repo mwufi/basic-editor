@@ -12,6 +12,7 @@ type Schema = {
     };
     posts: {
         id: string;
+        title: string;
         text: string;
         createdAt: number;
         comments: Array<Schema['comments']>;
