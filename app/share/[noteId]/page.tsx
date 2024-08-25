@@ -1,9 +1,9 @@
 'use client'
 
 import { db } from '@/lib/instantdb/client'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 import NoteHeader from '@/components/editor/NoteHeader'
+import { useEffect } from 'react'
 
 interface PageProps {
     params: {
@@ -16,9 +16,16 @@ export default function ShareNotePage({ params }: PageProps) {
     const { data, isLoading, error } = db.useQuery({ posts: { $: { where: { id: params.noteId } } } })
     const note = data?.posts[0] || null
 
+    useEffect(() => {
+        if (note?.title) {
+            document.title = `${note.title} - Owri`
+        }
+    }, [note])
+
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>{error.message}</div>
     if (!note) return <div>Note not found</div>
+
 
     return (
         <div className="max-w-3xl mx-auto mt-8">
