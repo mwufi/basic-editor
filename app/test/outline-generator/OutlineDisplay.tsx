@@ -12,7 +12,7 @@ type OutlineNode = {
 
 type OutlineDisplayProps = {
     outline: OutlineNode;
-    onSelect: (node: OutlineNode) => void;
+    onSelect?: (node: OutlineNode) => void;
 };
 
 const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: OutlineNode) => void; depth?: number }> = ({ node, onSelect, depth = 0 }) => {
