@@ -3,6 +3,7 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Compass, Headphones, Radio, Library, PlusCircle, Clock, Music, User, Disc, Settings, Search } from 'lucide-react';
+import Link from 'next/link';
 
 const LeftPanel = () => {
   return (
@@ -11,14 +12,18 @@ const LeftPanel = () => {
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-500">Outline Generator</h3>
           <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Create New Outline
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <Compass className="mr-2 h-4 w-4" />
-              Browse Outlines
-            </Button>
+            <Link href="/test/outline-generator/create" passHref>
+              <Button variant="ghost" className="w-full justify-start">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Create New Outline
+              </Button>
+            </Link>
+            <Link href="/test/outline-generator/browse" passHref>
+              <Button variant="ghost" className="w-full justify-start">
+                <Compass className="mr-2 h-4 w-4" />
+                Browse Outlines
+              </Button>
+            </Link>
             <Button variant="ghost" className="w-full justify-start">
               <Library className="mr-2 h-4 w-4" />
               Prompt Library

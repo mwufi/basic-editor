@@ -1,3 +1,4 @@
+import { db } from './client'
 
 export const UserProfile = email => (
     {
@@ -10,6 +11,12 @@ export const UserProfile = email => (
         }
     }
 )
+
+export function useUserProfile() {
+    const { user } = db.useAuth();
+    const { data: profile } = db.useQuery(user ? UserProfile(user.email) : null);
+    return { authUser: user, user: profile?.users[0] || null }
+}
 
 export const UserPosts = (userId) => (
     {

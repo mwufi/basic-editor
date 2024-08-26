@@ -5,6 +5,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type OutlineNode = {
+    id?: string;
     name?: string;
     title?: string;
     children?: OutlineNode[];
@@ -54,14 +55,16 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
             </div>
             {hasChildren && (
                 <div className={isExpanded ? 'visible' : 'hidden'}>
-                    {node.children!.map((child, index) => (
-                        <OutlineNodeComponent
-                            key={index}
-                            node={child}
-                            onSelect={onSelect}
-                            depth={depth + 1}
-                        />
-                    ))}
+                    {node.children!
+                        .sort((a, b) => (a.index || 0) - (b.index || 0))
+                        .map((child) => (
+                            <OutlineNodeComponent
+                                key={child.id}
+                                node={child}
+                                onSelect={onSelect}
+                                depth={depth + 1}
+                            />
+                        ))}
                 </div>
             )}
         </div>
@@ -69,8 +72,12 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
 };
 
 const OutlineDisplay: React.FC<OutlineDisplayProps> = ({ outline, onSelect }) => {
+    if (!outline) {
+        return <div>No outline selected</div>
+    }
     return (
         <div className="outline-display">
+            {/* <h1 className="text-3xl font-bold mb-4">{outline.name}</h1> */}
             <OutlineNodeComponent node={outline} onSelect={onSelect} />
         </div>
     );
