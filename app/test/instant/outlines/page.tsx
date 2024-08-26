@@ -25,7 +25,7 @@ export default function OutlineTestPage() {
         currentUserId ? UserOutline(outline?.id) : null
     )
 
-    console.log(outlineData?.outlines?.[0])
+    console.log("Retrieved outline with id", outlineData?.outlines?.[0]?.id)
 
     useEffect(() => {
         if (outlineData?.outlines?.[0]) {
@@ -201,7 +201,7 @@ export default function OutlineTestPage() {
                             <OutlineNode
                                 key={node.id}
                                 node={node}
-                                onNodeClick={(e) => console.log(e)}
+                                onNodeClick={(e) => console.log("clicked on node", e)}
                                 onDelete={null}
                                 onAddChild={null}
                             />
