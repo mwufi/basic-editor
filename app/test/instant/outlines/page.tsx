@@ -62,6 +62,8 @@ const OutlineNode = ({ node, onDelete, onAddChild }) => {
     )
 }
 
+import { loadOutline } from '@/app/expander/outlines/dynamicProgramming';
+
 export default function OutlineTestPage() {
     const [outline, setOutline] = useState(null)
     const [newOutlineName, setNewOutlineName] = useState('')
@@ -161,6 +163,34 @@ export default function OutlineTestPage() {
         }
     }
 
+    const [preloadedOutline, setPreloadedOutline] = useState(null);
+
+    const handleLoadOutline = () => {
+        const loadedOutline = loadOutline();
+        setPreloadedOutline(loadedOutline);
+    };
+
+    const handleBulkAdd = async () => {
+        if (!outline || !preloadedOutline) return;
+
+        function buildTx(node, parentId) {
+            const nodeId = id()
+            return [
+                tx.outlineNodes[nodeId].update({
+                    title: node.title,
+                    content: '',
+                }).link({
+                    author: currentUserId,
+                    outline: outline.id,
+                    ...(parentId && { parent: parentId }),
+                }),
+                ...(node.children?.flatMap(child => buildTx(child, nodeId)) || []),
+            ]
+        }
+
+        await db.transact(buildTx(preloadedOutline, null))
+    };
+
     if (isLoading) {
         return <div>Loading...</div>
     }
@@ -181,6 +211,25 @@ export default function OutlineTestPage() {
                         className="mb-2"
                     />
                     <Button onClick={handleCreateOutline}>Create Outline</Button>
+                </CardContent>
+            </Card>
+
+            <Card className="mb-4">
+                <CardHeader>
+                    <CardTitle>Load Preloaded Outline</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Button onClick={handleLoadOutline} className="mb-2">Load Outline</Button>
+                    {preloadedOutline && (
+                        <div>
+                            <p className="mb-2">Loaded: {preloadedOutline.title}</p>
+                            <div className="mt-2 mb-4 max-h-60 overflow-y-auto border border-gray-200 rounded p-2">
+                                <h3 className="font-semibold mb-2">Outline Structure:</h3>
+                                <pre>{JSON.stringify(preloadedOutline, null, 2)}</pre>
+                            </div>
+                            <Button onClick={handleBulkAdd}>Bulk Add to Current Outline</Button>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 
