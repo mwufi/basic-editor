@@ -21,7 +21,7 @@ const OutlineNode = ({ node, onDelete, onAddChild }) => {
     }
 
     return (
-        <div className="ml-4 mb-2 max-w-lg">
+        <div className="ml-4 mb-2 max-w-xl">
             <div className="flex items-center justify-between">
                 <span>{node.title}</span>
                 {node.parent && (
@@ -48,14 +48,16 @@ const OutlineNode = ({ node, onDelete, onAddChild }) => {
             )}
             {node.children && node.children.length > 0 && (
                 <div className="pl-4">
-                    {node.children.map(childNode => (
-                        <OutlineNode
-                            key={childNode.id}
-                            node={childNode}
-                            onDelete={onDelete}
-                            onAddChild={onAddChild}
-                        />
-                    ))}
+                    {node.children
+                        .sort((a, b) => a.index - b.index)
+                        .map(childNode => (
+                            <OutlineNode
+                                key={childNode.id}
+                                node={childNode}
+                                onDelete={onDelete}
+                                onAddChild={onAddChild}
+                            />
+                        ))}
                 </div>
             )}
         </div>
@@ -126,7 +128,7 @@ export default function OutlineTestPage() {
                 await db.transact([
                     tx.outlineNodes[nodeId].update({
                         title: title,
-                        content: '',
+                        content: ''
                     }).link({
                         author: currentUserId,
                         outline: outline.id,
@@ -173,22 +175,23 @@ export default function OutlineTestPage() {
     const handleBulkAdd = async () => {
         if (!outline || !preloadedOutline) return;
 
-        function buildTx(node, parentId) {
+        function buildTx(node, parentId, index) {
             const nodeId = id()
             return [
                 tx.outlineNodes[nodeId].update({
                     title: node.title,
+                    index: index,
                     content: '',
                 }).link({
                     author: currentUserId,
                     outline: outline.id,
-                    ...(parentId && { parent: parentId }),
+                    ...(parentId && { parent: parentId })
                 }),
-                ...(node.children?.flatMap(child => buildTx(child, nodeId)) || []),
+                ...(node.children?.flatMap((child, index, _) => buildTx(child, nodeId, index)) || []),
             ]
         }
 
-        await db.transact(buildTx(preloadedOutline, null))
+        await db.transact(buildTx(preloadedOutline, null, 0))
     };
 
     if (isLoading) {

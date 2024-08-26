@@ -28,6 +28,7 @@ type Schema = {
     };
     outlineNodes: {
         id: string;
+        index: number;
         title: string;
         content: string;
         parent: Schema['outlineNodes'];

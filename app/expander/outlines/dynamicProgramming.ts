@@ -166,6 +166,7 @@ import { createHash } from 'crypto';
 
 interface OutlineNode {
     id: string;
+    index: number;
     title: string;
     children?: OutlineNode[];
 }
@@ -175,9 +176,12 @@ function generateHash(title: string): string {
 }
 
 function assignIds(node: OutlineNode): OutlineNode {
-    const newNode: OutlineNode = { ...node, id: generateHash(node.title) };
+    const newNode: OutlineNode = { ...node, id: generateHash(node.title), index: node.index };
     if (node.children) {
         newNode.children = node.children.map(assignIds);
+        newNode.children.forEach((child, index) => {
+            child.index = index;
+        });
     }
     return newNode;
 }
