@@ -32,7 +32,7 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
     };
 
     return (
-        <div style={{ marginLeft: `${depth * 20}px` }}>
+        <div style={{ marginLeft: `${depth > 0 ? 2 : 0}em` }}>
             <div
                 className="flex items-center cursor-pointer hover:bg-gray-100 p-1 rounded"
                 onClick={() => {
@@ -42,8 +42,8 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
                     }
                 }}
             >
-                <div className="w-6 flex-shrink-0">
-                    {hasChildren && (
+                {hasChildren && (
+                    <div className="w-6 flex-shrink-0">
                         <Button
                             variant="ghost"
                             size="sm"
@@ -52,13 +52,13 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
                         >
                             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                         </Button>
-                    )}
-                </div>
+                    </div>
+                )}
                 <span className="ml-2">{node.name || node.title}</span>
             </div>
             {hasChildren && (
                 <div className={isExpanded ? 'visible' : 'hidden'}>
-                    {node.children!.map((child) => (
+                    {node.children!.sort((a, b) => (a.index || 0) - (b.index || 0)).map((child) => (
                         <OutlineNodeComponent
                             key={child.id}
                             node={child}
@@ -80,7 +80,7 @@ const OutlineDisplay: React.FC<OutlineDisplayProps> = ({ outline, onSelect }) =>
     return (
         <div className="outline-display">
             <h1 className="text-3xl font-bold mb-4">{outline.name || outline.title}</h1>
-            {hasChildren && outline.children.map((child) => (
+            {hasChildren && outline.children.sort((a, b) => (a.index || 0) - (b.index || 0)).map((child) => (
                 <OutlineNodeComponent key={child.id} node={child} onSelect={onSelect} />
             ))}
         </div>
