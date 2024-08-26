@@ -6,11 +6,21 @@ const OutlineItemSchema = z.object({
 
 const OutlineSectionSchema: z.ZodType<any> = z.lazy(() =>
     z.object({
-        title: z.string(),
-        children: z.array(OutlineSectionSchema.or(OutlineItemSchema)).optional()
+        name: z.string(),
+        children: z.array(z.union([
+            z.object({
+                title: z.string(),
+                children: z.lazy(() => z.array(OutlineSectionSchema).optional())
+            }),
+            OutlineItemSchema
+        ])).optional()
     })
 );
 
 // Define the schema for the entire outline
-const OutlineSchema = z.array(OutlineSectionSchema);
+const OutlineSchema = z.object({
+    name: z.string(),
+    children: z.array(OutlineSectionSchema)
+});
+
 export default OutlineSchema;
