@@ -8,61 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { UserProfile, UserOutline } from '@/lib/instantdb/queries'
 import { toast } from 'sonner'
-import { Trash2, Plus } from 'lucide-react'
-
-const OutlineNode = ({ node, onDelete, onAddChild }) => {
-    const [showAddChild, setShowAddChild] = useState(false)
-    const [newChildTitle, setNewChildTitle] = useState('')
-
-    const handleAddChild = () => {
-        onAddChild(node.id, newChildTitle)
-        setNewChildTitle('')
-        setShowAddChild(false)
-    }
-
-    return (
-        <div className="ml-4 mb-2 max-w-xl">
-            <div className="flex items-center justify-between">
-                <span>{node.title}</span>
-                {node.parent && (
-                    <div>
-                        <Button variant="ghost" size="sm" onClick={() => setShowAddChild(!showAddChild)}>
-                            <Plus size={16} />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => onDelete(node.id)}>
-                            <Trash2 size={16} />
-                        </Button>
-                    </div>
-                )}
-            </div>
-            {showAddChild && (
-                <div className="mt-2 flex">
-                    <Input
-                        value={newChildTitle}
-                        onChange={(e) => setNewChildTitle(e.target.value)}
-                        placeholder="Child Node Title"
-                        className="mr-2"
-                    />
-                    <Button onClick={handleAddChild}>Add</Button>
-                </div>
-            )}
-            {node.children && node.children.length > 0 && (
-                <div className="pl-4">
-                    {node.children
-                        .sort((a, b) => a.index - b.index)
-                        .map(childNode => (
-                            <OutlineNode
-                                key={childNode.id}
-                                node={childNode}
-                                onDelete={onDelete}
-                                onAddChild={onAddChild}
-                            />
-                        ))}
-                </div>
-            )}
-        </div>
-    )
-}
+import OutlineNode from '@/app/expander/OutlineNode'
 
 import { loadOutline } from '@/app/expander/outlines/dynamicProgramming';
 
@@ -255,8 +201,9 @@ export default function OutlineTestPage() {
                             <OutlineNode
                                 key={node.id}
                                 node={node}
-                                onDelete={handleDeleteNode}
-                                onAddChild={handleAddChildNode}
+                                onNodeClick={(e) => console.log(e)}
+                                onDelete={null}
+                                onAddChild={null}
                             />
                         ))}
                     </CardContent>
