@@ -34,7 +34,7 @@ export default function OutlineGenerator() {
     };
 
     return (
-        <div className="p-4 max-w-2xl mx-auto">
+        <div className="p-4 mx-auto">
             <h1 className="text-2xl font-bold mb-4">Streaming Outline Generator</h1>
             <p className="mb-4">Customize the system prompt and input a topic to generate an outline.</p>
             <form onSubmit={(e) => {
