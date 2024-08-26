@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { streamOutline } from './ai';
 import { readStreamableValue } from 'ai/rsc';
+import OutlineDisplay from './OutlineDisplay';
 
 export const maxDuration = 30;
 
@@ -71,9 +72,7 @@ export default function OutlineGenerator() {
                     ) : (
                         <>
                             <h2 className="text-xl font-semibold mb-2">Generated Outline:</h2>
-                            <pre className="bg-gray-100 p-4 rounded overflow-auto">
-                                {JSON.stringify(outline, null, 2)}
-                            </pre>
+                            <OutlineDisplay outline={outline} />
                         </>
                     )}
                 </div>
