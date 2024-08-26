@@ -49,18 +49,17 @@ const MiddlePanel = ({ onSelectOutline }) => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
             </div>
-            <ScrollArea className="flex-grow">
+            <ScrollArea className="flex-grow max-h-[calc(90vh-100px)]">
                 <div className="p-2">
                     {filteredOutlines.map((outline) => (
                         <div
                             key={outline.id}
+                            onClick={() => onSelectOutline(outline)}
                             className="mb-2 p-3 rounded border hover:bg-gray-100 transition-colors duration-200 cursor-pointer flex justify-between items-center"
                         >
-                            <div onClick={() => onSelectOutline(outline)}>
-                                <h3 className="font-semibold text-lg mb-1 truncate">{outline.name}</h3>
-                                <p className="text-sm text-gray-600 mb-1">Nodes: {outline.children?.length || 0}</p>
-                                {/* <p className="text-xs text-gray-400">{new Date(outline.createdAt).toLocaleDateString()}</p> */}
-                            </div>
+                            <h3 className="font-semibold text-lg mb-1 truncate">{outline.name}</h3>
+                            <p className="text-sm text-gray-600 mb-1">Nodes: {outline.children?.length || 0}</p>
+                            {/* <p className="text-xs text-gray-400">{new Date(outline.createdAt).toLocaleDateString()}</p> */}
                         </div>
                     ))}
                 </div>

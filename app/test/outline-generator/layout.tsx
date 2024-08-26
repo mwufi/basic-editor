@@ -4,10 +4,11 @@ import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Compass, Headphones, Radio, Library, PlusCircle, Clock, Music, User, Disc, Settings, Search } from 'lucide-react';
 import Link from 'next/link';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const LeftPanel = () => {
   return (
-    <div className="w-64 border-r p-4 flex-shrink-0">
+    <ScrollArea className="w-64 border-r p-4 flex-shrink-0">
       <nav className="space-y-6">
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-500">Outline Generator</h3>
@@ -82,14 +83,14 @@ const LeftPanel = () => {
           Settings
         </Button>
       </nav>
-    </div>
+    </ScrollArea>
   )
 }
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-[calc(100vh-100px)]">
       <div className="flex flex-grow">
         <LeftPanel />
         {children}

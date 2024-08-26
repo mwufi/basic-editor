@@ -32,7 +32,7 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
     };
 
     return (
-        <div style={{ marginLeft: `${depth > 0 ? 2 : 0}em` }}>
+        <div key={node.id} style={{ marginLeft: `${depth > 0 ? 2 : 0}em` }}>
             <div
                 className="flex items-center cursor-pointer hover:bg-gray-100 p-1 rounded"
                 onClick={() => {
