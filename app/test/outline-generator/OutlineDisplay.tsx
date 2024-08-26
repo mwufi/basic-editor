@@ -42,29 +42,30 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
                     }
                 }}
             >
-                {hasChildren && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={toggleExpand}
-                    >
-                        {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                    </Button>
-                )}
-                <span>{node.name || node.title}</span>
+                <div className="w-6 flex-shrink-0">
+                    {hasChildren && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={toggleExpand}
+                            className="p-0 h-6 w-6"
+                        >
+                            {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                        </Button>
+                    )}
+                </div>
+                <span className="ml-2">{node.name || node.title}</span>
             </div>
             {hasChildren && (
                 <div className={isExpanded ? 'visible' : 'hidden'}>
-                    {node.children!
-                        .sort((a, b) => (a.index || 0) - (b.index || 0))
-                        .map((child) => (
-                            <OutlineNodeComponent
-                                key={child.id}
-                                node={child}
-                                onSelect={onSelect}
-                                depth={depth + 1}
-                            />
-                        ))}
+                    {node.children!.map((child) => (
+                        <OutlineNodeComponent
+                            key={child.id}
+                            node={child}
+                            onSelect={onSelect}
+                            depth={depth + 1}
+                        />
+                    ))}
                 </div>
             )}
         </div>
@@ -75,10 +76,13 @@ const OutlineDisplay: React.FC<OutlineDisplayProps> = ({ outline, onSelect }) =>
     if (!outline) {
         return <div>No outline selected</div>
     }
+    const hasChildren = outline.children && outline.children.length > 0;
     return (
         <div className="outline-display">
-            {/* <h1 className="text-3xl font-bold mb-4">{outline.name}</h1> */}
-            <OutlineNodeComponent node={outline} onSelect={onSelect} />
+            <h1 className="text-3xl font-bold mb-4">{outline.name || outline.title}</h1>
+            {hasChildren && outline.children.map((child) => (
+                <OutlineNodeComponent key={child.id} node={child} onSelect={onSelect} />
+            ))}
         </div>
     );
 };

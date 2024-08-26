@@ -77,7 +77,15 @@ const RightPanel = ({ selectedOutline }) => {
 
     return (
         <div className="flex-grow p-4">
-            <h2 className="text-2xl font-bold mb-4">{selectedOutline.name}</h2>
+            {isLoading && (
+                <>
+                    <h2 className="text-3xl font-bold mb-6">{selectedOutline.name}</h2>
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mb-4"></div>
+                        <span className="text-gray-500 text-lg">Fetching outline...</span>
+                    </div>
+                </>
+            )}
             <OutlineDisplay outline={data?.outlines[0]} />
         </div>
     )
