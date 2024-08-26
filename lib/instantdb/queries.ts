@@ -25,7 +25,7 @@ export const UserPosts = (userId) => (
     }
 )
 
-export const UserOutline = (userId, outlineId) => (
+export const UserOutline = (outlineId) => (
     {
         outlines: {
             $: {
@@ -33,14 +33,17 @@ export const UserOutline = (userId, outlineId) => (
                     id: outlineId
                 }
             },
-            outlineNodes: {},
-            author: {
-                $: {
-                    where: {
-                        id: userId
-                    }
-                }
-            }
+            outlineNodes: {
+                children: {
+                    children: {
+                        children: {},
+                        parent: {}
+                    },
+                    parent: {}
+                },
+                parent: {}
+            },
+            author: {}
         }
     }
 )

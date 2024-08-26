@@ -5,31 +5,83 @@ import { db } from '@/lib/instantdb/client'
 import { tx, id } from '@instantdb/core'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { UserProfile, UserOutline } from '@/lib/instantdb/queries'
 import { toast } from 'sonner'
+import { Trash2, Plus } from 'lucide-react'
+
+const OutlineNode = ({ node, onDelete, onAddChild }) => {
+    const [showAddChild, setShowAddChild] = useState(false)
+    const [newChildTitle, setNewChildTitle] = useState('')
+
+    const handleAddChild = () => {
+        onAddChild(node.id, newChildTitle)
+        setNewChildTitle('')
+        setShowAddChild(false)
+    }
+
+    return (
+        <div className="ml-4 mb-2 max-w-lg">
+            <div className="flex items-center justify-between">
+                <span>{node.title}</span>
+                {node.parent && (
+                    <div>
+                        <Button variant="ghost" size="sm" onClick={() => setShowAddChild(!showAddChild)}>
+                            <Plus size={16} />
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => onDelete(node.id)}>
+                            <Trash2 size={16} />
+                        </Button>
+                    </div>
+                )}
+            </div>
+            {showAddChild && (
+                <div className="mt-2 flex">
+                    <Input
+                        value={newChildTitle}
+                        onChange={(e) => setNewChildTitle(e.target.value)}
+                        placeholder="Child Node Title"
+                        className="mr-2"
+                    />
+                    <Button onClick={handleAddChild}>Add</Button>
+                </div>
+            )}
+            {node.children && node.children.length > 0 && (
+                <div className="pl-4">
+                    {node.children.map(childNode => (
+                        <OutlineNode
+                            key={childNode.id}
+                            node={childNode}
+                            onDelete={onDelete}
+                            onAddChild={onAddChild}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 export default function OutlineTestPage() {
     const [outline, setOutline] = useState(null)
-    const [outlineNodes, setOutlineNodes] = useState([])
     const [newOutlineName, setNewOutlineName] = useState('')
-    const [newNodeTitle, setNewNodeTitle] = useState('')
-    const [newNodeContent, setNewNodeContent] = useState('')
+    const [newTopLevelNodeTitle, setNewTopLevelNodeTitle] = useState('')
 
     const { user } = db.useAuth()
     const { data: profile } = db.useQuery(user ? UserProfile(user.email) : null)
     const currentUserId = profile?.users[0]?.id
 
     const { data: outlineData, isLoading } = db.useQuery(
-        currentUserId ? UserOutline(currentUserId, outline?.id) : null
+        currentUserId ? UserOutline(outline?.id) : null
     )
+
+    console.log(outlineData?.outlines?.[0])
 
     useEffect(() => {
         if (outlineData?.outlines?.[0]) {
             setOutline(outlineData.outlines[0])
-            setOutlineNodes(outlineData.outlines[0].outlineNodes || [])
         }
+        document.title = outlineData?.outlines?.[0]?.name || 'Outline Test Page'
     }, [outlineData])
 
     const handleCreateOutline = async () => {
@@ -53,25 +105,58 @@ export default function OutlineTestPage() {
         }
     }
 
-    const handleAddNode = async () => {
-        if (newNodeTitle.trim() && newNodeContent.trim() && outline) {
+    const handleDeleteNode = async (nodeId) => {
+        try {
+            await db.transact([
+                tx.outlineNodes[nodeId].delete()
+            ])
+            toast.success('Node deleted successfully')
+        } catch (error) {
+            console.error('Error deleting node:', error)
+            toast.error('Failed to delete node')
+        }
+    }
+
+    const handleAddChildNode = async (parentId, title) => {
+        if (title.trim() && outline) {
             try {
                 const nodeId = id()
                 await db.transact([
                     tx.outlineNodes[nodeId].update({
-                        title: newNodeTitle,
-                        content: newNodeContent,
+                        title: title,
+                        content: '',
+                    }).link({
+                        author: currentUserId,
+                        outline: outline.id,
+                        parent: parentId
+                    })
+                ])
+                toast.success('Child node added successfully')
+            } catch (error) {
+                console.error('Error adding child node:', error)
+                toast.error('Failed to add child node')
+            }
+        }
+    }
+
+    const handleAddTopLevelNode = async () => {
+        if (newTopLevelNodeTitle.trim() && outline) {
+            try {
+                const nodeId = id()
+                await db.transact([
+                    tx.outlineNodes[nodeId].update({
+                        title: newTopLevelNodeTitle,
+                        content: '',
                     }).link({
                         author: currentUserId,
                         outline: outline.id
                     })
                 ])
-                setNewNodeTitle('')
-                setNewNodeContent('')
-                toast.success('Node added successfully')
+                setNewTopLevelNodeTitle('')
+                toast.success('Top level node added successfully')
             } catch (error) {
-                console.error('Error adding node:', error)
-                toast.error('Failed to add node')
+                console.error('Error adding top level node:', error)
+                toast.error('Failed to add top level node')
             }
         }
     }
@@ -105,31 +190,22 @@ export default function OutlineTestPage() {
                         <CardTitle>{outline.name}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <h3 className="text-lg font-semibold mb-2">Add New Node</h3>
-                        <Input
-                            value={newNodeTitle}
-                            onChange={(e) => setNewNodeTitle(e.target.value)}
-                            placeholder="Node Title"
-                            className="mb-2"
-                        />
-                        <Textarea
-                            value={newNodeContent}
-                            onChange={(e) => setNewNodeContent(e.target.value)}
-                            placeholder="Node Content"
-                            className="mb-2"
-                        />
-                        <Button onClick={handleAddNode}>Add Node</Button>
-
-                        <h3 className="text-lg font-semibold mt-4 mb-2">Outline Nodes</h3>
-                        {outlineNodes.map((node) => (
-                            <Card key={node.id} className="mb-2">
-                                <CardHeader>
-                                    <CardTitle>{node.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p>{node.content}</p>
-                                </CardContent>
-                            </Card>
+                        <div className="mb-4">
+                            <Input
+                                value={newTopLevelNodeTitle}
+                                onChange={(e) => setNewTopLevelNodeTitle(e.target.value)}
+                                placeholder="New Top Level Node Title"
+                                className="mb-2"
+                            />
+                            <Button onClick={handleAddTopLevelNode}>Add Top Level Node</Button>
+                        </div>
+                        {outline.outlineNodes && outline.outlineNodes.filter(node => node.parent.length === 0).map((node) => (
+                            <OutlineNode
+                                key={node.id}
+                                node={node}
+                                onDelete={handleDeleteNode}
+                                onAddChild={handleAddChildNode}
+                            />
                         ))}
                     </CardContent>
                 </Card>

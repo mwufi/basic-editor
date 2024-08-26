@@ -45,7 +45,7 @@ export default function DynamicProgrammingOutline() {
         ])
     }
 
-    async function saveContent(){
+    async function saveContent() {
         const contentId = id()
         const savedContent = {
             id: contentId,

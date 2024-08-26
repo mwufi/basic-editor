@@ -30,6 +30,9 @@ type Schema = {
         id: string;
         title: string;
         content: string;
+        parent: Schema['outlineNodes'];
+        children: Array<Schema['outlineNodes']>;
+        textGenerations: Array<Schema['textGeneration']>;
         author: Schema['users'];
         outline: Schema['outlines'];
     };
