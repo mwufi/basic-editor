@@ -21,12 +21,10 @@ export default function OutlineNode({ node, onNodeClick, onDelete = null, onAddC
         setShowAddChild(false)
     }
 
-    const showButtons = onDelete && onAddChild
-
     return (
         <div className="ml-4">
             <div className="flex items-center cursor-pointer" onClick={toggleExpand}>
-                {node.children ? (
+                {node.children && node.children.length > 0 ? (
                     isExpanded ? <ChevronDown className="w-4 h-4 mr-1" /> : <ChevronRight className="w-4 h-4 mr-1" />
                 ) : (
                     <span className="w-4 h-4 mr-1"></span>
