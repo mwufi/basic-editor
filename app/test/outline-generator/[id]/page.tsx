@@ -12,33 +12,18 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Outline, OutlineNode } from '@/lib/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-
-const getNodePath = (nodeId: string, rootNode: any): { ancestors: string[], siblings: string[] } | null => {
-    const stack: { node: any; parentNode: any | null; ancestorPath: string[] }[] = [{ node: rootNode, parentNode: null, ancestorPath: [] }];
-
-    while (stack.length > 0) {
-        const { node, parentNode, ancestorPath } = stack.pop()!;
-
-        if (node.id === nodeId) {
-            const siblings = parentNode?.children
-                ?.filter((child: any) => child.id !== nodeId)
-                .map((child: any) => child.title) || [];
-            return { ancestors: ancestorPath, siblings };
-        }
-
-        if (node.children && node.children.length > 0) {
-            const newAncestorPath = [...ancestorPath, node.title];
-            for (let i = node.children.length - 1; i >= 0; i--) {
-                stack.push({ node: node.children[i], parentNode: node, ancestorPath: newAncestorPath });
-            }
-        }
-    }
-
-    return null;
-};
+import { getNodePath, getOutlineAsText, getPrompt } from './utils';
+import Debug from '@/components/Debug';
+import { streamContent } from './ai';
+import { readStreamableValue } from 'ai/rsc';
+import { saveOutlineNodeContent } from '@/lib/instantdb/mutations';
+import { toast } from 'sonner';
 
 function OutlineContent({ outline, selectedNode }: { outline: Outline, selectedNode: OutlineNode }) {
+    const [content, setContent] = useState<string>('');
+    const [isStreaming, setIsStreaming] = useState(false);
     const nodePath = selectedNode ? getNodePath(selectedNode.id, outline) : null;
+    const outlineAsText = selectedNode ? getOutlineAsText({ outline, selectedNode }) : '';
 
     if (!nodePath) {
         return (
@@ -50,17 +35,57 @@ function OutlineContent({ outline, selectedNode }: { outline: Outline, selectedN
     }
 
     const { ancestors, siblings } = nodePath;
+    const handleStreamContent = async () => {
+        setIsStreaming(true);
+        try {
+            const prompt = getPrompt(outlineAsText, selectedNode, "You are university professor");
+            const { object } = await streamContent(prompt);
+
+            for await (const partialObject of readStreamableValue(object)) {
+                if (partialObject) {
+                    setContent(partialObject.content);
+                }
+            }
+        } catch (error) {
+            console.error('Error streaming content:', error);
+            setContent('Failed to generate content. Please try again.');
+        } finally {
+            setIsStreaming(false);
+        }
+    };
+
     return (
         <div className="flex-grow">
             <h2 className="text-2xl font-bold mb-4">{selectedNode.title}</h2>
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">Ancestors:</h3>
-                <pre className="bg-gray-100 p-2 rounded">{JSON.stringify(ancestors, null, 2)}</pre>
-            </div>
-            <div>
-                <h3 className="text-lg font-semibold mb-2">Siblings:</h3>
-                <pre className="bg-gray-100 p-2 rounded">{JSON.stringify(siblings, null, 2)}</pre>
-            </div>
+            <Button
+                onClick={handleStreamContent}
+                disabled={isStreaming}
+                className="mb-4"
+            >
+                {isStreaming ? 'Streaming...' : 'Stream Content'}
+            </Button>
+            {content && <Button
+                onClick={async () => {
+                    if (selectedNode && content) {
+                        try {
+                            const result = await saveOutlineNodeContent(selectedNode.id, content);
+                            if (result.success) {
+                                toast.success('Content saved successfully');
+                            } else {
+                                toast.error('Failed to save content:', result.error);
+                            }
+                        } catch (error) {
+                            toast.error('Error saving content:', error);
+                        }
+                    }
+                }}
+                disabled={!content || isStreaming}
+                className="mb-4 ml-2"
+            >
+                Save Content
+            </Button>}
+            <Debug title="content" obj={content} />
+            {/* <Debug title="Prompt" obj={getPrompt(outlineAsText, selectedNode, "You are university professor")} /> */}
         </div>
     );
 }
