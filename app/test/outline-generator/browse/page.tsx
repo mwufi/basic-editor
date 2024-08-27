@@ -1,15 +1,16 @@
 'use client'
 
 import { useState } from 'react';
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { db } from '@/lib/instantdb/client';
-import OutlineDisplay from '../OutlineDisplay';
-import { getOutline } from '../create/actions';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import NonFeaturedOutline from './Card';
+import FeaturedOutline from './Featured';
 
-const MiddlePanel = ({ onSelectOutline }) => {
+
+const MiddlePanel = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('All');
     const { data } = db.useQuery({
@@ -20,16 +21,18 @@ const MiddlePanel = ({ onSelectOutline }) => {
     const outlines = data?.outlines || [];
 
     const filteredOutlines = outlines.filter(outline =>
-        outline.name.toLowerCase().includes(searchTerm.toLowerCase())
+        outline.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const featuredOutlines = outlines.slice(0, 10); // Assuming first 5 are featured
+
     return (
-        <div className="w-[400px] border-r flex flex-col flex-shrink-0">
-            <div className="p-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Outlines</h2>
+        <div className="flex flex-col w-full mx-auto px-4 py-8">
+            <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-gray-800">Discover Outlines</h2>
                 <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
                     <TabsList>
-                        {['All', 'Recent'].map((tab) => (
+                        {['All', 'Recent', 'Popular'].map((tab) => (
                             <TabsTrigger key={tab} value={tab}>
                                 {tab}
                             </TabsTrigger>
@@ -37,7 +40,8 @@ const MiddlePanel = ({ onSelectOutline }) => {
                     </TabsList>
                 </Tabs>
             </div>
-            <div className="p-4">
+
+            <div className="mb-8">
                 <div className="relative">
                     <Input
                         type="search"
@@ -49,57 +53,39 @@ const MiddlePanel = ({ onSelectOutline }) => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
             </div>
-            <ScrollArea className="flex-grow max-h-[calc(90vh-100px)]">
-                <div className="p-2">
-                    {filteredOutlines.map((outline) => (
-                        <div
-                            key={outline.id}
-                            onClick={() => onSelectOutline(outline)}
-                            className="mb-2 p-3 rounded border hover:bg-gray-100 transition-colors duration-200 cursor-pointer flex justify-between items-center"
-                        >
-                            <h3 className="font-semibold text-lg mb-1 truncate">{outline.name}</h3>
-                            <p className="text-sm text-gray-600 mb-1">Nodes: {outline.children?.length || 0}</p>
-                            {/* <p className="text-xs text-gray-400">{new Date(outline.createdAt).toLocaleDateString()}</p> */}
-                        </div>
-                    ))}
+            <div className="mb-12">
+                <h3 className="text-2xl font-semibold mb-4 text-gray-700">Featured Outlines</h3>
+                <div className="relative">
+                    <Carousel className="overflow-hidden">
+                        <CarouselContent className="mx-6">
+                            {featuredOutlines.map((outline) => (
+                                <CarouselItem key={outline.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                                    <FeaturedOutline outline={outline} />
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2" />
+                        <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
+                    </Carousel>
                 </div>
-            </ScrollArea>
+            </div>
+            <h3 className="text-2xl font-semibold mb-4 text-gray-700">All Outlines</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredOutlines.map((outline) => (
+                    <NonFeaturedOutline key={outline.id} outline={outline} />
+                ))}
+            </div>
         </div>
     )
 }
-
-const RightPanel = ({ selectedOutline }) => {
-    const { isLoading, error, data } = getOutline(selectedOutline?.id)
-
-    if (!selectedOutline) {
-        return <div className="flex-grow p-4">Select an outline to view details</div>
-    }
+const Outlines = () => {
 
     return (
-        <div className="flex-grow p-4">
-            {isLoading && (
-                <>
-                    <h2 className="text-3xl font-bold mb-6">{selectedOutline.name}</h2>
-                    <div className="flex flex-col items-center justify-center h-full">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mb-4"></div>
-                        <span className="text-gray-500 text-lg">Fetching outline...</span>
-                    </div>
-                </>
-            )}
-            <OutlineDisplay outline={data?.outlines[0]} />
+        <div className="flex bg-gray-50 min-h-screen w-full">
+            <MiddlePanel />
         </div>
-    )
-}
-
-function Outlines() {
-    const [selectedOutline, setSelectedOutline] = useState(null)
-
-    return (
-        <>
-            <MiddlePanel onSelectOutline={setSelectedOutline} />
-            <RightPanel selectedOutline={selectedOutline} />
-        </>
     )
 }
 
 export default Outlines;
+

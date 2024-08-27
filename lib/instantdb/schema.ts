@@ -21,8 +21,8 @@ type Schema = {
     };
     outlines: {
         id: string;
-        name: string;
-        content: object;
+        title: string;
+        description: string;
         author: Schema['users'];
         children: Array<Schema['outlineNodes']>;
     };
