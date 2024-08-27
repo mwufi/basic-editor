@@ -87,12 +87,13 @@ const LeftPanel = () => {
   )
 }
 
-
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)]">
-      <div className="flex flex-grow">
+    <div className="flex h-[calc(100vh-100px)]">
+      <div className="sticky top-0 h-full overflow-hidden">
         <LeftPanel />
+      </div>
+      <div className="flex-grow overflow-auto">
         {children}
       </div>
     </div>
