@@ -94,13 +94,14 @@ function Outlines({ params }: { params: { id: string } }) {
     return (
         <div className="flex-grow flex flex-col">
             <div className="p-4 border-b">
-                <div className="flex justify-between items-center gap-4">
-                    <h1 className="text-2xl font-bold mr-4">{outline.title}</h1>
+                <div className="flex flex-col md:flex-row justify-start items-start md:items-center space-y-4 md:space-y-0 space-x-4">
                     <Link href="/test/outline-generator/browse">
                         <Button variant="outline" size="sm" className="inline-flex items-center">
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                     </Link>
+                    <h1 className="text-2xl font-bold mr-4">{outline.title}</h1>
+                    <div className="w-4"></div>
                 </div>
             </div>
             <div className="flex-grow flex flex-col md:flex-row p-4">
