@@ -11,6 +11,7 @@ import { getOutline } from '../create/actions';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Outline, OutlineNode } from '@/lib/types';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const getNodePath = (nodeId: string, rootNode: any): { ancestors: string[], siblings: string[] } | null => {
     const stack: { node: any; parentNode: any | null; ancestorPath: string[] }[] = [{ node: rootNode, parentNode: null, ancestorPath: [] }];
@@ -91,20 +92,38 @@ function Outlines({ params }: { params: { id: string } }) {
     }
 
     return (
-        <div className="flex-grow p-4 flex">
-            <div className="w-[300px] flex-shrink-0 mr-4">
-                <div className="mb-4">
+        <div className="flex-grow flex flex-col">
+            <div className="p-4 border-b">
+                <div className="flex justify-between items-center gap-4">
+                    <h1 className="text-2xl font-bold mr-4">{outline.title}</h1>
                     <Link href="/test/outline-generator/browse">
                         <Button variant="outline" size="sm" className="inline-flex items-center">
-                            <ArrowLeft className="h-4 w-4 mr-2" />
-                            Back to Browse
+                            <ArrowLeft className="h-4 w-4" />
                         </Button>
                     </Link>
                 </div>
-                <OutlineDisplay outline={outline} onSelect={handleNodeClick} />
             </div>
-            <div className="flex-grow">
-                <OutlineContent outline={outline} selectedNode={selectedNode} />
+            <div className="flex-grow flex flex-col md:flex-row p-4">
+                <div className="md:hidden mb-4">
+                    <Collapsible>
+                        <CollapsibleTrigger asChild>
+                            <Button variant="outline" className="w-full">
+                                Toggle Outline
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-2">
+                            <div className="border rounded p-2">
+                                <OutlineDisplay outline={outline} onSelect={handleNodeClick} />
+                            </div>
+                        </CollapsibleContent>
+                    </Collapsible>
+                </div>
+                <div className="hidden md:block w-[300px] flex-shrink-0 mr-4 overflow-auto">
+                    <OutlineDisplay outline={outline} onSelect={handleNodeClick} />
+                </div>
+                <div className="flex-grow overflow-auto">
+                    <OutlineContent outline={outline} selectedNode={selectedNode} />
+                </div>
             </div>
         </div>
     );

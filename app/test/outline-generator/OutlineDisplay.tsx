@@ -79,7 +79,6 @@ const OutlineDisplay: React.FC<OutlineDisplayProps> = ({ outline, onSelect }) =>
     const hasChildren = outline.children && outline.children.length > 0;
     return (
         <div className="outline-display">
-            <h1 className="text-3xl font-bold mb-4">{outline.title}</h1>
             {hasChildren && outline.children.sort((a, b) => (a.index || 0) - (b.index || 0)).map((child) => (
                 <OutlineNodeComponent key={child.id} node={child} onSelect={onSelect} />
             ))}
