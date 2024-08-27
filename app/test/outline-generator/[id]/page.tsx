@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft, Search, RefreshCw, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { db } from '@/lib/instantdb/client';
 import OutlineDisplay from '../OutlineDisplay';
@@ -19,16 +19,20 @@ import { readStreamableValue } from 'ai/rsc';
 import { saveOutlineNodeContent } from '@/lib/instantdb/mutations';
 import { toast } from 'sonner';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
+import { Textarea } from "@/components/ui/textarea";
+
 function OutlineContent({ outline, selectedNode }: { outline: Outline, selectedNode: OutlineNode }) {
     const [content, setContent] = useState<string | null>(null);
+    const [generatedContent, setGeneratedContent] = useState<string | null>(null);
     const [isStreaming, setIsStreaming] = useState(false);
+    const [additionalInstructions, setAdditionalInstructions] = useState('');
     const nodePath = selectedNode ? getNodePath(selectedNode.id, outline) : null;
     const outlineAsText = selectedNode ? getOutlineAsText({ outline, selectedNode }) : '';
 
     useEffect(() => {
-        console.log("selectedNode", selectedNode)
         if (selectedNode) {
             setContent(selectedNode.content);
+            setGeneratedContent(null);
         }
     }, [selectedNode]);
 
@@ -45,54 +49,82 @@ function OutlineContent({ outline, selectedNode }: { outline: Outline, selectedN
     const handleStreamContent = async () => {
         setIsStreaming(true);
         try {
-            const prompt = getPrompt(outlineAsText, selectedNode, "You are university professor");
+            const prompt = getPrompt(outlineAsText, selectedNode, additionalInstructions);
             const { object } = await streamContent(prompt);
 
             for await (const partialObject of readStreamableValue(object)) {
                 if (partialObject) {
-                    setContent(partialObject.content);
+                    setGeneratedContent(partialObject.content);
                 }
             }
         } catch (error) {
             console.error('Error streaming content:', error);
-            setContent('Failed to generate content. Please try again.');
+            setGeneratedContent('Failed to generate content. Please try again.');
         } finally {
             setIsStreaming(false);
+        }
+    };
+
+    const handleSaveContent = async () => {
+        if (selectedNode && generatedContent) {
+            try {
+                const result = await saveOutlineNodeContent(selectedNode.id, generatedContent);
+                if (result.success) {
+                    toast.success('Content saved successfully');
+                    setContent(generatedContent);
+                    setGeneratedContent(null);
+                } else {
+                    toast.error('Failed to save content:', result.error);
+                }
+            } catch (error) {
+                toast.error('Error saving content:', error);
+            }
         }
     };
 
     return (
         <div className="flex-grow">
             <h2 className="text-2xl font-bold mb-4">{selectedNode.title}</h2>
-            <Button
-                onClick={handleStreamContent}
-                disabled={isStreaming}
-                className="mb-4"
-            >
-                {isStreaming ? 'Streaming...' : content ? 'Regenerate' : 'Generate'}
-            </Button>
-            {content && <Button
-                onClick={async () => {
-                    if (selectedNode && content) {
-                        try {
-                            const result = await saveOutlineNodeContent(selectedNode.id, content);
-                            if (result.success) {
-                                toast.success('Content saved successfully');
-                            } else {
-                                toast.error('Failed to save content:', result.error);
-                            }
-                        } catch (error) {
-                            toast.error('Error saving content:', error);
-                        }
-                    }
-                }}
-                disabled={!content || isStreaming}
-                className="mb-4 ml-2"
-            >
-                Save Content
-            </Button>}
-            <MarkdownPreview content={content} />
-            {/* <Debug title="Prompt" obj={getPrompt(outlineAsText, selectedNode, "You are university professor")} /> */}
+            {content && <MarkdownPreview content={content} />}
+
+            <div className="mt-8 p-4 border border-gray-300 rounded-md">
+                <h3 className="text-xl font-semibold mb-4">Customize Content Generation</h3>
+                <Textarea
+                    placeholder="Additional instructions for content generation..."
+                    value={additionalInstructions}
+                    onChange={(e) => setAdditionalInstructions(e.target.value)}
+                    className="mb-4"
+                />
+                {!isStreaming && !generatedContent && (
+                    <Button onClick={handleStreamContent} disabled={isStreaming}>
+                        Generate Content
+                    </Button>
+                )}
+                {!isStreaming && generatedContent && (
+                    <div className="flex space-x-2">
+                        <Button onClick={handleStreamContent} disabled={isStreaming}>
+                            <RefreshCw className="mr-2 h-4 w-4" /> Regenerate
+                        </Button>
+                        <Button onClick={handleSaveContent}>
+                            <Save className="mr-2 h-4 w-4" /> Save Content
+                        </Button>
+                    </div>
+                )}
+                {isStreaming && (
+                    <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-gray-900 mr-2"></div>
+                        <span>Generating content...</span>
+                    </div>
+                )}
+                {generatedContent && (
+                    <div className="mt-4 p-4 border-2 border-dashed border-gray-300 rounded-md">
+                        <h4 className="text-lg font-semibold mb-2 text-gray-700">Prospective Content</h4>
+                        <div className="text-gray-600">
+                            <MarkdownPreview content={generatedContent} />
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

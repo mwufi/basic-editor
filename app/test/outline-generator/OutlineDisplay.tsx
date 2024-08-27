@@ -9,6 +9,8 @@ type OutlineNode = {
     name?: string;
     title?: string;
     children?: OutlineNode[];
+    content?: string;
+    index?: number;
 };
 
 type OutlineDisplayProps = {
@@ -54,7 +56,9 @@ const OutlineNodeComponent: React.FC<{ node: OutlineNode; onSelect?: (node: Outl
                         </Button>
                     </div>
                 )}
-                <span className="ml-2">{node.name || node.title}</span>
+                <span className={`ml-2 ${node.content ? 'text-green-600' : ''}`}>
+                    {node.name || node.title}
+                </span>
             </div>
             {hasChildren && (
                 <div className={isExpanded ? 'visible' : 'hidden'}>
