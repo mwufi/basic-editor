@@ -18,12 +18,19 @@ import { streamContent } from './ai';
 import { readStreamableValue } from 'ai/rsc';
 import { saveOutlineNodeContent } from '@/lib/instantdb/mutations';
 import { toast } from 'sonner';
-
+import { MarkdownPreview } from '@/components/MarkdownPreview';
 function OutlineContent({ outline, selectedNode }: { outline: Outline, selectedNode: OutlineNode }) {
-    const [content, setContent] = useState<string>('');
+    const [content, setContent] = useState<string | null>(null);
     const [isStreaming, setIsStreaming] = useState(false);
     const nodePath = selectedNode ? getNodePath(selectedNode.id, outline) : null;
     const outlineAsText = selectedNode ? getOutlineAsText({ outline, selectedNode }) : '';
+
+    useEffect(() => {
+        console.log("selectedNode", selectedNode)
+        if (selectedNode) {
+            setContent(selectedNode.content);
+        }
+    }, [selectedNode]);
 
     if (!nodePath) {
         return (
@@ -62,7 +69,7 @@ function OutlineContent({ outline, selectedNode }: { outline: Outline, selectedN
                 disabled={isStreaming}
                 className="mb-4"
             >
-                {isStreaming ? 'Streaming...' : 'Stream Content'}
+                {isStreaming ? 'Streaming...' : content ? 'Regenerate' : 'Generate'}
             </Button>
             {content && <Button
                 onClick={async () => {
@@ -84,7 +91,7 @@ function OutlineContent({ outline, selectedNode }: { outline: Outline, selectedN
             >
                 Save Content
             </Button>}
-            <Debug title="content" obj={content} />
+            <MarkdownPreview content={content} />
             {/* <Debug title="Prompt" obj={getPrompt(outlineAsText, selectedNode, "You are university professor")} /> */}
         </div>
     );

@@ -1,17 +1,25 @@
-import { Editor } from '@tiptap/core';
-import { EditorContent } from '@tiptap/react';
+import React, { useEffect } from 'react';
+import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Markdown } from 'tiptap-markdown';
 
 export function MarkdownPreview({ content }: { content: string }) {
-    const editor = new Editor({
-        content: content,
+    const editor = useEditor({
         extensions: [
             StarterKit,
             Markdown,
         ],
+        content: content || '',
+        editable: false, // Make it read-only
     });
 
-    return <EditorContent editor={editor} />
+    useEffect(() => {
+        let c = content || ''
+        console.log("content", c)
+        if (editor && c !== editor.getHTML()) {
+            editor.commands.setContent(c);
+        }
+    }, [content, editor]);
 
+    return <EditorContent editor={editor} />;
 }
