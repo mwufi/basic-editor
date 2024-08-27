@@ -5,7 +5,7 @@ import { tx, id } from '@instantdb/core'
 export async function saveOutlineForUser(outline: Outline, userId: string) {
     const outlineId = id()
     const createOutlineTx = tx.outlines[outlineId].update({
-        name: outline.title,
+        title: outline.title,
         content: {},
     }).link({
         author: userId
