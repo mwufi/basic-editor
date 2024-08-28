@@ -22,6 +22,7 @@ import { useEditor } from "@/components/editor/EditorContext"
 import { noteAtom, updatePublished } from "./editor/atoms"
 import { useAtomValue, useSetAtom } from "jotai"
 import { usePublish } from "./instant_hooks/usePublish"
+import { updatePublishInfo } from "@/lib/instantdb/mutations"
 
 export default function ShareDialog({ button }: { button: React.ReactNode }) {
     const { editor } = useEditor();
@@ -44,6 +45,8 @@ export default function ShareDialog({ button }: { button: React.ReactNode }) {
         })
         const newLink = `https://owri.netlify.app/share/${noteId}`
         updatePublishedState(noteId);
+
+        updatePublishInfo(note, noteId)
         setShareableLink(newLink)
         setLinkGenerated(true)
 

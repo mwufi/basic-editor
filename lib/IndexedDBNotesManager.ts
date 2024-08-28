@@ -24,6 +24,7 @@ export default class IndexedDBNotesManager {
     }
 
     async addNote(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> {
+        console.log("trying to add note", note);
         const db = await this.openDB();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(this.storeName, 'readwrite');

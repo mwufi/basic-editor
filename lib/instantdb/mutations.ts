@@ -103,15 +103,28 @@ export function getPost(postId: string) {
     const { isLoading, error, data } = db.useQuery(postId ? query : null)
     return { isLoading, error, data }
 }
-
-export async function saveNoteLocal(note: Note) {
+export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boolean; noteId?: number; error?: any }> {
     const notesManager = new IndexedDBNotesManager();
-    const noteId = note.id;
-    if (noteId) {
-        await notesManager.updateNote(noteId, note);
-        return { success: true, noteId };
-    } else {
-        const id = await notesManager.addNote(note);
-        return { success: true, noteId: id };
+    try {
+        if (note.id) {
+            await notesManager.updateNote(note.id, {
+                title: note.title,
+                content: note.content,
+            });
+            console.log("Note updated", note.id, note);
+            return { success: true, noteId: note.id };
+        } else {
+            const id = await notesManager.addNote(note as Note);
+            console.log("Note added", id, note);
+            return { success: true, noteId: id };
+        }
+    } catch (error) {
+        console.error("Error saving note", error);
+        return { success: false, error };
     }
+}
+
+export async function updatePublishInfo(note: Note, publishedId: string) {
+    const notesManager = new IndexedDBNotesManager();
+    await notesManager.updateNote(note.id, { ...note, publishedId, isPublished: true, lastSyncedAt: new Date() });
 }
