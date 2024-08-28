@@ -1,9 +1,9 @@
 'use client'
 
-import { db } from '@/lib/instantdb/client'
 import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 import NoteHeader from '@/components/editor/NoteHeader'
 import { useEffect } from 'react'
+import { getPost } from '@/lib/instantdb/mutations'
 
 interface PageProps {
     params: {
@@ -13,7 +13,7 @@ interface PageProps {
 
 export default function ShareNotePage({ params }: PageProps) {
     console.log("params", params.noteId)
-    const { data, isLoading, error } = db.useQuery({ posts: { $: { where: { id: params.noteId } } } })
+    const { data, isLoading, error } = getPost(params.noteId)
     const note = data?.posts[0] || null
 
     useEffect(() => {

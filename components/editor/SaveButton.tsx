@@ -9,35 +9,49 @@ import { Button } from "@/components/ui/button"
 import { Save } from "lucide-react"
 import { useAtom } from 'jotai';
 import { noteAtom } from './atoms';
-
+import { saveNoteLocal, syncPost } from '@/lib/instantdb/mutations';
+import { useUserProfile } from '@/lib/instantdb/queries';
 
 const SaveButton = () => {
     const { editor } = useEditor()
-    const [currentNote, setNote] = useAtom(noteAtom);
-    return (
-        <Button size="sm" variant="ghost" onClick={async () => {
-            const notesManager = new IndexedDBNotesManager();
-            const noteId = currentNote.id
-            if (noteId) {
-                notesManager.updateNote(noteId, {
-                    title: currentNote.title,
-                    content: editor?.getHTML() ?? '',
-                });
-                toast.success('Document saved! ' + currentNote.title);
-            } else {
-                const id = await notesManager.addNote({
-                    title: currentNote.title,
-                    content: editor?.getHTML() ?? '',
-                });
-                setNote({
-                    ...currentNote,
-                    id: id,
-                });
-                toast.success('Document created! ' + currentNote.title);
+    const [note, setNote] = useAtom(noteAtom);
+    const { user } = useUserProfile();
+    const currentUserId = user?.id;
+
+    const handleSave = async () => {
+        // add some fields to the note
+        let updatedNote = {
+            ...note,
+            content: editor?.getHTML() ?? '',
+            updatedAt: new Date()
+        };
+        if (note.publishedId) {
+            console.log("note.isPublished -- Syncing post...")
+            await syncPost(updatedNote, currentUserId)
+            updatedNote = {
+                ...updatedNote,
+                lastSyncedAt: new Date()
             }
-        }}>
+        }
+        const { noteId } = await saveNoteLocal(updatedNote);
+        setNote({
+            ...updatedNote,
+            id: noteId,
+        });
+
+        toast.success('Document saved! ' + updatedNote.title);
+        console.log("Document saved!", updatedNote)
+    }
+
+    return (
+        <Button
+            size="sm"
+            variant={note.isPublished ? "outline" : "ghost"}
+            onClick={handleSave}
+            className={note.isPublished ? " text-green-500" : ""}
+        >
             <Save className="mr-2 h-4 w-4" />
-            Save
+            {note.isPublished ? "Update" : "Save"}
         </Button>
     )
 }

@@ -1,32 +1,16 @@
-import { UserProfile } from '@/lib/instantdb/queries';
-import { db } from '@/lib/instantdb/client';
-import { tx, id } from '@instantdb/core';
+import { useUserProfile } from '@/lib/instantdb/queries';
 import { toast } from 'sonner';
-
-interface Note {
-    title: string;
-    text: string;
-}
+import { syncPost } from '@/lib/instantdb/mutations';
+import { Note } from '@/lib/types';
 
 export const usePublish = () => {
-    const { user } = db.useAuth();
-    const { data: profile } = db.useQuery(user ? UserProfile(user.email) : null);
-    const currentUserId = profile?.users[0].id;
+    const { user } = useUserProfile();
+    const currentUserId = user?.id;
 
     const addPost = async (note: Note) => {
-        if (note.text.trim()) {
+        if (note.content.trim()) {
             try {
-                const postId = id()
-                await db.transact([
-                    tx.posts[postId].update({
-                        title: note.title,
-                        text: note.text,
-                        createdAt: Date.now()
-                    }).link({
-                        author: currentUserId
-                    })
-                ]);
-                return postId
+                return await syncPost(note, currentUserId)
             } catch (error) {
                 toast.error('Error adding post:', error);
                 console.error('Error adding post:', error);

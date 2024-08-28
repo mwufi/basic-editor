@@ -15,6 +15,7 @@ type Schema = {
         title: string;
         text: string;
         createdAt: number;
+        updatedAt: number;
         comments: Array<Schema['comments']>;
         author: Schema['users'];
         pin: Schema['pins'];

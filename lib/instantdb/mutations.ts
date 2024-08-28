@@ -1,6 +1,7 @@
 import { db } from '@/lib/instantdb/client'
-import { Outline, OutlineNode } from '@/lib/types'
+import { Note, Outline, OutlineNode } from '@/lib/types'
 import { tx, id } from '@instantdb/core'
+import IndexedDBNotesManager from '../IndexedDBNotesManager';
 
 export async function saveOutlineForUser(outline: Outline, userId: string) {
     const outlineId = id()
@@ -71,3 +72,46 @@ export function getOutline(outlineId: string) {
     return { isLoading, error, data }
 }
 
+export async function syncPost(note: Note, userId: string) {
+    const noteId = note.publishedId || id();
+    const updatePostTx = tx.posts[noteId].update({
+        title: note.title,
+        text: note.content,
+        createdAt: note.createdAt || Date.now(),
+        updatedAt: Date.now()
+    }).link({
+        author: userId
+    });
+    const result = await db.transact([updatePostTx]);
+    return { success: true, result, noteId };
+}
+
+export function getPost(postId: string) {
+    const query = {
+        posts: {
+            $: {
+                where: {
+                    id: postId
+                },
+            },
+            author: {},
+            comments: {
+                author: {}
+            }
+        }
+    }
+    const { isLoading, error, data } = db.useQuery(postId ? query : null)
+    return { isLoading, error, data }
+}
+
+export async function saveNoteLocal(note: Note) {
+    const notesManager = new IndexedDBNotesManager();
+    const noteId = note.id;
+    if (noteId) {
+        await notesManager.updateNote(noteId, note);
+        return { success: true, noteId };
+    } else {
+        const id = await notesManager.addNote(note);
+        return { success: true, noteId: id };
+    }
+}

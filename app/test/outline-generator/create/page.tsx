@@ -31,6 +31,7 @@ export default function OutlineGenerator() {
                     setOutline(partialObject);
                 }
             }
+            console.log("finished!", outline);
         } catch (error) {
             setOutline({ error: error.message });
         } finally {

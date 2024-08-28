@@ -19,9 +19,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useEditor } from "@/components/editor/EditorContext"
-import { noteAtom } from "./editor/atoms"
-import { useAtomValue } from "jotai"
-import { db } from "@/lib/instantdb/client"
+import { noteAtom, updatePublished } from "./editor/atoms"
+import { useAtomValue, useSetAtom } from "jotai"
 import { usePublish } from "./instant_hooks/usePublish"
 
 export default function ShareDialog({ button }: { button: React.ReactNode }) {
@@ -33,16 +32,18 @@ export default function ShareDialog({ button }: { button: React.ReactNode }) {
     const [tags, setTags] = useState("")
     const [linkGenerated, setLinkGenerated] = useState(false)
     const note = useAtomValue(noteAtom)
+    const updatePublishedState = useSetAtom(updatePublished);
 
     // this part publishes to Instant!
     const addPost = usePublish();
     const handleGenerateLink = async () => {
-        // const uniqueId = crypto.randomUUID()
-        const result = await addPost({
-            title: note.title,
-            text: editor?.getHTML()
+        console.log("generating link")
+        const { noteId } = await addPost({
+            ...note,
+            content: editor?.getHTML()
         })
-        const newLink = `https://owri.netlify.app/share/${result}`
+        const newLink = `https://owri.netlify.app/share/${noteId}`
+        updatePublishedState(noteId);
         setShareableLink(newLink)
         setLinkGenerated(true)
 
@@ -50,8 +51,6 @@ export default function ShareDialog({ button }: { button: React.ReactNode }) {
         const noteContent = editor?.getHTML()
         console.log("Current note content:", noteContent)
         console.log("Current note", note)
-
-
     }
 
     const handleCopyLink = () => {
