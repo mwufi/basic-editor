@@ -16,13 +16,14 @@ import Editor, { insertCustomButton, insertGallery } from '@/components/editor/E
 import SaveButton from '@/components/editor/SaveButton';
 import EditorCharacterCount from '@/components/editor/CharacterCount';
 import { noteTitleAtom } from '@/components/editor/atoms';
+import ShareMenu from './ShareMenu';
 
 
 const Center = ({ children }: { children: React.ReactNode }) => {
     return <div className='relative h-full'><div className="mx-auto max-w-[600px] py-6">{children}</div></div>
 }
 
-const TopBar = ({ onShare }) => {
+const TopBar = () => {
     const [title, setTitle] = useAtom(noteTitleAtom);
     return (
         <div className="sticky top-0 z-10 flex items-center justify-center p-2 rounded">
@@ -53,13 +54,7 @@ const TopBar = ({ onShare }) => {
             )}
             <div className="absolute right-0">
                 <SaveButton />
-
-                <BottomMenu button={
-                    <Button size="sm" variant="ghost">
-                        <Share className="mr-2 h-4 w-4" />
-                        Share
-                    </Button>
-                } />
+                <ShareMenu />
             </div>
         </div>
     )

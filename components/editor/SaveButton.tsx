@@ -26,7 +26,7 @@ const SaveButton = () => {
             };
 
             let updatedNoteFromCloud = updatedNote;
-            if (note.publishedId) {
+            if (note.isPublished) {
                 const { result, updatedNote: updatedNoteFromCloud } = await syncPost(updatedNote, currentUserId)
                 console.log("syncPost result", result)
                 setNote(updatedNoteFromCloud)

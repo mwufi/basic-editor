@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from "react"
-import { Copy, X } from "lucide-react"
+import { Copy, Share, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
 import {
     Dialog,
     DialogContent,
@@ -23,7 +22,7 @@ import { noteAtom, publishInfoAtom } from "./editor/atoms"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { usePublish } from "./instant_hooks/usePublish"
 
-export default function ShareDialog({ button }: { button: React.ReactNode }) {
+export default function ShareMenu() {
     const { editor } = useEditor();
     const [audience, setAudience] = useState("everyone")
     const [comments, setComments] = useState("everyone")
@@ -31,6 +30,8 @@ export default function ShareDialog({ button }: { button: React.ReactNode }) {
     const [tags, setTags] = useState("")
     const [publishInfo, setPublishInfo] = useAtom(publishInfoAtom)
     const note = useAtomValue(noteAtom)
+    console.log("note", note)
+    console.log("publishInfo", publishInfo)
 
     const shareableLink = publishInfo.publishedId ? `https://owri.netlify.app/share/${publishInfo.publishedId}` : ""
 
@@ -63,7 +64,10 @@ export default function ShareDialog({ button }: { button: React.ReactNode }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                {button}
+                <Button size="sm" variant="ghost">
+                    <Share className="mr-2 h-4 w-4" />
+                    Share
+                </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] flex flex-col">
                 <DialogHeader>

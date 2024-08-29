@@ -92,6 +92,7 @@ export async function syncPost(note: Note, userId: string) {
         lastSyncedAt: new Date(),
         publishedAt: note.publishedAt || new Date(),
         isPublished: true,
+        publishedId: noteId
     }
     try {
         await saveNoteLocal(note)

@@ -7,10 +7,11 @@ import Tiptap from "@/components/TipTap"
 import { Button } from '@/components/ui/button'
 import Editor from '@/components/editor/Editor'
 import NoteHeader from '@/components/editor/NoteHeader'
-import { Note } from '@/lib/types'
+import { useAtom } from 'jotai'
+import { noteAtom } from '@/components/editor/atoms'
 
 const BlogPost = () => {
-    const [note, setNote] = useState<Note | null>(null)
+    const [note, setNote] = useAtom(noteAtom)
     const [isEditing, setIsEditing] = useState(false)
     const { id } = useParams()
 
