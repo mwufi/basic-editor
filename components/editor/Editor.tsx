@@ -18,6 +18,8 @@ import { uploadImageToSupabase } from '@/lib/uploadImage';
 import CustomButton from './CustomButton';
 import CustomImageGallery from './CustomImageGallery';
 import { WelcomeMessage } from '../WelcomeText';
+import { useSetAtom } from 'jotai';
+import { updateContentAtom } from './atoms';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -136,9 +138,22 @@ const Editor = ({ editable = true, content = null, font = 'serif' }) => {
         editable: editable,
     })
 
+    const updateContent = useSetAtom(updateContentAtom);
+
     useEffect(() => {
         if (editor) {
             setEditor(editor); // Set the editor in the context when it's created
+
+            const handleUpdate = () => {
+                const content = editor.getHTML();
+                updateContent(content);
+            };
+
+            editor.on('update', handleUpdate);
+
+            return () => {
+                editor.off('update', handleUpdate);
+            };
         }
     }, [editor, setEditor]);
 
