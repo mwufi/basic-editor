@@ -18,8 +18,8 @@ import { uploadImageToSupabase } from '@/lib/uploadImage';
 import CustomButton from './CustomButton';
 import CustomImageGallery from './CustomImageGallery';
 import { WelcomeMessage } from '../WelcomeText';
-import { useSetAtom } from 'jotai';
-import { updateContentAtom } from './atoms';
+import { useAtom, useSetAtom } from 'jotai';
+import { noteAtom, updateContentAtom } from './atoms';
 
 const libreBaskerville = Libre_Baskerville({
     weight: ['400', '700'],
@@ -95,6 +95,8 @@ export const insertGallery = (editor) => {
 
 const Editor = ({ editable = true, content = null, font = 'serif' }) => {
     const { setEditor } = useEditor(); // Use the context
+    const [note] = useAtom(noteAtom);
+    console.log("Note", note.text)
 
     const editor = useTiptapEditor({
         extensions: [
@@ -129,7 +131,7 @@ const Editor = ({ editable = true, content = null, font = 'serif' }) => {
                 },
             }),
         ],
-        content: content || WelcomeMessage,
+        content: content,
         editorProps: {
             attributes: {
                 class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
@@ -156,6 +158,13 @@ const Editor = ({ editable = true, content = null, font = 'serif' }) => {
             };
         }
     }, [editor, setEditor]);
+
+    useEffect(() => {
+        if (editor) {
+            console.log("Setting content", note.text)
+            editor.commands.setContent(note.text || note.content);
+        }
+    }, [note.title, editor]);
 
     return <div>{editor && <EditorContent editor={editor} />}</div>;
 }

@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Link from 'next/link'
 import BottomFooter from '@/components/blocks/BottomFooter'
+import { useAtom, useSetAtom } from 'jotai'
+import { noteAtom, resetNoteAtom } from '@/components/editor/atoms'
 
 const EmptyState = () => {
     return (
@@ -23,6 +25,7 @@ const EmptyState = () => {
 
 const BlogHome = () => {
     const [blogPosts, setBlogPosts] = useState([])
+    const resetNote = useSetAtom(resetNoteAtom)
 
     useEffect(() => {
         const fetchBlogPosts = async () => {
@@ -34,6 +37,11 @@ const BlogHome = () => {
 
         fetchBlogPosts()
     }, [])
+
+    useEffect(() => {
+        resetNote()
+    }, [])
+
     return (
         <div className="overflow-y-scroll min-h-screen w-full">
             <main className="max-w-3xl mx-auto p-4">

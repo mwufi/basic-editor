@@ -6,7 +6,7 @@ import { atom } from 'jotai';
 export const noteAtom = atom<Note>({
     id: null,
     title: 'Untitled',
-    content: '',
+    text: '',
     createdAt: new Date(),
     updatedAt: new Date(),
     isPublished: false,
@@ -14,6 +14,22 @@ export const noteAtom = atom<Note>({
     publishedAt: null,
     lastSyncedAt: null,
 });
+
+export const resetNoteAtom = atom(
+    null,
+    (_, set) => set(noteAtom, {
+        id: null,
+        title: 'Untitled',
+        text: '',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isPublished: false,
+        publishedId: null,
+        publishedAt: null,
+        lastSyncedAt: null,
+    })
+);
+
 
 export const noteTitleAtom = atom(
     (get) => get(noteAtom).title,
@@ -27,7 +43,7 @@ export const updateTitleAtom = atom(
 
 export const updateContentAtom = atom(
     null,
-    (get, set, newContent: string) => set(noteAtom, { ...get(noteAtom), content: newContent })
+    (get, set, newContent: string) => set(noteAtom, { ...get(noteAtom), text: newContent })
 );
 
 export const publishInfoAtom = atom(

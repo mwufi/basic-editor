@@ -14,7 +14,8 @@ export type Outline = {
 export interface Note {
     id?: number;
     title: string;
-    content: string;
+    text: string;
+    content?: string; // legacy!!
     createdAt: Date;
     updatedAt: Date;
 

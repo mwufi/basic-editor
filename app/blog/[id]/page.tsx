@@ -65,7 +65,7 @@ const BlogPost = () => {
                                 </Button>
                             </div>
                         )}
-                        <Editor content={note.content || note.text} font="serif" editable={false} />
+                        <Editor font="serif" editable={false} />
                     </>
                 ) : (
                     <Tiptap />
