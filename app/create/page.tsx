@@ -1,13 +1,13 @@
 'use client'
 
-import CommandPalette from "@/components/blocks/CommandPalette";
 import Tiptap from "@/components/TipTap";
-import { useState } from "react";
+import TopBar from "@/components/TopBar";
 
 export default function Home() {
   return (
     <>
       {/* <CommandPalette /> */}
+      <TopBar />
       <Tiptap wordcount={true} />
     </>
   );

@@ -5,7 +5,7 @@ import SaveButton from "./editor/SaveButton";
 import ShareMenu from "./ShareMenu";
 import { Button } from "@/components/ui/button";
 
-const TopBar = ({ children }: { children: React.ReactNode }) => {
+const TopBar = ({ children }: { children?: React.ReactNode }) => {
     const [title, setTitle] = useAtom(noteTitleAtom);
     return (
         <div className="sticky top-0 z-10 flex flex-col items-center justify-center p-2 rounded">
