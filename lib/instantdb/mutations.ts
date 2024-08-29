@@ -132,6 +132,11 @@ export function getPost(postId: string) {
 
 export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boolean; updatedNote?: Note; error?: any }> {
     const notesManager = new IndexedDBNotesManager();
+    if (!note.text && note.content) {
+        console.log("[legacy] Note has content, but no text. Converting content to text.")
+        note.text = note.content
+    }
+
     if (note.id) {
         await notesManager.updateNote(note.id, note);
         console.log("[saveNoteLocal] Note updated", note.id, note.title);
