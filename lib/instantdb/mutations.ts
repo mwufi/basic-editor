@@ -73,6 +73,7 @@ export function getOutline(outlineId: string) {
 }
 
 export async function syncPost(note: Note, userId: string) {
+    // Update publish
     const noteId = note.publishedId || id();
     const updatePostTx = tx.posts[noteId].update({
         title: note.title,
@@ -82,8 +83,23 @@ export async function syncPost(note: Note, userId: string) {
     }).link({
         author: userId
     });
+
     const result = await db.transact([updatePostTx]);
-    return { success: true, result, noteId };
+    console.log("Synced post to cloud", noteId, result)
+
+    const updatedNote = {
+        ...note,
+        lastSyncedAt: new Date(),
+        publishedAt: note.publishedAt || new Date(),
+        isPublished: true,
+    }
+    try {
+        await saveNoteLocal(note)
+    } catch (error) {
+        console.error('Error updating local note:', error);
+    }
+
+    return { success: true, result, updatedNote }
 }
 
 export function getPost(postId: string) {
@@ -103,14 +119,12 @@ export function getPost(postId: string) {
     const { isLoading, error, data } = db.useQuery(postId ? query : null)
     return { isLoading, error, data }
 }
+
 export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boolean; noteId?: number; error?: any }> {
     const notesManager = new IndexedDBNotesManager();
     try {
         if (note.id) {
-            await notesManager.updateNote(note.id, {
-                title: note.title,
-                content: note.content,
-            });
+            await notesManager.updateNote(note.id, note);
             console.log("Note updated", note.id, note);
             return { success: true, noteId: note.id };
         } else {

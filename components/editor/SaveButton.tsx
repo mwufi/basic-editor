@@ -2,45 +2,42 @@
 
 import { useEditor } from '@/components/editor/EditorContext';
 
-import IndexedDBNotesManager from '@/lib/IndexedDBNotesManager';
 import { toast } from 'sonner'
-
 import { Button } from "@/components/ui/button"
 import { Save } from "lucide-react"
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { noteAtom } from './atoms';
 import { saveNoteLocal, syncPost } from '@/lib/instantdb/mutations';
 import { useUserProfile } from '@/lib/instantdb/queries';
 
+
 const SaveButton = () => {
     const { editor } = useEditor()
-    const [note, setNote] = useAtom(noteAtom);
     const { user } = useUserProfile();
     const currentUserId = user?.id;
+    const [note, setNote] = useAtom(noteAtom);
 
     const handleSave = async () => {
-        // add some fields to the note
-        let updatedNote = {
-            ...note,
-            content: editor?.getHTML() ?? '',
-            updatedAt: new Date()
-        };
-        if (note.publishedId) {
-            console.log("note.isPublished -- Syncing post...")
-            await syncPost(updatedNote, currentUserId)
-            updatedNote = {
-                ...updatedNote,
-                lastSyncedAt: new Date()
-            }
-        }
-        const { noteId } = await saveNoteLocal(updatedNote);
-        setNote({
-            ...updatedNote,
-            id: noteId,
-        });
+        try {
+            console.log("Saving note...", note)
+            let updatedNote = {
+                ...note,
+                content: editor?.getHTML() ?? ''
+            };
 
-        toast.success('Document saved! ' + updatedNote.title);
-        console.log("Document saved!", updatedNote)
+            let updatedNoteFromCloud = updatedNote;
+            if (note.publishedId) {
+                const { result, updatedNote: updatedNoteFromCloud } = await syncPost(updatedNote, currentUserId)
+                console.log("syncPost result", result)
+                setNote(updatedNoteFromCloud)
+            }
+            await saveNoteLocal(updatedNoteFromCloud);
+            toast.success('Document saved! ' + note.title);
+            console.log("SUCCESS!", note)
+        } catch (error) {
+            console.error("Error saving note", error)
+            toast.error('Failed to save document');
+        }
     }
 
     return (

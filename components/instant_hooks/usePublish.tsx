@@ -7,14 +7,15 @@ export const usePublish = () => {
     const { user } = useUserProfile();
     const currentUserId = user?.id;
 
-    const addPost = async (note: Note) => {
+    const addPost = async (note: Note): Promise<{ success: boolean, result: any, updatedNote: Note }> => {
         if (note.content.trim()) {
             try {
-                return await syncPost(note, currentUserId)
+                const result = await syncPost(note, currentUserId)
+                return result
             } catch (error) {
                 toast.error('Error adding post:', error);
                 console.error('Error adding post:', error);
-                return null
+                return { success: false, result: null, updatedNote: null }
             }
         }
     };

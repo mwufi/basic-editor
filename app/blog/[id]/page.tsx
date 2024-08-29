@@ -7,16 +7,17 @@ import Tiptap from "@/components/TipTap"
 import { Button } from '@/components/ui/button'
 import Editor from '@/components/editor/Editor'
 import NoteHeader from '@/components/editor/NoteHeader'
+import { Note } from '@/lib/types'
 
 const BlogPost = () => {
-    const [post, setPost] = useState(null)
+    const [note, setNote] = useState<Note | null>(null)
     const [isEditing, setIsEditing] = useState(false)
     const { id } = useParams()
 
     const fetchPost = async () => {
         const notesManager = new IndexedDBNotesManager()
-        const fetchedPost = await notesManager.getNote(parseInt(id as string))
-        setPost(fetchedPost)
+        const fetchedNote = await notesManager.getNote(parseInt(id as string))
+        setNote(fetchedNote)
     }
 
     useEffect(() => {
@@ -27,7 +28,7 @@ const BlogPost = () => {
         setIsEditing(!isEditing)
     }
 
-    if (!post) {
+    if (!note) {
         return <div>Loading...</div>
     }
 
@@ -41,11 +42,25 @@ const BlogPost = () => {
             <main className="max-w-3xl mx-auto p-4">
                 {!isEditing ? (
                     <>
-                        <NoteHeader title={post.title} createdAt={post.createdAt} author={post.author?.handle} />
-                        <Editor content={post.content} font="serif" editable={false} />
+                        <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
+                        {note.isPublished && (
+                            <div className="mb-4">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-green-500 hover:text-green-600"
+                                    asChild
+                                >
+                                    <a href={`/share/${note.publishedId}`}>
+                                        Published
+                                    </a>
+                                </Button>
+                            </div>
+                        )}
+                        <Editor content={note.content || note.text} font="serif" editable={false} />
                     </>
                 ) : (
-                    <Tiptap note={post} />
+                    <Tiptap />
                 )}
             </main>
         </div>

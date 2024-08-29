@@ -20,17 +20,33 @@ export const noteTitleAtom = atom(
     (get, set, newTitle: string) => set(noteAtom, { ...get(noteAtom), title: newTitle })
 );
 
-export const updatePublished = atom(
+export const updateTitleAtom = atom(
     null,
-    (get, set, publishedId: string) => {
+    (get, set, newTitle: string) => set(noteAtom, { ...get(noteAtom), title: newTitle })
+);
+
+export const updateContentAtom = atom(
+    null,
+    (get, set, newContent: string) => set(noteAtom, { ...get(noteAtom), content: newContent })
+);
+
+export const publishInfoAtom = atom(
+    (get) => ({
+        isPublished: get(noteAtom).isPublished,
+        publishedId: get(noteAtom).publishedId,
+        lastSyncedAt: get(noteAtom).lastSyncedAt,
+        publishedAt: get(noteAtom).publishedAt,
+    }),
+    (get, set, newPublishInfo: {
+        isPublished?: boolean,
+        publishedId?: string | null,
+        lastSyncedAt?: Date | null,
+        publishedAt?: Date | null,
+    }) => {
         const currentNote = get(noteAtom);
-        const now = new Date();
         set(noteAtom, {
             ...currentNote,
-            publishedId: publishedId,
-            publishedAt: currentNote.publishedAt || now,
-            lastSyncedAt: now,
-            isPublished: true,
+            ...newPublishInfo,
         });
     }
 );

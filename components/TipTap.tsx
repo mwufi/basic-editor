@@ -10,12 +10,12 @@ import { ArrowLeft, Share } from "lucide-react"
 import SimpleDialog from './blocks/SimpleDialog';
 import BottomMenu from './BottomMenu';
 import Link from 'next/link';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 
 import Editor, { insertCustomButton, insertGallery } from '@/components/editor/Editor';
 import SaveButton from '@/components/editor/SaveButton';
 import EditorCharacterCount from '@/components/editor/CharacterCount';
-import { noteAtom, noteTitleAtom } from '@/components/editor/atoms';
+import { noteTitleAtom } from '@/components/editor/atoms';
 
 
 const Center = ({ children }: { children: React.ReactNode }) => {
@@ -67,27 +67,8 @@ const TopBar = ({ onShare }) => {
 
 
 
-const Tiptap = ({ note = undefined, wordcount = true }) => {
+const Tiptap = ({ wordcount = true }) => {
     const { editor } = useEditor();
-    const setNote = useSetAtom(noteAtom);
-
-    useEffect(() => {
-        if (note) {
-            setNote({
-                ...note,
-                title: note.title ?? 'Untitled',
-                text: editor?.getHTML() ?? '',
-            });
-        }
-    }, [note, setNote, editor]);
-
-    const setNoteTitle = (newTitle) => {
-        setNote((prevNote) => ({ ...prevNote, title: newTitle }));
-    };
-
-    const setNoteContent = (newContent) => {
-        setNote((prevNote) => ({ ...prevNote, text: newContent }));
-    };
 
     // for interactive fun :)
     useEffect(() => {
@@ -96,14 +77,6 @@ const Tiptap = ({ note = undefined, wordcount = true }) => {
             window.editor = editor;
         }
     }, [editor])
-
-    useEffect(() => {
-        if (note) {
-            editor?.commands.setContent(note.content)
-            setNoteTitle(note.title)
-            setNoteContent(note.content)
-        }
-    }, [editor, note])
 
     return (
         <div className="flex flex-col px-6">

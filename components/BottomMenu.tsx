@@ -19,36 +19,35 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useEditor } from "@/components/editor/EditorContext"
-import { noteAtom, updatePublished } from "./editor/atoms"
-import { useAtomValue, useSetAtom } from "jotai"
+import { noteAtom, publishInfoAtom } from "./editor/atoms"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { usePublish } from "./instant_hooks/usePublish"
-import { updatePublishInfo } from "@/lib/instantdb/mutations"
 
 export default function ShareDialog({ button }: { button: React.ReactNode }) {
     const { editor } = useEditor();
-    const [shareableLink, setShareableLink] = useState("")
     const [audience, setAudience] = useState("everyone")
     const [comments, setComments] = useState("everyone")
     const [commentOrder, setCommentOrder] = useState("top")
     const [tags, setTags] = useState("")
-    const [linkGenerated, setLinkGenerated] = useState(false)
+    const [publishInfo, setPublishInfo] = useAtom(publishInfoAtom)
     const note = useAtomValue(noteAtom)
-    const updatePublishedState = useSetAtom(updatePublished);
+
+    const shareableLink = publishInfo.publishedId ? `https://owri.netlify.app/share/${publishInfo.publishedId}` : ""
 
     // this part publishes to Instant!
     const addPost = usePublish();
     const handleGenerateLink = async () => {
         console.log("generating link")
-        const { noteId } = await addPost({
+        const { updatedNote } = await addPost({
             ...note,
             content: editor?.getHTML()
         })
-        const newLink = `https://owri.netlify.app/share/${noteId}`
-        updatePublishedState(noteId);
-
-        updatePublishInfo(note, noteId)
-        setShareableLink(newLink)
-        setLinkGenerated(true)
+        setPublishInfo({
+            ...publishInfo,
+            publishedId: updatedNote.publishedId,
+            lastSyncedAt: updatedNote.lastSyncedAt,
+            publishedAt: updatedNote.publishedAt,
+        })
 
         // Log the contents of the current note
         const noteContent = editor?.getHTML()
@@ -76,7 +75,7 @@ export default function ShareDialog({ button }: { button: React.ReactNode }) {
                         <Button onClick={handleGenerateLink} size="sm" className="w-full sm:w-auto">
                             Get a sharable link
                         </Button>
-                        {linkGenerated && (
+                        {shareableLink != "" && (
                             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                                 <Input
                                     value={shareableLink}

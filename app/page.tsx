@@ -45,11 +45,14 @@ const BlogHome = () => {
                         {blogPosts.map((post, index) => (
                             <li key={index} className="flex justify-between items-center hover:bg-gray-100 p-2">
                                 <Link href={`/blog/${post.id}`} className="flex-1">
-                                    <span className="font-medium">{post.title}</span>
+                                    <span className={`font-medium ${post.isPublished ? 'text-green-500' : ''}`}>{post.title}</span>
                                 </Link>
                                 <span className="text-gray-500">
                                     {new Date(post.createdAt).toLocaleDateString()}
                                 </span>
+                                {post.isPublished && (
+                                    <span className="ml-2 text-green-500">Published</span>
+                                )}
                             </li>
                         ))}
                     </ul>
