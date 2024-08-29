@@ -21,6 +21,7 @@ import { useEditor } from "@/components/editor/EditorContext"
 import { noteAtom, publishInfoAtom } from "./editor/atoms"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { usePublish } from "./instant_hooks/usePublish"
+import NotePublishInfo from "./NotePublishInfo"
 
 export default function ShareMenu() {
     const { editor } = useEditor();
@@ -72,11 +73,15 @@ export default function ShareMenu() {
                     <DialogTitle className="text-xl sm:text-2xl">Share Your Document</DialogTitle>
                     <DialogDescription>Configure sharing settings for your document.</DialogDescription>
                 </DialogHeader>
-                <div className="flex-grow overflow-y-auto p-4 sm:p-6 space-y-6 sm:space-y-8 border border-gray-200 rounded-lg">
+                <div className="flex-grow overflow-y-auto p-2 space-y-6 sm:space-y-8">
                     <div className="space-y-2 sm:space-y-4">
-                        <Button onClick={handleGenerateLink} size="sm" className="w-full sm:w-auto">
-                            Get a sharable link
-                        </Button>
+                        {shareableLink ? (
+                            <NotePublishInfo note={note} />
+                        ) : (
+                            <Button onClick={handleGenerateLink} size="sm" className="w-full sm:w-auto">
+                                Get a sharable link
+                            </Button>
+                        )}
                         {shareableLink != "" && (
                             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                                 <Input
@@ -91,63 +96,6 @@ export default function ShareMenu() {
                             </div>
                         )}
                     </div>
-                    <div className="space-y-2 sm:space-y-4">
-                        <h3 className="text-base sm:text-lg font-medium">This post is for...</h3>
-                        <RadioGroup value={audience} onValueChange={setAudience}>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="everyone" id="everyone" />
-                                <Label htmlFor="everyone">Everyone</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="paid" id="paid" />
-                                <Label htmlFor="paid">People with the link only</Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                    <div className="space-y-2 sm:space-y-4">
-                        <h3 className="text-base sm:text-lg font-medium">Allow comments from...</h3>
-                        <RadioGroup value={comments} onValueChange={setComments}>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="everyone" id="comments-everyone" />
-                                <Label htmlFor="comments-everyone">Everyone</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="no-one" id="no-one" />
-                                <Label htmlFor="no-one">No one (disable comments)</Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                    <div className="space-y-2 sm:space-y-4">
-                        <h3 className="text-base sm:text-lg font-medium">Order comments by…</h3>
-                        <RadioGroup value={commentOrder} onValueChange={setCommentOrder}>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="top" id="top" />
-                                <Label htmlFor="top">Top comments first</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="newest" id="newest" />
-                                <Label htmlFor="newest">Newest comments first</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="oldest" id="oldest" />
-                                <Label htmlFor="oldest">Oldest comments first</Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                    <div className="space-y-2 sm:space-y-4">
-                        <h3 className="text-base sm:text-lg font-medium">Add tags</h3>
-                        <Textarea
-                            value={tags}
-                            onChange={(e) => setTags(e.target.value)}
-                            placeholder="Enter tags separated by commas"
-                            className="min-h-[80px] sm:min-h-[100px]"
-                        />
-                    </div>
-                </div>
-                <div className="p-4 sm:p-6 bg-gray-100 flex justify-end">
-                    <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                        Save
-                    </Button>
                 </div>
             </DialogContent>
         </Dialog>

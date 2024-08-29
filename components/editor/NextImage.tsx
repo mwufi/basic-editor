@@ -38,10 +38,10 @@ const NextImage = Image.extend({
                         src={src}
                         alt={alt || ''}
                         title={title}
-                        width={600}
-                        height={height || 400}
+                        width={768} // 48rem = 768px (assuming 1rem = 16px)
+                        height={(height || 400) * (768 / 600)} // Maintain aspect ratio
                         loader={loader}
-                        style={{ height: 'auto' }}
+                        style={{ height: 'auto', maxWidth: '48rem', width: '100%' }}
                     />
                 </NodeViewWrapper>
             )
