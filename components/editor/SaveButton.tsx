@@ -17,7 +17,7 @@ const SaveButton = () => {
     const handleSave = async () => {
         try {
             if (note.isPublished) {
-                const {updatedNote} = await syncPost(note, currentUserId)
+                const { updatedNote } = await syncPost(note, currentUserId)
                 setNote(updatedNote)
             } else {
                 await saveNoteLocal(note);
@@ -26,6 +26,7 @@ const SaveButton = () => {
             console.log("document saved!")
         } catch (error) {
             console.error("Error saving note", error)
+            console.log(note)
             toast.error('Failed to save document');
         }
     }

@@ -93,10 +93,8 @@ export const insertGallery = (editor) => {
 };
 
 
-const Editor = ({ editable = true, content = null, font = 'serif' }) => {
+const Editor = ({ editable = true, initialContent = null, font = 'serif' }) => {
     const { setEditor } = useEditor(); // Use the context
-    const [note] = useAtom(noteAtom);
-    console.log("Note", note.text)
 
     const editor = useTiptapEditor({
         extensions: [
@@ -131,7 +129,7 @@ const Editor = ({ editable = true, content = null, font = 'serif' }) => {
                 },
             }),
         ],
-        content: content,
+        content: initialContent,
         editorProps: {
             attributes: {
                 class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
@@ -139,6 +137,12 @@ const Editor = ({ editable = true, content = null, font = 'serif' }) => {
         },
         editable: editable,
     })
+
+    useEffect(() => {
+        if (editor && initialContent !== null) {
+            editor.commands.setContent(initialContent);
+        }
+    }, [editor, initialContent]);
 
     const updateContent = useSetAtom(updateContentAtom);
 
@@ -159,18 +163,7 @@ const Editor = ({ editable = true, content = null, font = 'serif' }) => {
         }
     }, [editor, setEditor]);
 
-    useEffect(() => {
-        if (editor) {
-            console.log("Setting content", note.text)
-            editor.commands.setContent(note.text || note.content);
-        }
-    }, [note.title, editor]);
-
     return <div>{editor && <EditorContent editor={editor} />}</div>;
-}
-
-export function ReadOnlyEditor({ content, font = 'serif' }) {
-    return <Editor content={content} editable={false} font={font} />
 }
 
 export default Editor

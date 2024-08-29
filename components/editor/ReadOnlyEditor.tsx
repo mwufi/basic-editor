@@ -1,8 +1,8 @@
 import Editor from './Editor'
 
-const ReadOnlyEditor = ({ content, font = 'serif' }) => {
+const ReadOnlyEditor = ({ initialContent, font = 'serif' }) => {
     return (
-        <Editor content={content} font={font} editable={false} />
+        <Editor initialContent={initialContent} font={font} editable={false} />
     )
 }
 

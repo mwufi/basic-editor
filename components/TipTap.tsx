@@ -5,10 +5,9 @@ import { toast } from 'sonner'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { ArrowLeft, Share } from "lucide-react"
 import SimpleDialog from './blocks/SimpleDialog';
-import BottomMenu from './BottomMenu';
 import Link from 'next/link';
 import { useAtom, useAtomValue } from 'jotai';
 
@@ -74,6 +73,14 @@ const Tiptap = ({ wordcount = true }) => {
         }
     }, [editor])
 
+    const editorComponent = useMemo(() => {
+        if (!note.text && note.content) {
+            console.log("Note has content but no text (legacy)")
+        }
+        console.log("note memo  hit!")
+        return <Editor initialContent={note.text || note.content} />
+    }, [note.id])
+
     return (
         <div className="flex flex-col px-6">
             <TopBar />
@@ -119,7 +126,7 @@ const Tiptap = ({ wordcount = true }) => {
                 <Button onClick={() => insertGallery(editor)}>Insert Gallery</Button>
             </div>
             <Center>
-                <Editor />
+                {editorComponent}
             </Center>
         </div>
 

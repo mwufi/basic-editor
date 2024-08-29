@@ -9,6 +9,7 @@ import Editor from '@/components/editor/Editor'
 import NoteHeader from '@/components/editor/NoteHeader'
 import { useAtom } from 'jotai'
 import { noteAtom } from '@/components/editor/atoms'
+import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
@@ -31,6 +32,11 @@ const BlogPost = () => {
 
     if (!note) {
         return <div>Loading...</div>
+    }
+
+    const noteContent = note.text || note.content
+    if (!note.text && note.content) {
+        console.log("Note has content but no text (legacy)")
     }
 
     return (
@@ -65,7 +71,7 @@ const BlogPost = () => {
                                 </Button>
                             </div>
                         )}
-                        <Editor font="serif" editable={false} />
+                        <ReadOnlyEditor initialContent={noteContent} font="serif" />
                     </>
                 ) : (
                     <Tiptap />
