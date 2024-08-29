@@ -44,7 +44,14 @@ const BlogPost = () => {
                 {!isEditing ? (
                     <>
                         <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
-                        {note.isPublished && (
+                        {note.isPublished && !note.publishedId && (
+                            <div className="mb-4">
+                                <p className="text-red-500 font-semibold">
+                                    Error: Note is marked as published but has no published ID.
+                                </p>
+                            </div>
+                        )}
+                        {note.publishedId && (
                             <div className="mb-4">
                                 <Button
                                     variant="outline"

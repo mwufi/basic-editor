@@ -10,12 +10,12 @@ import { ArrowLeft, Share } from "lucide-react"
 import SimpleDialog from './blocks/SimpleDialog';
 import BottomMenu from './BottomMenu';
 import Link from 'next/link';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 
 import Editor, { insertCustomButton, insertGallery } from '@/components/editor/Editor';
 import SaveButton from '@/components/editor/SaveButton';
 import EditorCharacterCount from '@/components/editor/CharacterCount';
-import { noteTitleAtom } from '@/components/editor/atoms';
+import { noteAtom, noteTitleAtom } from '@/components/editor/atoms';
 import ShareMenu from './ShareMenu';
 
 
@@ -64,6 +64,7 @@ const TopBar = () => {
 
 const Tiptap = ({ wordcount = true }) => {
     const { editor } = useEditor();
+    const note = useAtomValue(noteAtom);
 
     // for interactive fun :)
     useEffect(() => {
@@ -75,12 +76,25 @@ const Tiptap = ({ wordcount = true }) => {
 
     return (
         <div className="flex flex-col px-6">
-            <TopBar
-                onShare={() => {
-                    navigator.clipboard.writeText(editor?.getHTML() ?? '')
-                    toast.success('Document copied to clipboard!');
-                }} />
-
+            <TopBar />
+            {note.publishedId ? (
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-green-500 hover:text-green-600 mb-4"
+                    asChild
+                >
+                    <Link href={`/share/${note.publishedId}`}>
+                        View Published
+                    </Link>
+                </Button>
+            ) : note.isPublished ? (
+                <div className="mb-4">
+                    <p className="text-red-500 font-semibold">
+                        Error: Note is marked as published but has no published ID.
+                    </p>
+                </div>
+            ) : null}
             <div className="fixed left-4 bottom-4 z-10">
                 {wordcount && <EditorCharacterCount limit={500} display="words" />}
                 <SimpleDialog

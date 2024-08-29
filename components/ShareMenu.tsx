@@ -30,8 +30,6 @@ export default function ShareMenu() {
     const [tags, setTags] = useState("")
     const [publishInfo, setPublishInfo] = useAtom(publishInfoAtom)
     const note = useAtomValue(noteAtom)
-    console.log("note", note)
-    console.log("publishInfo", publishInfo)
 
     const shareableLink = publishInfo.publishedId ? `https://owri.netlify.app/share/${publishInfo.publishedId}` : ""
 

@@ -85,7 +85,6 @@ export async function syncPost(note: Note, userId: string) {
     });
 
     const result = await db.transact([updatePostTx]);
-    console.log("Synced post to cloud", noteId, result)
 
     const updatedNote = {
         ...note,
@@ -95,7 +94,17 @@ export async function syncPost(note: Note, userId: string) {
         publishedId: noteId
     }
     try {
-        await saveNoteLocal(note)
+        await saveNoteLocal(updatedNote)
+        // Read the updated note from local storage to verify publishedId
+        const notesManager = new IndexedDBNotesManager();
+        const verifiedNote = await notesManager.getNote(updatedNote.id);
+
+        if (!verifiedNote.publishedId) {
+            console.error('Error: Note was not properly updated with publishedId');
+            throw new Error('Failed to update note with publishedId');
+        }
+
+        console.log('Note successfully updated and verified:', verifiedNote.title);
     } catch (error) {
         console.error('Error updating local note:', error);
     }
@@ -121,18 +130,17 @@ export function getPost(postId: string) {
     return { isLoading, error, data }
 }
 
-export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boolean; noteId?: number; error?: any }> {
+export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boolean; updatedNote?: Note; error?: any }> {
     const notesManager = new IndexedDBNotesManager();
     try {
         if (note.id) {
             await notesManager.updateNote(note.id, note);
-            console.log("Note updated", note.id, note);
-            return { success: true, noteId: note.id };
+            console.log("[saveNoteLocal] Note updated", note.id, note.title);
         } else {
             const id = await notesManager.addNote(note as Note);
-            console.log("Note added", id, note);
-            return { success: true, noteId: id };
+            console.log("[saveNoteLocal] Note added", id, note.title);
         }
+        return { success: true, updatedNote: note as Note };
     } catch (error) {
         console.error("Error saving note", error);
         return { success: false, error };
