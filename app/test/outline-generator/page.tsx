@@ -10,6 +10,7 @@ import OutlineDisplay from './OutlineDisplay';
 import { saveOutlineForUser } from '@/lib/instantdb/mutations';
 import { useUserProfile } from '@/lib/instantdb/queries';
 import { toast } from 'sonner';
+import { Save } from 'lucide-react';
 
 export const maxDuration = 30;
 
@@ -94,15 +95,25 @@ export default function OutlineGenerator() {
                         <p className="text-red-500">{outline.error}</p>
                     ) : (
                         <>
-                            <h2 className="text-xl font-semibold mb-2">Generated Outline:</h2>
+                            <div className="flex items-center justify-start gap-4 mb-2">
+                                <h2 className="text-xl font-semibold">Generated Outline:</h2>
+                                {!loading && (
+                                    <Button
+                                        onClick={handleSaveOutline}
+                                        disabled={saving || !user}
+                                        size="sm"
+                                        variant="ghost"
+                                        className="p-2"
+                                    >
+                                        {saving ? (
+                                            <span className="loading loading-spinner loading-xs"></span>
+                                        ) : (
+                                            <Save size={18} />
+                                        )}
+                                    </Button>
+                                )}
+                            </div>
                             <OutlineDisplay outline={outline} />
-                            <Button
-                                onClick={handleSaveOutline}
-                                disabled={saving || !user}
-                                className="mt-4 w-full"
-                            >
-                                {saving ? 'Saving...' : 'Save Outline'}
-                            </Button>
                         </>
                     )}
                 </div>

@@ -35,7 +35,7 @@ export async function getNotifications(input: string) {
 export async function streamOutline(system_prompt: string, prompt: string) {
     return stream({
         model: openai('gpt-4o-mini'),
-        system: "You are an outline generator. Additional instructions: " + system_prompt,
+        system: system_prompt,
         prompt: prompt,
         schema: BasicOutlineSchema,
     });

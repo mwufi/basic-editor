@@ -13,7 +13,7 @@ const LeftPanel = () => {
         <div>
           <h3 className="mb-2 text-sm font-semibold text-gray-500">Outline Generator</h3>
           <div className="space-y-1">
-            <Link href="/test/outline-generator/create" passHref>
+            <Link href="/test/outline-generator" passHref>
               <Button variant="ghost" className="w-full justify-start">
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Create New Outline
