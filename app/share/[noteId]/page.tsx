@@ -28,7 +28,7 @@ export default function ShareNotePage({ params }: PageProps) {
 
 
     return (
-        <div className="max-w-3xl mx-auto mt-8">
+        <div className="max-w-3xl mx-auto">
             <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
             <main>
                 <ReadOnlyEditor initialContent={note.text} font="serif" />

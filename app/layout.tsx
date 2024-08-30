@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full pt-12 md:pt-0">
       <head>
         {process.env.NODE_ENV === 'production' && (
           <script
@@ -34,7 +34,7 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className={cn(inter.className, "bg-gradient-to-b from-orange-50 to-pink-50 min-h-screen flex flex-col")}>
+      <body className={cn(inter.className, "bg-gradient-to-b from-orange-50 to-pink-50 min-h-screen flex flex-col p-4")}>
         <JotaiProvider>
           <EditorProvider>
             <div className="max-w-sm fixed top-0 left-0 p-4 z-50">
