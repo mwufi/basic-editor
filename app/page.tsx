@@ -83,9 +83,9 @@ const BlogHome = () => {
             const notesManager = new IndexedDBNotesManager()
             const notes = await notesManager.getAllNotes()
             console.log("Retrieved notes", notes)
-            
+
             const sortedNotes = notes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            
+
             setPublishedPosts(sortedNotes.filter(note => note.isPublished))
             setLocalPosts(sortedNotes.filter(note => !note.isPublished))
         }
@@ -100,26 +100,24 @@ const BlogHome = () => {
     const hasNoPosts = publishedPosts.length === 0 && localPosts.length === 0
 
     return (
-        <div className="overflow-y-scroll min-h-screen w-full bg-gradient-to-b from-orange-50 to-pink-50">
-            <main className="max-w-3xl mx-auto p-8">
-                <motion.h1
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-4xl font-bold my-14 text-center text-orange-800"
-                >
-                    Notebook
-                </motion.h1>
-                {hasNoPosts ? (
-                    <EmptyState />
-                ) : (
-                    <>
-                        {publishedPosts.length > 0 && <BlogSection title="Published" posts={publishedPosts} />}
-                        {localPosts.length > 0 && <BlogSection title="Local" posts={localPosts} />}
-                    </>
-                )}
-            </main>
-        </div>
+        <main className="max-w-3xl mx-auto p-8">
+            <motion.h1
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-4xl font-bold my-14 text-center text-orange-800"
+            >
+                Notebook
+            </motion.h1>
+            {hasNoPosts ? (
+                <EmptyState />
+            ) : (
+                <>
+                    {publishedPosts.length > 0 && <BlogSection title="Published" posts={publishedPosts} />}
+                    {localPosts.length > 0 && <BlogSection title="Local" posts={localPosts} />}
+                </>
+            )}
+        </main>
     )
 }
 

@@ -19,11 +19,9 @@ export default function Home() {
     };
   }, [setUiState]);
   return (
-    <div className="overflow-y-scroll min-h-screen w-full relative">
-      <main className="max-w-3xl mx-auto p-4">
-        <TopBar />
-        <Tiptap />
-      </main>
-    </div>
+    <main className="max-w-3xl mx-auto p-4">
+      <TopBar />
+      <Tiptap />
+    </main>
   );
 }

@@ -36,58 +36,56 @@ const BlogPost = () => {
     }
 
     return (
-        <div className="overflow-y-scroll min-h-screen w-full relative mt-10">
-            <main className="max-w-3xl mx-auto p-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0 * 0.1 }}
-                    className="mb-4"
-                >
-                    <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
-                </motion.div>
+        <main className="max-w-3xl mx-auto p-4">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0 * 0.1 }}
+                className="mb-4"
+            >
+                <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
+            </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 1 * 0.1 }}
-                    className="mb-4"
-                >
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1 * 0.1 }}
+                className="mb-4"
+            >
 
-                    {note.isPublished && !note.publishedId && (
-                        <div className="mb-4">
-                            <p className="text-red-500 font-semibold">
-                                Error: Note is marked as published but has no published ID.
-                            </p>
-                        </div>
-                    )}
+                {note.isPublished && !note.publishedId && (
+                    <div className="mb-4">
+                        <p className="text-red-500 font-semibold">
+                            Error: Note is marked as published but has no published ID.
+                        </p>
+                    </div>
+                )}
 
-                    {note.publishedId && (
-                        <div className="mb-4">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-green-500 hover:text-green-600"
-                                asChild
-                            >
-                                <a href={`/share/${note.publishedId}`}>
-                                    Published
-                                </a>
-                            </Button>
-                        </div>
-                    )}
-                </motion.div>
+                {note.publishedId && (
+                    <div className="mb-4">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-green-500 hover:text-green-600"
+                            asChild
+                        >
+                            <a href={`/share/${note.publishedId}`}>
+                                Published
+                            </a>
+                        </Button>
+                    </div>
+                )}
+            </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 2 * 0.1 }}
-                    className="mb-4"
-                >
-                    <ReadOnlyEditor initialContent={noteContent} font="serif" />
-                </motion.div>
-            </main>
-        </div>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 2 * 0.1 }}
+                className="mb-4"
+            >
+                <ReadOnlyEditor initialContent={noteContent} font="serif" />
+            </motion.div>
+        </main>
     )
 }
 

@@ -34,12 +34,15 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className={cn(inter.className, "bg-gradient-to-b from-orange-50 to-pink-50 min-h-screen flex flex-col p-4")}>
+      <body className={cn(inter.className, "bg-gradient-to-b from-orange-50 to-pink-50 min-h-screen flex flex-col p-4 md:p-8")}>
         <JotaiProvider>
           <EditorProvider>
             <div className="max-w-sm fixed top-0 left-0 p-4 z-50">
               <ComposingMenubar />
             </div>
+            {/* <div className="fixed top-0 right-0 p-4 z-50">
+              <Avatar />
+            </div> */}
             <main className="flex-grow">
               <Toaster richColors position="top-center" expand={true} />
               {children}
