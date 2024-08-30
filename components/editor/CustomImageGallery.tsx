@@ -79,17 +79,37 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
         )
 
         if (layout === 'carousel') {
+            const getCarouselWidth = () => {
+                switch (images.length) {
+                    case 1: return 'w-1/2 mx-auto';
+                    case 2: return 'w-3/4 mx-auto';
+                    default: return 'w-full';
+                }
+            };
+
+            const getCarouselItemClass = () => {
+                switch (images.length) {
+                    case 1: return 'basis-full';
+                    case 2: return 'basis-1/2';
+                    default: return 'basis-full md:basis-1/3 lg:basis-1/4';
+                }
+            };
+
             return (
-                <Carousel className="w-full" opts={{ dragFree: true }}>
+                <Carousel className={getCarouselWidth()} opts={{ dragFree: true }}>
                     <CarouselContent>
                         {images.map((src, index) => (
-                            <CarouselItem key={index} className="md:basis-2/5">
+                            <CarouselItem key={index} className={getCarouselItemClass()}>
                                 {imageComponent(src, index)}
                             </CarouselItem>
                         ))}
                     </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
+                    {images.length > 1 && (
+                        <>
+                            <CarouselPrevious />
+                            <CarouselNext />
+                        </>
+                    )}
                 </Carousel>
             )
         } else {
@@ -106,7 +126,7 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
             <NodeViewWrapper>
                 <div className="custom-image-gallery-wrapper relative left-1/2 right-1/2 -mx-[45vw] w-[90vw]">
                     {renderImages()}
-                    {caption && <p className="text-center mt-2">{caption}</p>}
+                    {caption && <p className="text-center mt-2 italic text-gray-500">{caption}</p>}
                 </div>
             </NodeViewWrapper>
         )

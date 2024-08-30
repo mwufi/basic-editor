@@ -20,11 +20,11 @@ const TopBar = ({ children }: { children?: React.ReactNode }) => {
             </div>
             <form onSubmit={(e) => {
                 e.preventDefault();
-            }} className='w-full mt-2'>
+            }} className='w-full mt-2 max-w-3xl'>
                 <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className='w-full rounded-lg text-2xl font-bold text-center focus-visible:ring-0 outline-none border-none hover:bg-orange-100'
+                    className='w-full rounded-lg text-3xl font-bold text-center focus-visible:ring-0 outline-none border-none hover:bg-orange-100 bg-transparent py-2'
                     placeholder='Untitled'
                     autoFocus
                 />

@@ -30,6 +30,12 @@ export const resetNoteAtom = atom(
     })
 );
 
+export const uiStateAtom = atom({
+    isSidebarOpen: false,
+    isFullscreen: false,
+    isInserting: false,
+    isShareMenuOpen: false,
+});
 
 export const noteTitleAtom = atom(
     (get) => get(noteAtom).title,

@@ -6,13 +6,14 @@ import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Tiptap from "@/components/TipTap"
 import { Button } from '@/components/ui/button'
 import { useAtom } from 'jotai'
-import { noteAtom } from '@/components/editor/atoms'
+import { noteAtom, uiStateAtom } from '@/components/editor/atoms'
 import Link from 'next/link'
 import TopBar from '@/components/TopBar'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
     const { id } = useParams()
+    const [uiState, setUiState] = useAtom(uiStateAtom);
 
     const fetchPost = async () => {
         const notesManager = new IndexedDBNotesManager()
@@ -23,6 +24,13 @@ const BlogPost = () => {
     useEffect(() => {
         fetchPost()
     }, [id])
+
+    useEffect(() => {
+        setUiState({ ...uiState, isInserting: true })
+        return () => {
+            setUiState({ ...uiState, isInserting: false })
+        }
+    }, [])
 
     if (!note) {
         return <div>Loading...</div>

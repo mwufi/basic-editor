@@ -40,7 +40,7 @@ const Tiptap = ({ wordcount = true }) => {
         <div className="flex flex-col">
             <div className="fixed left-4 bottom-4 z-10">
                 {wordcount && <EditorCharacterCount limit={500} display="words" />}
-                <SimpleDialog
+                {/* <SimpleDialog
                     schema={[{ url: 'text' }]}
                     onSubmit={({ url }) => {
                         if (url) {
@@ -57,9 +57,7 @@ const Tiptap = ({ wordcount = true }) => {
                     >
                         Insert YouTube Video
                     </Button>
-                </SimpleDialog>
-                <Button onClick={() => insertCustomButton(editor, 'Click me', () => alert('Button clicked!'))}>Insert Custom Button</Button>
-                <Button onClick={() => insertGallery(editor)}>Insert Gallery</Button>
+                </SimpleDialog> */}
             </div>
             <Center>
                 {editorComponent}

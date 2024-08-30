@@ -69,7 +69,7 @@ const BlogHome = () => {
             setBlogPosts(notes)
         }
 
-        // fetchBlogPosts()
+        fetchBlogPosts()
     }, [])
 
     useEffect(() => {

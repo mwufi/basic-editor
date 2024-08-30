@@ -6,6 +6,9 @@ import JotaiProvider from "@/components/providers/JotaiProvider";
 import Avatar from "./Avatar";
 import PageHeader from "@/components/blocks/PageHeader";
 import { EditorProvider } from "@/components/editor/EditorContext";
+import { cn } from "@/lib/utils";
+import ComposingMenubar from "@/components/blocks/ComposingMenubar";
+import ShareMenu from "@/components/ShareMenu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         {process.env.NODE_ENV === 'production' && (
           <script
@@ -31,12 +34,17 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className={inter.className}>
+      <body className={cn(inter.className, "bg-gradient-to-b from-orange-50 to-pink-50 min-h-screen flex flex-col")}>
         <JotaiProvider>
           <EditorProvider>
-            <PageHeader />
-            <Toaster richColors position="top-center" expand={true} />
-            {children}
+            <div className="max-w-sm fixed top-0 left-0 p-4 z-50">
+              <ComposingMenubar />
+            </div>
+            <main className="flex-grow">
+              <Toaster richColors position="top-center" expand={true} />
+              {children}
+            </main>
+            <ShareMenu />
           </EditorProvider>
         </JotaiProvider>
       </body>

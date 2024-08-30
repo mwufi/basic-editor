@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from "react"
-import { Copy, Share, X } from "lucide-react"
+import { Copy } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,23 +13,17 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { useEditor } from "@/components/editor/EditorContext"
-import { noteAtom, publishInfoAtom } from "./editor/atoms"
+import { noteAtom, publishInfoAtom, uiStateAtom } from "./editor/atoms"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { usePublish } from "./instant_hooks/usePublish"
 import NotePublishInfo from "./NotePublishInfo"
 
 export default function ShareMenu() {
     const { editor } = useEditor();
-    const [audience, setAudience] = useState("everyone")
-    const [comments, setComments] = useState("everyone")
-    const [commentOrder, setCommentOrder] = useState("top")
-    const [tags, setTags] = useState("")
     const [publishInfo, setPublishInfo] = useAtom(publishInfoAtom)
     const note = useAtomValue(noteAtom)
+    const [uiState, setUiState] = useAtom(uiStateAtom)
 
     const shareableLink = publishInfo.publishedId ? `https://owri.netlify.app/share/${publishInfo.publishedId}` : ""
 
@@ -60,14 +53,12 @@ export default function ShareMenu() {
         toast.success("Link copied to clipboard")
     }
 
+    const handleCloseDialog = () => {
+        setUiState({ ...uiState, isShareMenuOpen: false })
+    }
+
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button size="sm" variant="ghost">
-                    <Share className="mr-2 h-4 w-4" />
-                    Share
-                </Button>
-            </DialogTrigger>
+        <Dialog open={uiState.isShareMenuOpen} onOpenChange={handleCloseDialog}>
             <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] flex flex-col">
                 <DialogHeader>
                     <DialogTitle className="text-xl sm:text-2xl">Share Your Document</DialogTitle>
