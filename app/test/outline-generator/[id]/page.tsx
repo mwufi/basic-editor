@@ -183,7 +183,7 @@ function Outlines({ params }: { params: { id: string } }) {
                         </CollapsibleContent>
                     </Collapsible>
                 </div>
-                <div className="hidden md:block w-[300px] flex-shrink-0 mr-4 overflow-auto">
+                <div className="hidden md:block w-[300px] flex-shrink-0 mr-4 overflow-y-auto overflow-x-hidden">
                     <OutlineDisplay outline={outline} onSelect={handleNodeClick} />
                 </div>
                 <div className="flex-grow overflow-auto">

@@ -15,7 +15,6 @@ export function MarkdownPreview({ content }: { content: string }) {
 
     useEffect(() => {
         let c = content || ''
-        console.log("content", c)
         if (editor && c !== editor.getHTML()) {
             editor.commands.setContent(c);
         }
