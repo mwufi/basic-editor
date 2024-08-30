@@ -31,18 +31,6 @@ export default function Avatar() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Owri</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/">Home</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/settings">{user ? "Settings" : "Local Settings"}</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/create">New Note</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 {user ? (
                     <DropdownMenuItem asChild>
                         <button

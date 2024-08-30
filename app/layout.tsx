@@ -40,9 +40,9 @@ export default function RootLayout({
             <div className="max-w-sm fixed top-0 left-0 p-4 z-50">
               <ComposingMenubar />
             </div>
-            {/* <div className="fixed top-0 right-0 p-4 z-50">
+            <div className="fixed top-0 right-0 p-4 z-50">
               <Avatar />
-            </div> */}
+            </div>
             <main className="flex-grow">
               <Toaster richColors position="top-center" expand={true} />
               {children}

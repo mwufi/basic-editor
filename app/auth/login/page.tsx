@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { init } from '@instantdb/react';
@@ -17,6 +18,7 @@ const GOOGLE_CLIENT_NAME = process.env.NEXT_PUBLIC_INSTANT_APP_NAME;
 
 function App() {
     const { isLoading, user, error } = db.useAuth();
+    const router = useRouter();
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -25,9 +27,8 @@ function App() {
         return <div>Uh oh! {error.message}</div>;
     }
     if (user) {
-        return (
-            <Profile user={user} />
-        );
+        router.push('/');
+        return null;
     }
 
     return (
