@@ -16,6 +16,8 @@ export default function Avatar() {
         db.auth.signOut();
     }
 
+    const username = data?.users[0] && data?.users[0].handle ? data?.users[0].handle : "hi there"
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -25,7 +27,7 @@ export default function Avatar() {
                 >
                     <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
                         {
-                            data?.users[0].handle ? data?.users[0].handle : "hi there"
+                            username
                         }
                     </div>
                 </Button>

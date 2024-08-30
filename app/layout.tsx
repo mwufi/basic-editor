@@ -9,6 +9,7 @@ import { EditorProvider } from "@/components/editor/EditorContext";
 import { cn } from "@/lib/utils";
 import ComposingMenubar from "@/components/blocks/ComposingMenubar";
 import ShareMenu from "@/components/ShareMenu";
+import BottomFooter from "@/components/blocks/BottomFooter";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,6 +49,7 @@ export default function RootLayout({
               {children}
             </main>
             <ShareMenu />
+            <BottomFooter />
           </EditorProvider>
         </JotaiProvider>
       </body>
