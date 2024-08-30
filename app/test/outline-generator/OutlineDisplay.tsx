@@ -6,12 +6,17 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type OutlineNode = {
-    id?: string;
-    name?: string;
     title?: string;
     children?: OutlineNode[];
+    name?: string;
+    id?: string;
     content?: string;
     index?: number;
+};
+
+type GeneratedOutlineNode = {
+    title: string;
+    children?: GeneratedOutlineNode[];
 };
 
 type OutlineDisplayProps = {

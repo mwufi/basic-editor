@@ -4,9 +4,10 @@ import { tx, id } from '@instantdb/core'
 import IndexedDBNotesManager from '../IndexedDBNotesManager';
 
 export async function saveOutlineForUser(outline: Outline, userId: string) {
+    console.log("saving outline", outline)
     const outlineId = id()
     const createOutlineTx = tx.outlines[outlineId].update({
-        name: outline.title,
+        title: outline.title,
         content: {},
     }).link({
         author: userId
