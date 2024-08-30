@@ -1,19 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Search, RefreshCw, Save } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { db } from '@/lib/instantdb/client';
+import { ArrowLeft, RefreshCw, Save } from "lucide-react";
 import OutlineDisplay from '../OutlineDisplay';
-import { getOutline } from '../create/actions';
+import { getOutline } from '@/lib/instantdb/mutations';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Outline, OutlineNode } from '@/lib/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { getNodePath, getOutlineAsText, getPrompt } from './utils';
-import Debug from '@/components/Debug';
 import { streamContent } from './ai';
 import { readStreamableValue } from 'ai/rsc';
 import { saveOutlineNodeContent } from '@/lib/instantdb/mutations';

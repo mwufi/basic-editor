@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { streamOutline } from '../ai';
 import { readStreamableValue } from 'ai/rsc';
 import OutlineDisplay from '../OutlineDisplay';
-import { saveOutlineForUser } from './actions';
+import { saveOutlineForUser } from '@/lib/instantdb/mutations';
 import { useUserProfile } from '@/lib/instantdb/queries';
 import { toast } from 'sonner';
 
@@ -59,9 +59,6 @@ export default function OutlineGenerator() {
     return (
         <div className="p-4 mx-auto w-full">
             <h1 className="text-2xl font-bold mb-4">Streaming Outline Generator</h1>
-            <pre>
-                {JSON.stringify(user, null, 2)}
-            </pre>
             <p className="mb-4">Customize the system prompt and input a topic to generate an outline.</p>
             <form onSubmit={(e) => {
                 e.preventDefault();

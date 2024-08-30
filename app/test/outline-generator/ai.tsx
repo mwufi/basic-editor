@@ -31,11 +31,11 @@ export async function getNotifications(input: string) {
     }
 }
 
-// Example usage for notifications
+// Example usage for outline generation
 export async function streamOutline(system_prompt: string, prompt: string) {
     return stream({
         model: openai('gpt-4o-mini'),
-        system: system_prompt,
+        system: "You are an outline generator. Additional instructions: " + system_prompt,
         prompt: prompt,
         schema: BasicOutlineSchema,
     });
