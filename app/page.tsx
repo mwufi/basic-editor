@@ -28,33 +28,29 @@ const EmptyState = () => {
     )
 }
 
-const BlogPost = ({ post, index }) => (
-    <motion.li
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-        className="mb-4"
+const BlogPost = ({ post }) => (
+    <motion.div
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+        className="relative w-16 h-16 m-2 group z-0"
     >
         <Link href={`/blog/${post.id}`}>
-            <Card className="hover:shadow-lg transition-shadow duration-300 bg-gradient-to-r from-pink-100 to-orange-100">
-                <CardContent className="p-6">
-                    <h2 className={`text-xl font-semibold mb-2 ${post.isPublished ? 'text-green-600' : 'text-orange-700'}`}>
-                        {post.title}
-                    </h2>
-                    <p className="text-gray-600 mb-2">
-                        {new Date(post.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}
-                    </p>
-                    {/* {post.isPublished && (
-                        <span className="inline-block bg-green-200 text-green-800 px-2 py-1 rounded-full text-sm">Published</span>
-                    )} */}
-                </CardContent>
+            <Card className="w-full h-full bg-gradient-to-r from-pink-100 to-orange-100">
+                <CardContent className="p-1"></CardContent>
             </Card>
+            <div className="z-10 absolute left-0 w-48 p-2 bg-white shadow-lg rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 translate-y-full -mt-2" style={{ isolation: 'isolate', transform: 'translateZ(0)' }}>
+                <h2 className={`text-sm font-semibold mb-1 truncate ${post.isPublished ? 'text-green-600' : 'text-orange-700'}`}>
+                    {post.title}
+                </h2>
+                <p className="text-xs text-gray-600">
+                    {new Date(post.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric'
+                    })}
+                </p>
+            </div>
         </Link>
-    </motion.li>
+    </motion.div>
 )
 
 const BlogSection = ({ title, posts }) => (
@@ -65,11 +61,11 @@ const BlogSection = ({ title, posts }) => (
         className="mb-8"
     >
         <h2 className="text-2xl font-semibold mb-4 text-orange-800">{title}</h2>
-        <ul className="space-y-4">
-            {posts.map((post, index) => (
-                <BlogPost key={post.id} post={post} index={index} />
+        <div className="flex flex-wrap justify-start">
+            {posts.map((post) => (
+                <BlogPost key={post.id} post={post} />
             ))}
-        </ul>
+        </div>
     </motion.div>
 )
 
@@ -84,7 +80,7 @@ const BlogHome = () => {
             const notes = await notesManager.getAllNotes()
             console.log("Retrieved notes", notes)
 
-            const sortedNotes = notes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            const sortedNotes = notes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
             setPublishedPosts(sortedNotes.filter(note => note.isPublished))
             setLocalPosts(sortedNotes.filter(note => !note.isPublished))
@@ -95,12 +91,12 @@ const BlogHome = () => {
 
     useEffect(() => {
         resetNote()
-    }, [])
+    }, [resetNote])
 
     const hasNoPosts = publishedPosts.length === 0 && localPosts.length === 0
 
     return (
-        <main className="max-w-3xl mx-auto p-8">
+        <main className="max-w-5xl mx-auto p-8">
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
