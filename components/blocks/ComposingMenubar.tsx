@@ -65,14 +65,11 @@ function ComposingMenubar() {
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
-                <MenubarTrigger>Home</MenubarTrigger>
-                <MenubarContent>
-                    <MenubarItem>
-                        <Link href="/">
-                            Home <MenubarShortcut>⌘Z</MenubarShortcut>
-                        </Link>
-                    </MenubarItem>
-                </MenubarContent>
+                <MenubarTrigger>
+                    <Link href="/">
+                        Home
+                    </Link>
+                </MenubarTrigger>
             </MenubarMenu>
             {isInserting && (
                 <MenubarMenu>

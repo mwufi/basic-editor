@@ -48,17 +48,34 @@ const BlogPost = ({ post, index }) => (
                             day: 'numeric'
                         })}
                     </p>
-                    {post.isPublished && (
+                    {/* {post.isPublished && (
                         <span className="inline-block bg-green-200 text-green-800 px-2 py-1 rounded-full text-sm">Published</span>
-                    )}
+                    )} */}
                 </CardContent>
             </Card>
         </Link>
     </motion.li>
 )
 
+const BlogSection = ({ title, posts }) => (
+    <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-8"
+    >
+        <h2 className="text-2xl font-semibold mb-4 text-orange-800">{title}</h2>
+        <ul className="space-y-4">
+            {posts.map((post, index) => (
+                <BlogPost key={post.id} post={post} index={index} />
+            ))}
+        </ul>
+    </motion.div>
+)
+
 const BlogHome = () => {
-    const [blogPosts, setBlogPosts] = useState([])
+    const [publishedPosts, setPublishedPosts] = useState([])
+    const [localPosts, setLocalPosts] = useState([])
     const resetNote = useSetAtom(resetNoteAtom)
 
     useEffect(() => {
@@ -66,7 +83,11 @@ const BlogHome = () => {
             const notesManager = new IndexedDBNotesManager()
             const notes = await notesManager.getAllNotes()
             console.log("Retrieved notes", notes)
-            setBlogPosts(notes)
+            
+            const sortedNotes = notes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            
+            setPublishedPosts(sortedNotes.filter(note => note.isPublished))
+            setLocalPosts(sortedNotes.filter(note => !note.isPublished))
         }
 
         fetchBlogPosts()
@@ -75,6 +96,8 @@ const BlogHome = () => {
     useEffect(() => {
         resetNote()
     }, [])
+
+    const hasNoPosts = publishedPosts.length === 0 && localPosts.length === 0
 
     return (
         <div className="overflow-y-scroll min-h-screen w-full bg-gradient-to-b from-orange-50 to-pink-50">
@@ -87,14 +110,13 @@ const BlogHome = () => {
                 >
                     Notebook
                 </motion.h1>
-                {blogPosts.length === 0 ? (
+                {hasNoPosts ? (
                     <EmptyState />
                 ) : (
-                    <ul className="space-y-4">
-                        {blogPosts.map((post, index) => (
-                            <BlogPost key={post.id} post={post} index={index} />
-                        ))}
-                    </ul>
+                    <>
+                        {publishedPosts.length > 0 && <BlogSection title="Published" posts={publishedPosts} />}
+                        {localPosts.length > 0 && <BlogSection title="Local" posts={localPosts} />}
+                    </>
                 )}
             </main>
         </div>
