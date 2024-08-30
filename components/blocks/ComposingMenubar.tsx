@@ -19,8 +19,10 @@ import { useEditor } from '@/components/editor/EditorContext';
 import { insertCustomButton, insertGallery } from '@/components/editor/Editor';
 import { noteAtom, publishInfoAtom, uiStateAtom } from "../editor/atoms";
 import { useAtom, useAtomValue } from "jotai";
+import { useUserProfile } from "@/lib/instantdb/queries";
 
 function ComposingMenubar() {
+    const { user } = useUserProfile();
     const { editor } = useEditor();
     const { isInserting } = useAtomValue(uiStateAtom);
     const note = useAtomValue(noteAtom);
@@ -88,21 +90,23 @@ function ComposingMenubar() {
                     </MenubarContent>
                 </MenubarMenu>
             )}
-            <MenubarMenu>
-                <MenubarTrigger>Sharing</MenubarTrigger>
-                <MenubarContent>
-                    <MenubarItem onClick={() => setUiState({ ...uiState, isShareMenuOpen: true })}>
-                        Share settings
-                    </MenubarItem>
-                    {publishInfo.publishedId && (
-                        <MenubarItem>
-                            <Link href={`https://owri.netlify.app/share/${publishInfo.publishedId}`} className="text-green-500 hover:text-green-600">
-                                See public link
-                            </Link>
+            {user && (
+                <MenubarMenu>
+                    <MenubarTrigger>Sharing</MenubarTrigger>
+                    <MenubarContent>
+                        <MenubarItem onClick={() => setUiState({ ...uiState, isShareMenuOpen: true })}>
+                            Share settings
                         </MenubarItem>
-                    )}
-                </MenubarContent>
-            </MenubarMenu>
+                        {publishInfo.publishedId && (
+                            <MenubarItem>
+                                <Link href={`https://owri.netlify.app/share/${publishInfo.publishedId}`} className="text-green-500 hover:text-green-600">
+                                    See public link
+                                </Link>
+                            </MenubarItem>
+                        )}
+                    </MenubarContent>
+                </MenubarMenu>
+            )}
         </Menubar>
     )
 }
