@@ -9,6 +9,7 @@ import { useAtom } from 'jotai'
 import { noteAtom } from '@/components/editor/atoms'
 import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
@@ -35,36 +36,56 @@ const BlogPost = () => {
     }
 
     return (
-        <div className="overflow-y-scroll min-h-screen w-full relative">
+        <div className="overflow-y-scroll min-h-screen w-full relative mt-10">
             <main className="max-w-3xl mx-auto p-4">
-                <div className="mb-4">
-                    <Button asChild>
-                        <Link href={`/blog/${id}/edit`}>Edit</Link>
-                    </Button>
-                </div>
-                <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
-                {note.isPublished && !note.publishedId && (
-                    <div className="mb-4">
-                        <p className="text-red-500 font-semibold">
-                            Error: Note is marked as published but has no published ID.
-                        </p>
-                    </div>
-                )}
-                {note.publishedId && (
-                    <div className="mb-4">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-green-500 hover:text-green-600"
-                            asChild
-                        >
-                            <a href={`/share/${note.publishedId}`}>
-                                Published
-                            </a>
-                        </Button>
-                    </div>
-                )}
-                <ReadOnlyEditor initialContent={noteContent} font="serif" />
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0 * 0.1 }}
+                    className="mb-4"
+                >
+                    <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 1 * 0.1 }}
+                    className="mb-4"
+                >
+
+                    {note.isPublished && !note.publishedId && (
+                        <div className="mb-4">
+                            <p className="text-red-500 font-semibold">
+                                Error: Note is marked as published but has no published ID.
+                            </p>
+                        </div>
+                    )}
+
+                    {note.publishedId && (
+                        <div className="mb-4">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-green-500 hover:text-green-600"
+                                asChild
+                            >
+                                <a href={`/share/${note.publishedId}`}>
+                                    Published
+                                </a>
+                            </Button>
+                        </div>
+                    )}
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 2 * 0.1 }}
+                    className="mb-4"
+                >
+                    <ReadOnlyEditor initialContent={noteContent} font="serif" />
+                </motion.div>
             </main>
         </div>
     )

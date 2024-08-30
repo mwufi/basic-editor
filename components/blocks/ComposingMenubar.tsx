@@ -42,6 +42,13 @@ function ComposingMenubar() {
                             Save <MenubarShortcut>⌘S</MenubarShortcut>
                         </MenubarItem>
                     )}
+                    {note.id && (
+                        <MenubarItem>
+                            <Link href={`/blog/${note.id}/edit`}>
+                                Edit <MenubarShortcut>⌘V</MenubarShortcut>
+                            </Link>
+                        </MenubarItem>
+                    )}
                     <MenubarSeparator />
                     <MenubarSub>
                         <MenubarSubTrigger>Share</MenubarSubTrigger>

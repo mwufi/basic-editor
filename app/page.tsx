@@ -42,10 +42,10 @@ const BlogPost = ({ post, index }) => (
                         {post.title}
                     </h2>
                     <p className="text-gray-600 mb-2">
-                        {new Date(post.createdAt).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
+                        {new Date(post.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
                         })}
                     </p>
                     {post.isPublished && (
@@ -79,7 +79,7 @@ const BlogHome = () => {
     return (
         <div className="overflow-y-scroll min-h-screen w-full bg-gradient-to-b from-orange-50 to-pink-50">
             <main className="max-w-3xl mx-auto p-8">
-                <motion.h1 
+                <motion.h1
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
