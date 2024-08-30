@@ -91,7 +91,7 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
                 switch (images.length) {
                     case 1: return 'basis-full';
                     case 2: return 'basis-1/2';
-                    default: return 'basis-full md:basis-1/3 lg:basis-1/4';
+                    default: return 'basis-full md:basis-1/3 lg:basis-2/5';
                 }
             };
 
