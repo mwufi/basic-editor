@@ -10,6 +10,7 @@ import { noteAtom } from '@/components/editor/atoms'
 import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { Pencil } from 'lucide-react'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
@@ -62,7 +63,7 @@ const BlogPost = () => {
                 )}
 
                 {note.publishedId && (
-                    <div className="mb-4">
+                    <div className="mb-4 flex items-center">
                         <Button
                             variant="outline"
                             size="sm"
@@ -72,6 +73,16 @@ const BlogPost = () => {
                             <a href={`/share/${note.publishedId}`}>
                                 Published
                             </a>
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="ml-2"
+                            asChild
+                        >
+                            <Link href={`/blog/${note.id}/edit`}>
+                                <Pencil className="w-4 h-4 mr-1" />
+                            </Link>
                         </Button>
                     </div>
                 )}
