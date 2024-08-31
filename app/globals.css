@@ -59,6 +59,10 @@
   }
 }
 
+.top-navbar {
+  top: calc(46px + 48px);
+}
+
 @layer base {
   * {
     @apply border-border;

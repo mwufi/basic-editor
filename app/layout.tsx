@@ -1,3 +1,5 @@
+import "./globals.css";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full pt-12 md:pt-0">
+    <html lang="en" className="h-full antialiased">
       <head>
         {process.env.NODE_ENV === 'production' && (
           <script
