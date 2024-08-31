@@ -45,7 +45,7 @@ async function uploadAndInsertImage(editor, file, pos = null) {
         console.log("Supabase path", supabasePath)
 
         editor.chain().insertContentAt(pos ?? getPos(editor), {
-            type: 'image',
+            type: 'nextImage',
             attrs: {
                 src: supabasePath,
             },
