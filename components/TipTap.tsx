@@ -32,8 +32,8 @@ const Tiptap = ({ wordcount = true }) => {
         if (!note.text && note.content) {
             console.log("Note has content but no text (legacy)")
         }
-        console.log("note memo  hit!")
-        return <Editor initialContent={note.text || note.content} />
+        console.log("note memo hit!", note.id, note.title)
+        return <Editor initialContent={note.text} />
     }, [note.id])
 
     return (

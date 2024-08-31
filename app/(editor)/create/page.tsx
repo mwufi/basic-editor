@@ -5,12 +5,15 @@ import TopBar from "@/components/TopBar";
 
 import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
-import { uiStateAtom } from '@/components/editor/atoms';
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { resetNoteAtom, uiStateAtom } from '@/components/editor/atoms';
 
 export default function Home() {
   const setUiState = useSetAtom(uiStateAtom);
+  const resetNote = useSetAtom(resetNoteAtom);
+
+  useEffect(() => {
+    resetNote();
+  }, []);
 
   useEffect(() => {
     setUiState(prevState => ({ ...prevState, isInserting: true }));

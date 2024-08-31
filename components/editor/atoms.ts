@@ -3,7 +3,8 @@
 import { Note } from '@/lib/types';
 import { atom } from 'jotai';
 
-export const noteAtom = atom<Note>({
+
+const createEmptyNote = (): Note => ({
     id: null,
     title: 'Untitled',
     text: '',
@@ -15,19 +16,11 @@ export const noteAtom = atom<Note>({
     lastSyncedAt: null,
 });
 
+export const noteAtom = atom<Note>(createEmptyNote());
+
 export const resetNoteAtom = atom(
     null,
-    (_, set) => set(noteAtom, {
-        id: null,
-        title: 'Untitled',
-        text: '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isPublished: false,
-        publishedId: null,
-        publishedAt: null,
-        lastSyncedAt: null,
-    })
+    (_, set) => set(noteAtom, createEmptyNote())
 );
 
 export const uiStateAtom = atom({
