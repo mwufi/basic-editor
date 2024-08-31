@@ -10,6 +10,13 @@ type Schema = {
         posts: Array<Schema['posts']>;
         pin: Schema['pins'];
     };
+    pages: {
+        id: string;
+        title: string;
+        href: string;
+        author: Schema['users'];
+        post: Schema['posts'];
+    };
     posts: {
         id: string;
         title: string;

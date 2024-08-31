@@ -12,6 +12,18 @@ export const UserProfile = email => (
     }
 )
 
+export const UserProfileByHandle = (handle) => (
+    {
+        users: {
+            $: {
+                where: {
+                    handle: handle
+                }
+            }
+        }
+    }
+)
+
 export function useUserProfile() {
     const { user } = db.useAuth();
     const { data: profile } = db.useQuery(user ? UserProfile(user.email) : null);
