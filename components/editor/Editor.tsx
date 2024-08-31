@@ -55,6 +55,15 @@ async function uploadAndInsertImage(editor, file, pos = null) {
     }
 }
 
+function insertImageUrl(editor, url, pos = null) {
+    editor.chain().insertContentAt(pos ?? getPos(editor), {
+        type: 'nextImage',
+        attrs: {
+            src: url,
+        },
+    }).focus().run()
+}
+
 export const insertCustomButton = (editor, label, onClick) => {
     editor
         .chain()
@@ -117,10 +126,19 @@ const Editor = ({ editable = true, initialContent = null, font = 'serif' }) => {
                 },
                 onPaste: (currentEditor, files, htmlContent) => {
                     if (htmlContent) {
-                        // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
-                        // you could extract the pasted file from this url string and upload it to a server for example
-                        console.log("you pasted", htmlContent) // eslint-disable-line no-console
-                        return false
+                        // Handle pasted HTML content
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(htmlContent, 'text/html');
+                        const imgElement = doc.querySelector('img');
+                        console.log("pasted html content", htmlContent, imgElement)
+
+                        if (imgElement && imgElement.src) {
+                            insertImageUrl(currentEditor, imgElement.src)
+                            return true;
+                        }
+
+                        // If no image in HTML content, allow default paste behavior
+                        return false;
                     }
 
                     files.forEach(async file => {

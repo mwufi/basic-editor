@@ -24,7 +24,7 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className="h-full">
+      <body className="h-full max-w-full overflow-x-hidden md:overflow-x-auto">
         {children}
       </body>
     </html>

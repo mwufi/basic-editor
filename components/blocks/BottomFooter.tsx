@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 
 function Footer() {
     return (
-        <nav className="border-t fixed bottom-0 w-full bg-white">
+        <nav className="hidden md:block border-t fixed bottom-0 w-full bg-white">
             <div className="max-w-3xl mx-auto p-2 flex justify-between items-center text-sm">
                 <span className="text-gray-600">© 2024</span>
                 <div className="flex items-center space-x-3">

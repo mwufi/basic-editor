@@ -21,7 +21,7 @@ export default function EditorLayout({
   return (
     <JotaiProvider>
       <EditorProvider>
-        <div className="max-w-sm fixed top-0 left-0 p-4 z-50">
+        <div className="hidden md:block max-w-sm fixed top-0 left-0 p-4 z-50">
           <ComposingMenubar />
         </div>
         <div className="fixed top-0 right-0 p-4 z-50">

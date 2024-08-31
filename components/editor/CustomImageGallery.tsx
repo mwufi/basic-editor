@@ -61,10 +61,17 @@ const CustomImageGalleryComponent = ({ node, updateAttributes, editor }) => {
                 </div>
             )
         }
-
         const imageComponent = (src, index) => (
-            <div key={index} className="relative group">
-                <Image src={src} alt={`Gallery image ${index + 1}`} loader={supabaseImageLoader} width={800} height={600} className="object-cover w-full h-auto" style={{ maxHeight: `${maxHeight}px` }} />
+            <div key={index} className="relative group h-full">
+                <Image 
+                    src={src} 
+                    alt={`Gallery image ${index + 1}`} 
+                    loader={supabaseImageLoader} 
+                    width={800} 
+                    height={600} 
+                    className="object-cover w-full h-full" 
+                    style={{ maxHeight: `${maxHeight}px` }} 
+                />
                 {editable && (
                     <button
                         className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"

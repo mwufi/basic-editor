@@ -63,6 +63,16 @@
   top: calc(46px + 48px);
 }
 
+@media (max-width: 767px) {
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  body::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
