@@ -96,7 +96,7 @@ export default function Container() {
                         initial={{ opacity: 0, y: -20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="text-6xl font-semibold mb-8"
+                        className="text-6xl font-semibold mb-5 leading-[4.12rem]"
                     >
                         Markdown to amazing forms and web pages
                     </motion.h1>
@@ -112,7 +112,7 @@ export default function Container() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="flex gap-6"
+                        className="flex gap-6 mb-12"
                     >
                         <Button>
                             Get Started
