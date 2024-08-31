@@ -96,9 +96,25 @@ const NextImageView = ({ node, updateAttributes }) => {
 
     return (
         <NodeViewWrapper className="next-image-wrapper">
+            {/* Mobile */}
             <div
                 ref={imageRef}
-                className="next-image"
+                className={`md:hidden next-image relative w-full max-w-[${width}px] aspect-[16/9] mx-auto my-8`}
+            >
+                <ImageFromNext
+                    src={src}
+                    alt={alt || ''}
+                    title={title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg"
+                    loader={loader}
+                />
+            </div>
+            {/* Desktop */}
+            <div
+                ref={imageRef}
+                className={`hidden md:block next-image relative w-full max-w-[${width}px] aspect-[16/9] mx-auto my-8`}
                 style={{
                     position: 'relative',
                     width: `${width}px`,
@@ -111,26 +127,13 @@ const NextImageView = ({ node, updateAttributes }) => {
                     src={src}
                     alt={alt || ''}
                     title={title}
-                    width={width}
-                    height={height}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg"
                     loader={loader}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
                 <div
-                    className="resize-handle"
-                    style={{
-                        position: 'absolute',
-                        right: '-5px',
-                        bottom: '-5px',
-                        width: '10px',
-                        height: '10px',
-                        cursor: 'se-resize',
-                        opacity: 1,
-                        borderRadius: '50%',
-                        transition: 'opacity 0.2s, background 0.2s',
-                        background: 'linear-gradient(135deg, #6366f1, #3b82f6)',
-                        boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)'
-                    }}
+                    className="resize-handle absolute right-[-5px] bottom-[-5px] w-[10px] h-[10px] cursor-se-resize opacity-100 rounded-full transition-all duration-200 bg-gradient-to-br from-indigo-500 to-blue-500 shadow-md hover:opacity-100 hover:scale-110"
                     onMouseDown={handleMouseDown}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.opacity = '1';
