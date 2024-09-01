@@ -15,6 +15,7 @@ export interface Note {
     id?: number;
     title: string;
     text: string;
+    metadata?: Record<string, any>;
     content?: string; // legacy!!
     createdAt: Date;
     updatedAt: Date;

@@ -21,6 +21,7 @@ type Schema = {
         id: string;
         title: string;
         text: string;
+        metadata: object;
         createdAt: number;
         updatedAt: number;
         comments: Array<Schema['comments']>;

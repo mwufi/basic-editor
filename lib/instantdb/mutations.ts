@@ -79,6 +79,7 @@ export async function syncPost(note: Note, userId: string) {
     const updatePostTx = tx.posts[noteId].update({
         title: note.title,
         text: note.text,
+        metadata: note.metadata,
         createdAt: note.createdAt || Date.now(),
         updatedAt: Date.now()
     }).link({

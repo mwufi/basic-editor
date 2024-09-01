@@ -8,6 +8,7 @@ const createEmptyNote = (): Note => ({
     id: null,
     title: 'Untitled',
     text: '',
+    metadata: {},
     createdAt: new Date(),
     updatedAt: new Date(),
     isPublished: false,
@@ -21,6 +22,11 @@ export const noteAtom = atom<Note>(createEmptyNote());
 export const resetNoteAtom = atom(
     null,
     (_, set) => set(noteAtom, createEmptyNote())
+);
+
+export const noteMetadataAtom = atom(
+    (get) => get(noteAtom).metadata,
+    (get, set, newMetadata: Record<string, any>) => set(noteAtom, { ...get(noteAtom), metadata: { ...get(noteAtom).metadata, ...newMetadata } })
 );
 
 export const uiStateAtom = atom({
