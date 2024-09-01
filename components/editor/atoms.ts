@@ -13,12 +13,14 @@ const localStorageKey = 'themeContent';
 
 export const themeContentAtom = atom(
     (get) => {
-        const storedContent = localStorage.getItem(localStorageKey);
-        return storedContent ? JSON.parse(storedContent) : get(themeAtom).content;
+        // const storedContent = localStorage.getItem(localStorageKey);
+        // return storedContent ? JSON.parse(storedContent) : get(themeAtom).content;
+        return get(themeAtom).content;
     },
     (get, set, newContent: string) => {
+        console.log('newContent', newContent);
         set(themeAtom, { ...get(themeAtom), content: newContent });
-        localStorage.setItem(localStorageKey, JSON.stringify(newContent));
+        // localStorage.setItem(localStorageKey, JSON.stringify(newContent));
     }
 );
 

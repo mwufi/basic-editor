@@ -7,13 +7,12 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
 import Editor from '@/components/editor/Editor';
 import EditorCharacterCount from '@/components/editor/CharacterCount';
-import { noteAtom, noteMetadataAtom, noteTitleAtom, updatedAtAtom } from '@/components/editor/atoms';
+import { noteAtom, noteTitleAtom, updatedAtAtom } from '@/components/editor/atoms';
 import { motion } from 'framer-motion';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { Eye, Pencil, Save } from 'lucide-react';
+import { Eye, Pencil } from 'lucide-react';
 import HeaderImgEditor from './editor/HeaderImgEditor';
-import { saveNoteLocal } from '@/lib/instantdb/mutations';
 import SaveButton from './editor/SaveButton';
 
 const Center = ({ children }: { children: React.ReactNode }) => {
@@ -34,23 +33,23 @@ const Tiptap = ({ wordcount = true }) => {
         }
     }, [editor])
 
-    useEffect(() => {
-        const saveInterval = setInterval(async () => {
-            if (note) {
-                console.log("auto-saving note", note.id, note.title)
-                /*
-                try {
-                    const { updatedNote } = await saveNoteLocal(note);
-                    setUpdatedAt(updatedNote?.updatedAt);
-                } catch (error) {
-                    console.error('Error auto-saving note:', error);
-                }
-                    */
-            }
-        }, 1000);
+    // useEffect(() => {
+    //     const saveInterval = setInterval(async () => {
+    //         if (note) {
+    //             console.log("auto-saving note", note.id, note.title)
+    //             /*
+    //             try {
+    //                 const { updatedNote } = await saveNoteLocal(note);
+    //                 setUpdatedAt(updatedNote?.updatedAt);
+    //             } catch (error) {
+    //                 console.error('Error auto-saving note:', error);
+    //             }
+    //                 */
+    //         }
+    //     }, 1000);
 
-        return () => clearInterval(saveInterval);
-    }, [note]);
+    //     return () => clearInterval(saveInterval);
+    // }, [note]);
 
     const editorComponent = useMemo(() => {
         if (!note.text && note.content) {
@@ -61,7 +60,7 @@ const Tiptap = ({ wordcount = true }) => {
     }, [note.id])
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col editor">
             <div className="absolute left-4 bottom-4 z-10">
                 {wordcount && <EditorCharacterCount limit={500} display="words" />}
             </div>
@@ -123,7 +122,7 @@ const Tiptap = ({ wordcount = true }) => {
                         onChange={(e) => {
                             setTitle(e.target.value);
                         }}
-                        className="w-full text-5xl font-bold focus:outline-none"
+                        className="w-full text-5xl font-bold focus:outline-none title"
                         placeholder="Enter title..."
                     />
                 </div>

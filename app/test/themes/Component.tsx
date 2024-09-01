@@ -10,6 +10,7 @@ const YourComponent = () => {
     const { changeTheme, loadCustomStylesheet } = useTheme();
     const [customUrl, setCustomUrl] = useState('');
     const [themeContent, setThemeContent] = useAtom(themeContentAtom);
+    console.log('themeContent', themeContent);
 
     const handleCustomTheme = (e) => {
         e.preventDefault();
@@ -51,15 +52,16 @@ const YourComponent = () => {
                     Load Custom Theme
                 </button>
             </form>
-
             <form onSubmit={handleCustomCSS} className="flex flex-col space-y-2">
                 <textarea
                     value={themeContent}
                     onChange={(e) => {
-                        setThemeContent(e.target.value);
+                        handleCustomCSS(e);
                     }}
                     placeholder="Enter custom CSS"
-                    className="border rounded-md p-2"
+                    className="border rounded-md p-2 resize-none overflow-hidden"
+                    style={{ height: 'auto' }}
+                    rows={themeContent.split('\n').length}
                 />
                 <button
                     type="submit"

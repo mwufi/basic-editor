@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+
+.editor {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Noto Sans', sans-serif;
+  padding: 2rem;
+}
+
+.buttons {
+ color: black;
+}
+
+.title {
+ color: hsl(205.59, 100%, 60%);
+}
+
+.tiptap p {
+  font-size: 20px;
+  font-family: 'Noto Sans', sans-serif;
+  line-height: 30px;
+}
+.tiptap a {
+  color: hsl(205.59, 100%, 60%);
+}
+
+.tiptap h1 {
+  color: hsl(205.59, 87.55%, 52.75%);
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 40px;
+}
+
+.tiptap li::marker {
+ color:  hsl(205.59, 87.55%, 52.75%);
+}
+.tiptap h2 {
+    color: hsl(205.59, 87.55%, 52.75%);
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 32px;
+  }
