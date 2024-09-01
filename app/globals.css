@@ -64,6 +64,29 @@
   top: calc(46px + 48px);
 }
 
+.img-holder {
+  position: relative;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .img-holder {
+    width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .img-holder {
+    max-width: 100%;
+    overflow: hidden;
+  }
+}
+
+
 @media (max-width: 767px) {
   body {
     scrollbar-width: none;

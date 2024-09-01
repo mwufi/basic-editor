@@ -5,8 +5,8 @@ import { useParams } from 'next/navigation'
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import { Button } from '@/components/ui/button'
 import NoteHeader from '@/components/editor/NoteHeader'
-import { useAtom } from 'jotai'
-import { noteAtom } from '@/components/editor/atoms'
+import { useAtom, useAtomValue } from 'jotai'
+import { noteAtom, noteMetadataAtom } from '@/components/editor/atoms'
 import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -15,6 +15,7 @@ import { Pencil } from 'lucide-react'
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
     const { id } = useParams()
+    const metadata = useAtomValue(noteMetadataAtom)
 
     const fetchPost = async () => {
         const notesManager = new IndexedDBNotesManager()
@@ -38,6 +39,14 @@ const BlogPost = () => {
 
     return (
         <main className="max-w-3xl mx-auto">
+            {metadata?.headerImg && (
+                <img
+                    src={metadata.headerImg}
+                    alt="Header"
+                    className="w-full h-64 object-cover mb-6"
+                />
+            )}
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

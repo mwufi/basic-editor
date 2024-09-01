@@ -9,7 +9,7 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import { noteAtom, resetNoteAtom } from '@/components/editor/atoms'
 import { motion } from 'framer-motion'
 import { saveNoteLocal } from '@/lib/instantdb/mutations'
-import { Trash2 } from 'lucide-react'
+import { PlusCircle, Trash2 } from 'lucide-react'
 
 const EmptyState = () => {
     return (
@@ -125,6 +125,19 @@ const BlogHome = () => {
             >
                 Notebook
             </motion.h1>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="mb-8 flex justify-center"
+            >
+                <Link href="/create" passHref>
+                    <Button variant="default" size="lg">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Record a thought
+                    </Button>
+                </Link>
+            </motion.div>
             {hasNoPosts ? (
                 <EmptyState />
             ) : (

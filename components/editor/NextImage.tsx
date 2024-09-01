@@ -84,7 +84,7 @@ const ResizableContainer = ({ children, width, height, minWidth = 200, maxWidth 
     return (
         <div
             ref={containerRef}
-            className="relative border-3 border-transparent hover:border-gray-300 rounded-xl mx-auto my-8"
+            className="relative border-3 border-transparent hover:border-gray-300 rounded-xl mx-auto my-8 hidden md:block"
             style={{ width: `${width}px`, height: `${height}px` }}
         >
             {children}
@@ -112,15 +112,17 @@ const ResizableContainer = ({ children, width, height, minWidth = 200, maxWidth 
 
 const FullWidthImage = ({ src, alt, title, width, height, loader }) => {
     return (
-        <ImageFromNext
-            src={src}
-            alt={alt || ''}
-            title={title}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-lg"
-            loader={loader}
-        />
+        <>
+            <ImageFromNext
+                src={src}
+                alt={alt || ''}
+                title={title}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+                loader={loader}
+            />
+        </>
     )
 }
 
@@ -161,6 +163,17 @@ const NextImageView = ({ node, updateAttributes, editor }) => {
                         loader={loader}
                     />
                 </ResizableContainer>
+                <div className="md:hidden">
+                    <ImageFromNext
+                        src={src}
+                        alt={alt || ''}
+                        title={title}
+                        layout="responsive"
+                        width={width}
+                        height={height}
+                        loader={loader}
+                    />
+                </div>
             </div>
         </NodeViewWrapper>
     )
