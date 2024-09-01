@@ -33,6 +33,7 @@
     "@react-oauth/google": "^0.12.1",
     "@supabase/supabase-js": "^2.45.2",
     "@tiptap/extension-character-count": "^2.6.6",
+    "@tiptap/extension-floating-menu": "^2.6.6",
     "@tiptap/extension-focus": "^2.6.6",
     "@tiptap/extension-image": "^2.6.6",
     "@tiptap/extension-link": "^2.6.6",

@@ -23,15 +23,14 @@ export default function EditorLayout({
           </Link>
           <Avatar />
         </div>
-        <main className="flex-grow">
+        <main className="flex-grow min-h-full p-3 relative w-full">
           <Toaster richColors position="top-center" expand={true} />
           {children}
+          <div className="fixed right-6 bottom-20 md:bottom-6 md:right-6 z-10 md:w-fit">
+            <SettingsButton />
+          </div>
         </main>
         <ShareMenu />
-        <div className="fixed bottom-4 right-4 z-10">
-          <SettingsButton />
-        </div>
-        <MobileMenu />
       </EditorProvider>
     </JotaiProvider>
   );

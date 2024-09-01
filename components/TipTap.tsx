@@ -36,7 +36,7 @@ const Tiptap = ({ wordcount = true }) => {
 
     return (
         <div className="flex flex-col">
-            <div className="fixed left-4 bottom-4 z-10">
+            <div className="absolute left-4 bottom-4 z-10">
                 {wordcount && <EditorCharacterCount limit={500} display="words" />}
             </div>
             <Center>

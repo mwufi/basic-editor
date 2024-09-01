@@ -1,3 +1,4 @@
+import MobileMenu from "@/components/editor/MobileMenu";
 import "./globals.css";
 
 import { Metadata } from "next";
@@ -24,8 +25,9 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className="h-full max-w-full overflow-x-hidden md:overflow-x-auto">
+      <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
         {children}
+        <MobileMenu />
       </body>
     </html>
   );
