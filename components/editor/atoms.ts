@@ -29,6 +29,11 @@ export const noteMetadataAtom = atom(
     (get, set, newMetadata: Record<string, any>) => set(noteAtom, { ...get(noteAtom), metadata: { ...get(noteAtom).metadata, ...newMetadata } })
 );
 
+export const updatedAtAtom = atom(
+    (get) => get(noteAtom).updatedAt,
+    (get, set, newUpdatedAt: Date) => set(noteAtom, { ...get(noteAtom), updatedAt: newUpdatedAt })
+);
+
 export const uiStateAtom = atom({
     isSidebarOpen: false,
     isFullscreen: false,

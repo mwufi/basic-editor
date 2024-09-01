@@ -147,7 +147,10 @@ export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boo
         const id = await notesManager.addNote(note as Note);
         console.log("[saveNoteLocal] Note added", id, note.title);
     }
-    return { success: true, updatedNote: note as Note };
+    return { success: true, updatedNote: {
+        ...note,
+        updatedAt: new Date()
+    } as Note };
 }
 
 export async function updatePublishInfo(note: Note, publishedId: string) {
