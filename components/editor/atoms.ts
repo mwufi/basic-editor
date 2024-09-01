@@ -8,6 +8,7 @@ const createEmptyNote = (): Note => ({
     id: null,
     title: 'Untitled',
     text: '',
+    isNew: true,
     metadata: {},
     createdAt: new Date(),
     updatedAt: new Date(),

@@ -140,17 +140,24 @@ export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boo
     }
 
     if (note.id) {
-        await notesManager.updateNote(note.id, note);
+        await notesManager.updateNote(note.id, { ...note, isNew: false });
         console.log("[saveNoteLocal] Note updated", note.id, note.title);
     } else {
         delete note.id
-        const id = await notesManager.addNote(note as Note);
+        if (note.isNew && note.title === "Untitled" && !note.text) {
+            console.log("[saveNoteLocal] Note is new, but title and content are empty. Skipping save.");
+            return { success: false, updatedNote: note as Note };
+        }
+        const id = await notesManager.addNote({ ...note, isNew: false } as Note);
         console.log("[saveNoteLocal] Note added", id, note.title);
     }
-    return { success: true, updatedNote: {
-        ...note,
-        updatedAt: new Date()
-    } as Note };
+    return {
+        success: true, updatedNote: {
+            ...note,
+            isNew: false,
+            updatedAt: new Date()
+        } as Note
+    };
 }
 
 export async function updatePublishInfo(note: Note, publishedId: string) {

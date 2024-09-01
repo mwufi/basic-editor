@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Link from 'next/link'
-import { useSetAtom } from 'jotai'
-import { resetNoteAtom } from '@/components/editor/atoms'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { noteAtom, resetNoteAtom } from '@/components/editor/atoms'
 import { motion } from 'framer-motion'
+import { saveNoteLocal } from '@/lib/instantdb/mutations'
+import { Trash2 } from 'lucide-react'
 
 const EmptyState = () => {
     return (
@@ -28,32 +30,37 @@ const EmptyState = () => {
     )
 }
 
-const BlogPost = ({ post }) => (
-    <motion.div
-        whileHover={{ scale: 1.05 }}
-        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        className="relative w-16 h-16 m-2 group z-0"
-    >
-        <Link href={`/blog/${post.id}`}>
-            <Card className="w-full h-full bg-gradient-to-r from-pink-100 to-orange-100">
-                <CardContent className="p-1"></CardContent>
-            </Card>
-            <div className="z-10 absolute left-0 w-48 p-2 bg-white shadow-lg rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 translate-y-full -mt-2" style={{ isolation: 'isolate', transform: 'translateZ(0)' }}>
-                <h2 className={`text-sm font-semibold mb-1 truncate ${post.isPublished ? 'text-green-600' : 'text-orange-700'}`}>
-                    {post.title}
-                </h2>
-                <p className="text-xs text-gray-600">
-                    {new Date(post.createdAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric'
+const BlogPost = ({ post, index, onDelete }) => (
+    <motion.li initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: index * 0.1 }}>
+        <Link href={`/blog/${post.id}`} className="block hover:bg-gray-100 p-2 rounded-md transition-colors duration-200">
+            <div className="flex justify-start items-center gap-4">
+                <h2 className={`text-lg font-semibold ${post.isPublished ? 'text-green-600' : 'text-orange-700'}`}>{post.title}</h2>
+                <p className="mr-auto text-sm text-gray-600">
+                    {new Date(post.updatedAt).toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
                     })}
                 </p>
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onDelete(post.id);
+                    }}
+                    className="text-gray-500 hover:text-red-500 transition-colors duration-200"
+                    aria-label="Delete note"
+                >
+                    <Trash2 size={18} />
+                </button>
             </div>
         </Link>
-    </motion.div>
+    </motion.li>
 )
 
-const BlogSection = ({ title, posts }) => (
+const BlogSection = ({ title, posts, onDelete }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -61,42 +68,55 @@ const BlogSection = ({ title, posts }) => (
         className="mb-8"
     >
         <h2 className="text-2xl font-semibold mb-4 text-orange-800">{title}</h2>
-        <div className="flex flex-wrap justify-start">
-            {posts.map((post) => (
-                <BlogPost key={post.id} post={post} />
+        <ul className="list-none">
+            {posts.map((post, index) => (
+                <BlogPost key={post.id} post={post} index={index} onDelete={onDelete} />
             ))}
-        </div>
+        </ul>
     </motion.div>
 )
 
 const BlogHome = () => {
     const [publishedPosts, setPublishedPosts] = useState([])
     const [localPosts, setLocalPosts] = useState([])
+    const note = useAtomValue(noteAtom)
     const resetNote = useSetAtom(resetNoteAtom)
 
+    const fetchBlogPosts = async () => {
+        const notesManager = new IndexedDBNotesManager()
+        const notes = await notesManager.getAllNotes()
+        console.log("Retrieved notes", notes)
+
+        const sortedNotes = notes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+
+        setPublishedPosts(sortedNotes.filter(note => note.isPublished))
+        setLocalPosts(sortedNotes.filter(note => !note.isPublished))
+    }
+
     useEffect(() => {
-        const fetchBlogPosts = async () => {
-            const notesManager = new IndexedDBNotesManager()
-            const notes = await notesManager.getAllNotes()
-            console.log("Retrieved notes", notes)
-
-            const sortedNotes = notes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-
-            setPublishedPosts(sortedNotes.filter(note => note.isPublished))
-            setLocalPosts(sortedNotes.filter(note => !note.isPublished))
-        }
-
         fetchBlogPosts()
     }, [])
 
     useEffect(() => {
+        void saveNoteLocal(note)
         resetNote()
     }, [resetNote])
+
+    const handleDelete = async (id) => {
+        const notesManager = new IndexedDBNotesManager();
+        try {
+            await notesManager.deleteNote(id);
+            // Refresh the posts after deletion
+            await fetchBlogPosts();
+        } catch (error) {
+            console.error('Error deleting note:', error);
+        }
+    }
 
     const hasNoPosts = publishedPosts.length === 0 && localPosts.length === 0
 
     return (
-        <main className="max-w-5xl mx-auto p-8">
+        <main className="max-w-2xl mx-auto p-8 w-full">
             <motion.h1
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -109,8 +129,8 @@ const BlogHome = () => {
                 <EmptyState />
             ) : (
                 <>
-                    {publishedPosts.length > 0 && <BlogSection title="Published" posts={publishedPosts} />}
-                    {localPosts.length > 0 && <BlogSection title="Local" posts={localPosts} />}
+                    {publishedPosts.length > 0 && <BlogSection title="Published" posts={publishedPosts} onDelete={handleDelete} />}
+                    {localPosts.length > 0 && <BlogSection title="Local" posts={localPosts} onDelete={handleDelete} />}
                 </>
             )}
         </main>
