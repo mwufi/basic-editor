@@ -148,7 +148,8 @@
 }
 
 .tiptap p {
-  @apply text-base leading-loose mb-4;
+  /* @apply text-base leading-loose mb-4; */
+  @apply text-lg leading-relaxed mb-1;
 }
 
 .tiptap .next-image {

@@ -10,7 +10,7 @@ export function MarkdownPreview({ content }: { content: string }) {
             Markdown,
         ],
         content: content || '',
-        editable: false, // Make it read-only
+        editable: true, // Make it read-only
     });
 
     useEffect(() => {
