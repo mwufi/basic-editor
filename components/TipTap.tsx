@@ -47,7 +47,7 @@ const Tiptap = ({ wordcount = true }) => {
                         onChange={(e) => {
                             setTitle(e.target.value);
                         }}
-                        className="w-full text-4xl font-bold focus:outline-none"
+                        className="w-full text-5xl font-bold focus:outline-none"
                         placeholder="Enter title..."
                     />
                 </div>

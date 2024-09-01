@@ -4,10 +4,9 @@ import { useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Tiptap from "@/components/TipTap"
-import { Button } from '@/components/ui/button'
 import { useAtom } from 'jotai'
 import { noteAtom, uiStateAtom } from '@/components/editor/atoms'
-import Link from 'next/link'
+import { saveNoteLocal } from '@/lib/instantdb/mutations'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
@@ -19,6 +18,21 @@ const BlogPost = () => {
         const fetchedNote = await notesManager.getNote(parseInt(id as string))
         setNote(fetchedNote)
     }
+
+    useEffect(() => {
+        const saveInterval = setInterval(async () => {
+            if (note) {
+                try {
+                    await saveNoteLocal(note);
+                    console.log('Auto-saved note');
+                } catch (error) {
+                    console.error('Error auto-saving note:', error);
+                }
+            }
+        }, 10000);
+
+        return () => clearInterval(saveInterval);
+    }, [note]);
 
     useEffect(() => {
         fetchPost()

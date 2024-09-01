@@ -62,8 +62,8 @@ const BlogPost = () => {
                     </div>
                 )}
 
-                {note.publishedId && (
-                    <div className="mb-4 flex items-center">
+                <div className="mb-4 flex items-center gap-2">
+                    {note.publishedId && (
                         <Button
                             variant="outline"
                             size="sm"
@@ -74,18 +74,17 @@ const BlogPost = () => {
                                 Published
                             </a>
                         </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="ml-2"
-                            asChild
-                        >
-                            <Link href={`/blog/${note.id}/edit`}>
-                                <Pencil className="w-4 h-4 mr-1" />
-                            </Link>
-                        </Button>
-                    </div>
-                )}
+                    )}
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                    >
+                        <Link href={`/blog/${note.id}/edit`}>
+                            <Pencil className="w-4 h-4 mr-1" />
+                        </Link>
+                    </Button>
+                </div>
             </motion.div>
 
             <motion.div
