@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTheme } from './themeContext';
 import { predefinedThemes } from './themes';
-import { themeContentAtom } from '@/components/editor/atoms';
+import { saveThemeContent, themeContentAtom } from '@/components/editor/atoms';
 import { useAtom } from 'jotai';
 
 const YourComponent = () => {
@@ -52,7 +52,7 @@ const YourComponent = () => {
                     Load Custom Theme
                 </button>
             </form>
-            <form onSubmit={handleCustomCSS} className="flex flex-col space-y-2">
+            <form onSubmit={e => saveThemeContent(themeContent)} className="flex flex-col space-y-2">
                 <textarea
                     value={themeContent}
                     onChange={(e) => {

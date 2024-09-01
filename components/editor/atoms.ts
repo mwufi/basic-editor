@@ -4,12 +4,12 @@ import { Note } from '@/lib/types';
 import { atom } from 'jotai';
 
 // theme atoms
+const localStorageKey = 'themeContent';
+
 export const themeAtom = atom({
     name: 'default',
-    content: '',
+    content: localStorage.getItem(localStorageKey) || '',
 });
-
-const localStorageKey = 'themeContent';
 
 export const themeContentAtom = atom(
     (get) => {
@@ -23,6 +23,10 @@ export const themeContentAtom = atom(
         // localStorage.setItem(localStorageKey, JSON.stringify(newContent));
     }
 );
+
+export function saveThemeContent(content: string) {
+    localStorage.setItem(localStorageKey, content);
+}
 
 
 const createEmptyNote = (): Note => ({

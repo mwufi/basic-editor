@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { Metadata } from "next";
 import JotaiProvider from "@/components/providers/JotaiProvider";
+import { ThemeProvider } from "./test/themes/themeContext";
 
 export const metadata: Metadata = {
   title: "Playground V0",
@@ -27,10 +28,12 @@ export default function RootLayout({
         )}
       </head>
       <JotaiProvider>
-        <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
-          {children}
-          <MobileMenu />
-        </body>
+        <ThemeProvider>
+          <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
+            {children}
+            <MobileMenu />
+          </body>
+        </ThemeProvider>
       </JotaiProvider>
     </html>
   );
