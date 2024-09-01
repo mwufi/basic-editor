@@ -1,10 +1,24 @@
 'use client'
 
 import { useState } from 'react'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { noteMetadataAtom } from '@/components/editor/atoms'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+
+export const HeaderImgDisplay = () => {
+    const metadata = useAtomValue(noteMetadataAtom)
+    if (!metadata?.headerImg) {
+        return null
+    }
+    return (
+        <img
+            src={metadata.headerImg}
+            alt="Header"
+            className="w-full h-64 object-cover mb-2"
+        />
+    )
+}
 
 const HeaderImgEditor = () => {
     const [metadata, setMetadata] = useAtom(noteMetadataAtom)

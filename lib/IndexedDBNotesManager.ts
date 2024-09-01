@@ -42,27 +42,6 @@ export default class IndexedDBNotesManager {
         });
     }
 
-    async saveDraft(note: Partial<Note>): Promise<number> {
-        const DRAFT_ID = 10010101001;
-        const db = await this.openDB();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(this.storeName, 'readwrite');
-            const store = transaction.objectStore(this.storeName);
-
-            const draftNote: Note = {
-                ...note,
-                id: DRAFT_ID,
-                updatedAt: new Date(),
-                createdAt: note.createdAt || new Date()
-            };
-
-            const request = store.put(draftNote);
-
-            request.onerror = () => reject(request.error);
-            request.onsuccess = () => resolve(DRAFT_ID);
-        });
-    }
-
     async getNote(id: number): Promise<Note | undefined> {
         const db = await this.openDB();
         return new Promise((resolve, reject) => {

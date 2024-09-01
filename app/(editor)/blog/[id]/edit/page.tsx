@@ -6,7 +6,6 @@ import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Tiptap from "@/components/TipTap"
 import { useAtom, useSetAtom } from 'jotai'
 import { noteAtom, uiStateAtom, updatedAtAtom } from '@/components/editor/atoms'
-import { saveNoteLocal } from '@/lib/instantdb/mutations'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
@@ -34,15 +33,12 @@ const BlogPost = () => {
         return <div>Loading...</div>
     }
 
-    const noteContent = note.text || note.content
     if (!note.text && note.content) {
         console.log("Note has content but no text (legacy)")
     }
 
     return (
-        <main className="max-w-3xl mx-auto">
-            <Tiptap />
-        </main>
+        <Tiptap />
     )
 }
 
