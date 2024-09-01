@@ -1,4 +1,4 @@
-import { JetBrains_Mono, Libre_Baskerville, Roboto, Playfair_Display, Montserrat, Merriweather, Oswald, Lora } from 'next/font/google';
+import { JetBrains_Mono, Libre_Baskerville, Roboto, Playfair_Display, Montserrat, Merriweather, Oswald, Lora, Manrope } from 'next/font/google';
 
 const jetBrainsMono = JetBrains_Mono({
   weight: ['400', '700'],
@@ -43,6 +43,12 @@ const oswald = Oswald({
 });
 
 const lora = Lora({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const manrope = Manrope({
   weight: ['400', '700'],
   subsets: ['latin'],
   display: 'swap',
@@ -112,5 +118,14 @@ export const predefinedThemes = {
       primary: '#34495e',
       background: '#bdc3c7',
     },
+  },
+  mediumGrayManrope: {
+    name: 'Medium Gray Manrope',
+    font: manrope,
+    colors: {
+      primary: '#666666',
+      background: '#ffffff',
+    },
+    fontSize: '18px',
   },
 };
