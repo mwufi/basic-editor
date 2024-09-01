@@ -68,6 +68,41 @@ a {
   }
 }
 
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+  --background-color: #0C1821;
+  --heading-color: #f5f3f4;
+  --text-color: #ffffff;
+  --link-color: #f9c784;
+  --link-text-decoration-color: #324A5F;
+  --code-background-color: #cdd7d6;
+  --code-color: #222;
+  --h4-background-color: #1A759F;
+  --h4-text-color: #ffffff;
+  --h5-background-color: #0C1821;
+  --h5-border-color: #C3B597;
+  --h5-text-color: #ffffff;
+  --h5-background-hover-color: #f9c784;
+  --h5-hover-text-color: #0C1821;
+  --strong-bold-color: #ccc9dc;  
+  --blockquote-background-color: #1b2a41;
+  --highlight-color: #F9E076;
+  --highlight-link: #363457
+  --upvote-count-color: #ffffff;
+  --nav-textcolor-hover: #003049
+  }
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5 {
+  color: var(--heading-color);
+}
+
 .top-navbar {
   top: calc(46px + 48px);
 }
@@ -94,7 +129,6 @@ a {
   }
 }
 
-
 @media (max-width: 767px) {
   body {
     scrollbar-width: none;
@@ -106,42 +140,28 @@ a {
 }
 
 .tiptap .node-nextImage.ProseMirror-selectednode {
-  outline: 3px solid var(--purple);
+  outline: 3px solid var(--highlight-color);
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  color: #adb5bd;
+  color: var(--strong-bold-color);
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
 }
-
-/* .tiptap p.is-empty::before {
-  color: #adb5bd;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-} */
 
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    color: var(--text-color);
     overscroll-behavior: none;
   }
 }
 
 /* Scoped to the editor */
-
-@layer base {
-  html {
-    font-size: 14.4px;
-  }
-}
 
 .tiptap h1 {
   @apply text-4xl font-bold leading-tight mb-6;
@@ -156,7 +176,6 @@ a {
 }
 
 .tiptap p {
-  /* @apply text-base leading-loose mb-4; */
   @apply text-lg leading-relaxed mb-1;
 }
 
@@ -189,15 +208,19 @@ a {
 }
 
 .tiptap a {
-  @apply text-blue-600 hover:underline;
+  color: var(--link-color);
+  text-decoration-color: var(--link-text-decoration-color);
+  @apply hover:underline;
 }
 
 .tiptap blockquote {
   @apply pl-4 border-l-4 border-gray-300 italic my-6;
+  background-color: var(--blockquote-background-color);
 }
 
 .tiptap pre {
-  @apply bg-zinc-100 p-4 my-6;
+  @apply p-4 my-6;
+  background-color: var(--code-background-color);
 }
 
 .tiptap hr {
