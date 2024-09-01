@@ -35,6 +35,20 @@ type Schema = {
         author: Schema['users'];
         children: Array<Schema['outlineNodes']>;
     };
+    theme: {
+        id: string;
+        name: string;
+        content: string;
+        author: Schema['users'];
+        themeConfirmations: Array<Schema['themeConfirmations']>;
+        createdAt: number;
+    };
+    themeConfirmations: {
+        id: string;
+        theme: Schema['theme'];
+        value: number;
+        createdAt: number;
+    };
     outlineNodes: {
         id: string;
         index: number;

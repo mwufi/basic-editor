@@ -1,0 +1,18 @@
+/* Import Sevillana font */
+@import url('https://fonts.googleapis.com/css2?family=Sevillana&display=swap');
+
+/* Apply Sevillana font to Tiptap paragraphs */
+.tiptap {
+  font-family: 'Sevillana', cursive;
+}
+
+/* Optional: Set a fallback font and font size */
+.tiptap p {
+  font-family: 'Sevillana', cursive, sans-serif;
+  font-size: 16px;
+}
+
+/* Optional: Adjust line height for better readability */
+.tiptap p {
+  line-height: 1.5;
+}

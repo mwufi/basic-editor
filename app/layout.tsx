@@ -2,6 +2,7 @@ import MobileMenu from "@/components/editor/MobileMenu";
 import "./globals.css";
 
 import { Metadata } from "next";
+import JotaiProvider from "@/components/providers/JotaiProvider";
 
 export const metadata: Metadata = {
   title: "Playground V0",
@@ -25,10 +26,12 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
-        {children}
-        <MobileMenu />
-      </body>
+      <JotaiProvider>
+        <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
+          {children}
+          <MobileMenu />
+        </body>
+      </JotaiProvider>
     </html>
   );
 }
