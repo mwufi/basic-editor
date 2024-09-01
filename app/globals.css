@@ -25,6 +25,7 @@
     --ring: 240 10% 3.9%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
+    --purple: 270 50% 60%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
@@ -71,6 +72,26 @@
   body::-webkit-scrollbar {
     display: none;
   }
+}
+
+.tiptap .node-nextImage.ProseMirror-selectednode {
+  outline: 3px solid var(--purple);
+}
+/* 
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+} */
+
+.tiptap p.is-empty::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }
 
 @layer base {

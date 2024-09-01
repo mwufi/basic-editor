@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { useAtom } from 'jotai'
 import { noteAtom, uiStateAtom } from '@/components/editor/atoms'
 import Link from 'next/link'
-import TopBar from '@/components/TopBar'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
@@ -43,11 +42,6 @@ const BlogPost = () => {
 
     return (
         <main className="max-w-3xl mx-auto p-4">
-            <TopBar>
-                <Button asChild>
-                    <Link href={`/blog/${id}`}>View</Link>
-                </Button>
-            </TopBar>
             <Tiptap />
         </main>
     )

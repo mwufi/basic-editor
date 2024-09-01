@@ -35,11 +35,6 @@ export const noteTitleAtom = atom(
     (get, set, newTitle: string) => set(noteAtom, { ...get(noteAtom), title: newTitle })
 );
 
-export const updateTitleAtom = atom(
-    null,
-    (get, set, newTitle: string) => set(noteAtom, { ...get(noteAtom), title: newTitle })
-);
-
 export const updateContentAtom = atom(
     null,
     (get, set, newContent: string) => set(noteAtom, { ...get(noteAtom), text: newContent })

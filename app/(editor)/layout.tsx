@@ -1,17 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
 import { Toaster } from 'sonner'
 import JotaiProvider from "@/components/providers/JotaiProvider";
 import Avatar from "../Avatar";
-import PageHeader from "@/components/blocks/PageHeader";
 import { EditorProvider } from "@/components/editor/EditorContext";
-import { cn } from "@/lib/utils";
-import ComposingMenubar from "@/components/blocks/ComposingMenubar";
 import ShareMenu from "@/components/ShareMenu";
-import BottomFooter from "@/components/blocks/BottomFooter";
-
-const inter = Inter({ subsets: ["latin"] });
+import MobileMenu from "@/components/editor/MobileMenu";
+import SettingsButton from '@/components/editor/SettingsButton';
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 export default function EditorLayout({
   children,
@@ -21,10 +16,11 @@ export default function EditorLayout({
   return (
     <JotaiProvider>
       <EditorProvider>
-        <div className="hidden md:block max-w-sm fixed top-0 left-0 p-4 z-50">
-          <ComposingMenubar />
-        </div>
-        <div className="fixed top-0 right-0 p-4 z-50">
+        <div className="p-4 flex justify-between border-b">
+          <Link href="/" className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md p-2 px-4">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Link>
           <Avatar />
         </div>
         <main className="flex-grow">
@@ -32,7 +28,10 @@ export default function EditorLayout({
           {children}
         </main>
         <ShareMenu />
-        <BottomFooter />
+        <div className="fixed bottom-4 right-4 z-10">
+          <SettingsButton />
+        </div>
+        <MobileMenu />
       </EditorProvider>
     </JotaiProvider>
   );

@@ -2,15 +2,12 @@
 
 import { useEditor } from '@/components/editor/EditorContext';
 
-import { Button } from "@/components/ui/button"
 import { useEffect, useMemo } from "react"
-import SimpleDialog from './blocks/SimpleDialog';
-import Link from 'next/link';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 
-import Editor, { insertCustomButton, insertGallery } from '@/components/editor/Editor';
+import Editor from '@/components/editor/Editor';
 import EditorCharacterCount from '@/components/editor/CharacterCount';
-import { noteAtom } from '@/components/editor/atoms';
+import { noteAtom, noteTitleAtom } from '@/components/editor/atoms';
 
 const Center = ({ children }: { children: React.ReactNode }) => {
     return <div className='relative h-full'><div className="mx-auto max-w-3xl py-6">{children}</div></div>
@@ -19,6 +16,7 @@ const Center = ({ children }: { children: React.ReactNode }) => {
 const Tiptap = ({ wordcount = true }) => {
     const { editor } = useEditor();
     const note = useAtomValue(noteAtom);
+    const [title, setTitle] = useAtom(noteTitleAtom);
 
     // for interactive fun :)
     useEffect(() => {
@@ -42,6 +40,17 @@ const Tiptap = ({ wordcount = true }) => {
                 {wordcount && <EditorCharacterCount limit={500} display="words" />}
             </div>
             <Center>
+                <div className="mb-6">
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => {
+                            setTitle(e.target.value);
+                        }}
+                        className="w-full text-4xl font-bold focus:outline-none"
+                        placeholder="Enter title..."
+                    />
+                </div>
                 {editorComponent}
             </Center>
         </div>

@@ -1,12 +1,15 @@
 'use client'
 
 import Tiptap from "@/components/TipTap";
-import TopBar from "@/components/TopBar";
 
 import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { resetNoteAtom, uiStateAtom } from '@/components/editor/atoms';
 
+/*
+The purpose of this page is to reset the note and tell the other UI elements that
+we are writing. 
+*/
 export default function Home() {
   const setUiState = useSetAtom(uiStateAtom);
   const resetNote = useSetAtom(resetNoteAtom);
@@ -22,9 +25,6 @@ export default function Home() {
     };
   }, [setUiState]);
   return (
-    <main className="max-w-3xl mx-auto p-4">
-      <TopBar />
-      <Tiptap />
-    </main>
+    <Tiptap />
   );
 }

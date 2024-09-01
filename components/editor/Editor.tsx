@@ -17,6 +17,8 @@ import { toast } from 'sonner'
 import { uploadImageToSupabase } from '@/lib/uploadImage';
 import CustomButton from './CustomButton';
 import CustomImageGallery from './CustomImageGallery';
+import Placeholder from '@tiptap/extension-placeholder';
+import Focus from '@tiptap/extension-focus';
 import { WelcomeMessage } from '../WelcomeText';
 import { useAtom, useSetAtom } from 'jotai';
 import { noteAtom, updateContentAtom } from './atoms';
@@ -44,24 +46,34 @@ async function uploadAndInsertImage(editor, file, pos = null) {
         const supabasePath = await uploadImageToSupabase(file)
         console.log("Supabase path", supabasePath)
 
-        editor.chain().insertContentAt(pos ?? getPos(editor), {
-            type: 'nextImage',
-            attrs: {
-                src: supabasePath,
+        editor.chain().insertContent([
+            {
+                type: 'nextImage',
+                attrs: {
+                    src: supabasePath,
+                },
             },
-        }).focus().run()
+            {
+                type: 'paragraph'
+            },
+        ]).focus().run()
     } catch (error) {
         toast.error('Error uploading image:', error.message);
     }
 }
 
-function insertImageUrl(editor, url, pos = null) {
-    editor.chain().insertContentAt(pos ?? getPos(editor), {
-        type: 'nextImage',
-        attrs: {
-            src: url,
+function insertImageUrl(editor, url) {
+    editor.chain().insertContent([
+        {
+            type: 'nextImage',
+            attrs: {
+                src: url,
+            },
         },
-    }).focus().run()
+        {
+            type: 'paragraph'
+        }
+    ]).focus().run()
 }
 
 export const insertCustomButton = (editor, label, onClick) => {
@@ -108,6 +120,12 @@ const Editor = ({ editable = true, initialContent = null, font = 'serif' }) => {
     const editor = useTiptapEditor({
         extensions: [
             StarterKit,
+            Placeholder.configure({
+                placeholder: 'Write your note here...',
+            }),
+            Focus.configure({
+                className: 'focus',
+            }),
             CharacterCount,
             NextImage,
             Link,
