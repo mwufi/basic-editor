@@ -12,28 +12,12 @@ const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
     const { id } = useParams()
     const [uiState, setUiState] = useAtom(uiStateAtom);
-    const setUpdatedAt = useSetAtom(updatedAtAtom);
 
     const fetchPost = async () => {
         const notesManager = new IndexedDBNotesManager()
         const fetchedNote = await notesManager.getNote(parseInt(id as string))
         setNote(fetchedNote)
     }
-
-    useEffect(() => {
-        const saveInterval = setInterval(async () => {
-            if (note) {
-                try {
-                    const { updatedNote } = await saveNoteLocal(note);
-                    setUpdatedAt(updatedNote?.updatedAt);
-                } catch (error) {
-                    console.error('Error auto-saving note:', error);
-                }
-            }
-        }, 5000);
-
-        return () => clearInterval(saveInterval);
-    }, [note]);
 
     useEffect(() => {
         fetchPost()

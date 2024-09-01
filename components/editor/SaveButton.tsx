@@ -20,7 +20,9 @@ const SaveButton = () => {
                 const { updatedNote } = await syncPost(note, currentUserId)
                 setNote(updatedNote)
             } else {
-                await saveNoteLocal(note);
+                // since a human clicked it, we force-save!
+                const { updatedNote } = await saveNoteLocal(note, true);
+                setNote(updatedNote)
             }
             toast.success('Document saved! ' + note.title);
             console.log("document saved!")
@@ -34,12 +36,11 @@ const SaveButton = () => {
     return (
         <Button
             size="sm"
-            variant={note.isPublished ? "outline" : "ghost"}
+            variant="outline"
             onClick={handleSave}
             className={note.isPublished ? " text-green-500" : ""}
         >
-            <Save className="mr-2 h-4 w-4" />
-            {note.isPublished ? "Update" : "Save"}
+            <Save className="h-4 w-4 mr-1" />
         </Button>
     )
 }

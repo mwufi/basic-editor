@@ -132,28 +132,32 @@ export function getPost(postId: string) {
     return { isLoading, error, data }
 }
 
-export async function saveNoteLocal(note: Partial<Note>): Promise<{ success: boolean; updatedNote?: Note; error?: any }> {
+export async function saveNoteLocal(note: Partial<Note>, force = false): Promise<{ success: boolean; updatedNote?: Note; error?: any }> {
     const notesManager = new IndexedDBNotesManager();
     if (!note.text && note.content) {
         console.log("[legacy] Note has content, but no text. Converting content to text.")
         note.text = note.content
     }
 
+    let id = note.id
     if (note.id) {
         await notesManager.updateNote(note.id, { ...note, isNew: false });
         console.log("[saveNoteLocal] Note updated", note.id, note.title);
     } else {
         delete note.id
-        if (note.isNew && note.title === "Untitled" && !note.text) {
+        if (!force && note.isNew && note.title === "Untitled" && !note.text) {
             console.log("[saveNoteLocal] Note is new, but title and content are empty. Skipping save.");
             return { success: false, updatedNote: note as Note };
+        } else {
+            id = await notesManager.addNote({ ...note, isNew: false } as Note);
+            console.log("[saveNoteLocal] Note added", id, note.title);
         }
-        const id = await notesManager.addNote({ ...note, isNew: false } as Note);
-        console.log("[saveNoteLocal] Note added", id, note.title);
     }
+
     return {
         success: true, updatedNote: {
             ...note,
+            id,
             isNew: false,
             updatedAt: new Date()
         } as Note

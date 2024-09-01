@@ -3,15 +3,18 @@
 import { useEditor } from '@/components/editor/EditorContext';
 
 import { useEffect, useMemo } from "react"
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
 import Editor from '@/components/editor/Editor';
 import EditorCharacterCount from '@/components/editor/CharacterCount';
-import { noteAtom, noteMetadataAtom, noteTitleAtom } from '@/components/editor/atoms';
+import { noteAtom, noteMetadataAtom, noteTitleAtom, updatedAtAtom } from '@/components/editor/atoms';
 import { motion } from 'framer-motion';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Save } from 'lucide-react';
+import HeaderImgEditor from './editor/HeaderImgEditor';
+import { saveNoteLocal } from '@/lib/instantdb/mutations';
+import SaveButton from './editor/SaveButton';
 
 const Center = ({ children }: { children: React.ReactNode }) => {
     return <div className='relative h-full'><div className="mx-auto max-w-3xl py-6">{children}</div></div>
@@ -21,7 +24,7 @@ const Tiptap = ({ wordcount = true }) => {
     const { editor } = useEditor();
     const note = useAtomValue(noteAtom);
     const [title, setTitle] = useAtom(noteTitleAtom);
-    const [metadata, setMetadata] = useAtom(noteMetadataAtom);
+    const setUpdatedAt = useSetAtom(updatedAtAtom);
 
     // for interactive fun :)
     useEffect(() => {
@@ -30,6 +33,24 @@ const Tiptap = ({ wordcount = true }) => {
             window.editor = editor;
         }
     }, [editor])
+
+    useEffect(() => {
+        const saveInterval = setInterval(async () => {
+            if (note) {
+                console.log("auto-saving note", note.id, note.title)
+                /*
+                try {
+                    const { updatedNote } = await saveNoteLocal(note);
+                    setUpdatedAt(updatedNote?.updatedAt);
+                } catch (error) {
+                    console.error('Error auto-saving note:', error);
+                }
+                    */
+            }
+        }, 1000);
+
+        return () => clearInterval(saveInterval);
+    }, [note]);
 
     const editorComponent = useMemo(() => {
         if (!note.text && note.content) {
@@ -44,26 +65,8 @@ const Tiptap = ({ wordcount = true }) => {
             <div className="absolute left-4 bottom-4 z-10">
                 {wordcount && <EditorCharacterCount limit={500} display="words" />}
             </div>
+            <HeaderImgEditor />
             <Center>
-                {metadata?.headerImg ? (
-                    <img
-                        src={metadata.headerImg}
-                        alt="Header"
-                        className="w-full h-64 object-cover mb-6"
-                    />
-                ) : (
-                    <button
-                        onClick={() => {
-                            const url = prompt("Enter header image URL:");
-                            if (url) {
-                                setMetadata({ ...metadata, headerImg: url });
-                            }
-                        }}
-                        className="w-full h-64 border-2 border-dashed border-gray-300 flex items-center justify-center mb-6 hover:bg-gray-50 transition-colors"
-                    >
-                        Add Header Image
-                    </button>
-                )}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -110,6 +113,7 @@ const Tiptap = ({ wordcount = true }) => {
                                 <Eye className="w-4 h-4 mr-1" />
                             </Link>
                         </Button>
+                        <SaveButton />
                     </div>
                 </motion.div>
                 <div className="mb-6">
