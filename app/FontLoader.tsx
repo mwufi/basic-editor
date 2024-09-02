@@ -34,5 +34,7 @@ export const FontLoader = () => {
         };
     }, []);
 
-    return <FontPicker loadFonts={fontToLoad} />
+    return <div style={{ width: 0, height: 0, overflow: 'hidden' }}>
+        <FontPicker loadFonts={fontToLoad} />
+    </div>
 }
