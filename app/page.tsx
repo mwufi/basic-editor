@@ -32,7 +32,7 @@ const EmptyState = () => {
 
 const BlogPost = ({ post, index, onDelete }) => (
     <motion.li initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-        <Link href={`/blog/${post.id}`} className="block hover:bg-accent p-2 rounded-md transition-colors duration-200">
+        <Link href={`/blog/${post.id}`} className="block hover:bg-accent hover:text-accent-foreground p-2 rounded-md transition-colors duration-200">
             <div className="flex justify-start items-center gap-4">
                 <h2 className={`text-lg font-body font-semibold text-primary`}>{post.title}</h2>
                 <p className="mr-auto text-sm text-gray-600">
