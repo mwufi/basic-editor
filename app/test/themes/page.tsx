@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react';
 import YourComponent from './Component';
 import Tiptap from '@/components/TipTap';
 import { EditorProvider } from '@/components/editor/EditorContext';
@@ -8,6 +7,8 @@ import ThemeEditor from '@/components/dev/ThemeEditor';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'; // Assuming you have a Tabs component
 
 export default function ThemedEditorPage() {
+
+    
     return (
         <EditorProvider>
             <div className="container mx-auto p-4">

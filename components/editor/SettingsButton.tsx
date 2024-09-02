@@ -38,7 +38,7 @@ export default function SettingsButton() {
                         <TabsTrigger value="theme" className="text-lg py-3">Theme</TabsTrigger>
                     </TabsList>
                     <TabsContent value="editing" className="space-y-6">
-                        <div className="flex items-center space-x-4 p-4 bg-gray-100 rounded-lg">
+                        <div className="flex items-center space-x-4 p-4 rounded-lg">
                             <Switch
                                 id="zen-mode"
                                 checked={zenMode}
@@ -47,7 +47,7 @@ export default function SettingsButton() {
                             />
                             <Label htmlFor="zen-mode" className="text-lg">Zen Mode</Label>
                         </div>
-                        <div className="p-4 bg-gray-100 rounded-lg">
+                        <div className="p-4 rounded-lg">
                             <h3 className="text-xl font-semibold mb-3">Font Settings</h3>
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
@@ -62,7 +62,7 @@ export default function SettingsButton() {
                         </div>
                     </TabsContent>
                     <TabsContent value="sharing" className="space-y-6">
-                        <div className="p-4 bg-gray-100 rounded-lg">
+                        <div className="p-4 rounded-lg">
                             <h3 className="text-xl font-semibold mb-3">Sharing Options</h3>
                             <p className="text-lg mb-4">Choose how you want to share your content:</p>
                             <div className="space-y-3">
@@ -82,7 +82,7 @@ export default function SettingsButton() {
                         </div>
                     </TabsContent>
                     <TabsContent value="theme" className="space-y-6">
-                        <RadioGroup value={theme} onValueChange={setTheme} className="p-4 bg-gray-100 rounded-lg">
+                        <RadioGroup value={theme} onValueChange={setTheme} className="p-4 rounded-lg">
                             <h3 className="text-xl font-semibold mb-3">Choose Your Theme</h3>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex items-center space-x-2 p-3 border rounded-md">

@@ -66,7 +66,6 @@ const ThemeEditor = () => {
 
     return (
         <div className="theme-editor">
-            <h2>Edit Theme Colors</h2>
             <div className="flex">
                 <div className="shrink-0 flex flex-col gap-2">
                     {Object.entries(colors).map(([key, value]) => (

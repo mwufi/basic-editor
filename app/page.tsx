@@ -67,7 +67,7 @@ const BlogSection = ({ title, posts, onDelete }) => (
         transition={{ duration: 0.5 }}
         className="mb-8"
     >
-        <h2 className="text-2xl font-semibold mb-4 text-primary]">{title}</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-primary">{title}</h2>
         <ul className="list-none">
             {posts.map((post, index) => (
                 <BlogPost key={post.id} post={post} index={index} onDelete={onDelete} />
