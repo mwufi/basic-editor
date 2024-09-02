@@ -41,7 +41,7 @@ a {
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: #0C1821;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -68,13 +68,14 @@ a {
   }
 }
 
-/* dark mode */
-@media (prefers-color-scheme: dark) {
   :root {
-  --background-color: #0C1821;
+  --primary: #f9c784;
+  --background: #0C1821;
+  --foreground: #f5f3f4;
+
   --heading-color: #f5f3f4;
   --text-color: #ffffff;
-  --link-color: #f9c784;
+  --link-color: var(--primary);
   --link-text-decoration-color: #324A5F;
   --code-background-color: #cdd7d6;
   --code-color: #222;
@@ -83,7 +84,7 @@ a {
   --h5-background-color: #0C1821;
   --h5-border-color: #C3B597;
   --h5-text-color: #ffffff;
-  --h5-background-hover-color: #f9c784;
+  --h5-background-hover-color: var(--primary);
   --h5-hover-text-color: #0C1821;
   --strong-bold-color: #ccc9dc;  
   --blockquote-background-color: #1b2a41;
@@ -92,11 +93,10 @@ a {
   --upvote-count-color: #ffffff;
   --nav-textcolor-hover: #003049
   }
-}
 
 body {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 h1, h2, h3, h4, h5 {

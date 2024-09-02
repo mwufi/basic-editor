@@ -1,9 +1,9 @@
 'use client'
 
-import { ThemeProvider } from './themeContext'
 import YourComponent from './Component'
 import Tiptap from '@/components/TipTap'
 import { EditorProvider } from '@/components/editor/EditorContext'
+import ThemeEditor from '@/components/dev/ThemeEditor'
 
 export default function ThemedEditorPage() {
     return (
@@ -20,6 +20,7 @@ export default function ThemedEditorPage() {
                         <Tiptap />
                     </div>
                 </div>
+                <ThemeEditor />
             </div>
         </EditorProvider>
     )

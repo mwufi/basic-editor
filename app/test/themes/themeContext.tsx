@@ -12,6 +12,20 @@ export const ThemeProvider = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState(predefinedThemes.default);
   const [themeContent, setThemeContent] = useAtom(themeContentAtom);
 
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'themeContent') {
+        setThemeContent(e.newValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
   const changeTheme = (themeName) => {
     if (predefinedThemes[themeName]) {
       setCurrentTheme(predefinedThemes[themeName]);

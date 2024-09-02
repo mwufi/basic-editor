@@ -37,22 +37,13 @@ const YourComponent = () => {
                 ))}
             </select>
 
-            <form onSubmit={handleCustomTheme} className="flex flex-col space-y-2">
-                <input
-                    type="url"
-                    value={customUrl}
-                    onChange={(e) => setCustomUrl(e.target.value)}
-                    placeholder="Enter custom stylesheet URL"
-                    className="border rounded-md p-2"
-                />
+            <form onSubmit={e => saveThemeContent(themeContent)} className="flex flex-col space-y-2">
                 <button
                     type="submit"
                     className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600"
                 >
-                    Load Custom Theme
+                    Apply Custom CSS
                 </button>
-            </form>
-            <form onSubmit={e => saveThemeContent(themeContent)} className="flex flex-col space-y-2">
                 <textarea
                     value={themeContent}
                     onChange={(e) => {
@@ -63,12 +54,6 @@ const YourComponent = () => {
                     style={{ height: 'auto' }}
                     rows={themeContent.split('\n').length}
                 />
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600"
-                >
-                    Apply Custom CSS
-                </button>
             </form>
         </div>
     );
