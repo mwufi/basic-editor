@@ -3,6 +3,31 @@
 import { Note } from '@/lib/types';
 import { atom } from 'jotai';
 
+// theme atoms
+const localStorageKey = 'themeContent';
+
+export const themeAtom = atom({
+    name: 'default',
+    content: localStorage.getItem(localStorageKey) || '',
+});
+
+export const themeContentAtom = atom(
+    (get) => {
+        // const storedContent = localStorage.getItem(localStorageKey);
+        // return storedContent ? JSON.parse(storedContent) : get(themeAtom).content;
+        return get(themeAtom).content;
+    },
+    (get, set, newContent: string) => {
+        console.log('newContent', newContent);
+        set(themeAtom, { ...get(themeAtom), content: newContent });
+        // localStorage.setItem(localStorageKey, JSON.stringify(newContent));
+    }
+);
+
+export function saveThemeContent(content: string) {
+    localStorage.setItem(localStorageKey, content);
+}
+
 
 const createEmptyNote = (): Note => ({
     id: null,

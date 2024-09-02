@@ -11,6 +11,11 @@ export type Outline = {
     children: OutlineNode[];
 };
 
+export type Theme = {
+    name: string;
+    content: string;
+}
+
 export interface Note {
     id?: number;
     title: string;

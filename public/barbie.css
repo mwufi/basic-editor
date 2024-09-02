@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+
+:root {
+  --background: #F7B2BD;
+  --foreground: #053225;
+  --primary: #E34A6F;
+--secondary: #60A561;
+
+  --text-color: var(--foreground);
+ --font-family: 'Noto Sans', sans-serif;
+}
+
+.editor {
+  background-color: var(--background);
+  color: var(--text-color);
+  padding: 2rem;
+}
+
+.buttons {
+ color: var(--text-color);
+}
+
+.title {
+ color: var(--primary);
+}
+
+.tiptap p {
+  font-family: var(--font-family);
+  font-size: 20px;
+  line-height: 30px;
+}
+.tiptap a {
+ color: var(--primary);
+}
+
+.tiptap h1, h2, h3 {
+ color: var(--primary);
+  font-family: var(--font-family);
+}
+
+.tiptap li::marker {
+ color: var(--primary);
+}
+
+.tiptap h1 { font-size: 40px; }
+.tiptap h2 { font-size: 32px; }

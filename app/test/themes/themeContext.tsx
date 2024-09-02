@@ -2,43 +2,61 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { predefinedThemes } from './themes';
-
+import { themeContentAtom } from '@/components/editor/atoms';
+import { useAtom } from 'jotai';
 const ThemeContext = createContext(null);
 
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState(predefinedThemes.default);
-  const [customStylesheet, setCustomStylesheet] = useState(null);
+  const [themeContent, setThemeContent] = useAtom(themeContentAtom);
+
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'themeContent') {
+        setThemeContent(e.newValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const changeTheme = (themeName) => {
     if (predefinedThemes[themeName]) {
       setCurrentTheme(predefinedThemes[themeName]);
-      setCustomStylesheet(null);
+      setThemeContent('');
     }
   };
 
-  const loadCustomStylesheet = (url) => {
-    setCustomStylesheet(url);
-    setCurrentTheme({ name: 'Custom', font: predefinedThemes.default.font });
+  const loadCustomStylesheet = async (url) => {
+    try {
+      const response = await fetch(url);
+      const content = await response.text();
+      setThemeContent(content);
+      setCurrentTheme({ name: 'Custom', font: predefinedThemes.default.font, colors: predefinedThemes.default.colors });
+    } catch (error) {
+      console.error('Failed to load custom stylesheet:', error);
+    }
   };
 
   useEffect(() => {
-    if (customStylesheet) {
-      const link = document.createElement('link');
-      link.href = customStylesheet;
-      link.rel = 'stylesheet';
-      link.id = 'custom-theme-stylesheet';
-      document.head.appendChild(link);
+    const style = document.createElement('style');
+    style.textContent = themeContent;
+    style.id = 'custom-theme-style';
+    document.head.appendChild(style);
 
-      return () => {
-        const existingLink = document.getElementById('custom-theme-stylesheet');
-        if (existingLink) {
-          existingLink.remove();
-        }
-      };
-    }
-  }, [customStylesheet]);
+    return () => {
+      const existingStyle = document.getElementById('custom-theme-style');
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+    };
+  }, [themeContent]);
 
   return (
     <ThemeContext.Provider value={{ currentTheme, changeTheme, loadCustomStylesheet }}>

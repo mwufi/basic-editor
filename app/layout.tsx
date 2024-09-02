@@ -1,7 +1,12 @@
 import MobileMenu from "@/components/editor/MobileMenu";
 import "./globals.css";
+import 'react-fontpicker-ts-lite/dist/index.css'
 
 import { Metadata } from "next";
+import JotaiProvider from "@/components/providers/JotaiProvider";
+import { ThemeProvider } from "./test/themes/themeContext";
+import { FontLoader } from "./FontLoader";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Playground V0",
@@ -25,10 +30,16 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
-        {children}
-        <MobileMenu />
-      </body>
+      <JotaiProvider>
+        <ThemeProvider>
+          <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
+            <Toaster richColors position="top-center" expand={true} />
+            {children}
+            <MobileMenu />
+            <FontLoader />
+          </body>
+        </ThemeProvider>
+      </JotaiProvider>
     </html>
   );
 }

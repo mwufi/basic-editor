@@ -56,7 +56,7 @@ const HeaderImgEditor = () => {
                         value={inputUrl}
                         onChange={(e) => setInputUrl(e.target.value)}
                     />
-                    <Button onClick={handleAddImage} variant="outline" size="sm">
+                    <Button onClick={handleAddImage} size="sm">
                         Add Header Image
                     </Button>
                 </div>

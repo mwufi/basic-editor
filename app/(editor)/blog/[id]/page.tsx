@@ -6,17 +6,22 @@ import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import { Button } from '@/components/ui/button'
 import NoteHeader from '@/components/editor/NoteHeader'
 import { useAtom, useAtomValue } from 'jotai'
-import { noteAtom, noteMetadataAtom } from '@/components/editor/atoms'
+import { noteAtom, noteMetadataAtom, themeContentAtom } from '@/components/editor/atoms'
 import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Pencil } from 'lucide-react'
 import { HeaderImgDisplay } from '@/components/editor/HeaderImgEditor'
+import { useTheme } from '@/app/test/themes/themeContext'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
     const { id } = useParams()
     const metadata = useAtomValue(noteMetadataAtom)
+    const themeContent = useAtomValue(themeContentAtom)
+    useEffect(() => {
+        console.log('themeContent', themeContent)
+    }, [themeContent])
 
     const fetchPost = async () => {
         const notesManager = new IndexedDBNotesManager()

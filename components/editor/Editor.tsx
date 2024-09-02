@@ -168,7 +168,7 @@ const Editor = ({ editable = true, initialContent = null, font = 'serif' }) => {
         content: initialContent,
         editorProps: {
             attributes: {
-                class: `${font === 'serif' ? libreBaskerville.className : jetBrainsMono.className} h-full pb-10 min-h-[400px] focus:outline-none`,
+                class: `font-body h-full pb-10 min-h-[400px] focus:outline-none`,
             },
         },
         editable: editable,

@@ -1,7 +1,30 @@
 import { db } from '@/lib/instantdb/client'
-import { Note, Outline, OutlineNode } from '@/lib/types'
+import { Note, Outline, OutlineNode, Theme } from '@/lib/types'
 import { tx, id } from '@instantdb/core'
 import IndexedDBNotesManager from '../IndexedDBNotesManager';
+
+export async function saveTheme(theme: Theme, userId: string) {
+    console.log("saving theme", theme)
+    const themeId = id()
+    const createThemeTx = tx.theme[themeId].update({
+        name: theme.name,
+        content: theme.content,
+        createdAt: new Date(),
+    }).link({
+        author: userId
+    })
+    return db.transact([createThemeTx])
+}
+
+export function getThemes() {
+    const query = {
+        theme: {
+            author: {}
+        }
+    }
+    const { isLoading, error, data } = db.useQuery(query)
+    return { isLoading, error, data }
+}
 
 export async function saveOutlineForUser(outline: Outline, userId: string) {
     console.log("saving outline", outline)
