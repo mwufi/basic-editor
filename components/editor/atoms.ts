@@ -8,7 +8,7 @@ const localStorageKey = 'themeContent';
 
 export const themeAtom = atom({
     name: 'default',
-    content: localStorage.getItem(localStorageKey) || '',
+    content: '',
 });
 
 export const themeContentAtom = atom(

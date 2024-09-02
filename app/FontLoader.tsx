@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import FontPicker from 'react-fontpicker-ts-lite';
+import { useEffect, useState, lazy, Suspense } from 'react';
+
+const FontPicker = lazy(() => import('react-fontpicker-ts-lite'));
 
 const parseThemeContent = (css) => {
     const fonts = {};
@@ -47,7 +48,11 @@ export const FontLoader = () => {
         };
     }, []);
 
-    return <div style={{ width: 0, height: 0, overflow: 'hidden' }}>
-        <FontPicker loadFonts={fontsToLoad} />
-    </div>
+    return (
+        <div style={{ width: 0, height: 0, overflow: 'hidden' }}>
+            <Suspense fallback={null}>
+                <FontPicker loadFonts={fontsToLoad} />
+            </Suspense>
+        </div>
+    );
 }

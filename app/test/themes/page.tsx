@@ -1,16 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { EditorProvider } from '@/components/editor/EditorContext';
-import ThemeEditor from '@/components/dev/ThemeEditor';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { themeAtom, themeContentAtom } from '@/components/editor/atoms';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useUserProfile } from '@/lib/instantdb/queries';
 import { getThemes, saveTheme } from '@/lib/instantdb/mutations';
-import YourComponent from './Component';
 import { toast } from 'sonner';
+
+const ThemeEditor = lazy(() => import('@/components/dev/ThemeEditor'));
+const YourComponent = lazy(() => import('./Component'));
 
 export default function ThemedEditorPage() {
     const theme = useAtomValue(themeAtom);
@@ -84,10 +85,14 @@ export default function ThemedEditorPage() {
                                 <TabsTrigger value="ui">Edit via UI</TabsTrigger>
                             </TabsList>
                             <TabsContent value="text">
-                                <YourComponent />
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <YourComponent />
+                                </Suspense>
                             </TabsContent>
                             <TabsContent value="ui">
-                                <ThemeEditor />
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <ThemeEditor />
+                                </Suspense>
                             </TabsContent>
                         </Tabs>
                     </div>
