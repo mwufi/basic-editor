@@ -5,8 +5,8 @@ import { EditorProvider } from '@/components/editor/EditorContext';
 import ThemeEditor from '@/components/dev/ThemeEditor';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { themeAtom } from '@/components/editor/atoms';
-import { useAtomValue } from 'jotai';
+import { themeAtom, themeContentAtom } from '@/components/editor/atoms';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useUserProfile } from '@/lib/instantdb/queries';
 import { getThemes, saveTheme } from '@/lib/instantdb/mutations';
 import YourComponent from './Component';
@@ -17,6 +17,7 @@ export default function ThemedEditorPage() {
     const { user } = useUserProfile();
     const { isLoading, error, data } = getThemes();
     const [selectedTheme, setSelectedTheme] = useState(null);
+    const setThemeContent = useSetAtom(themeContentAtom);
     console.log(data);
 
     const handleSaveTheme = () => {
@@ -42,6 +43,7 @@ export default function ThemedEditorPage() {
 
     const handleThemeSelect = (theme) => {
         setSelectedTheme(theme);
+        setThemeContent(theme.content);
     };
 
     return (
