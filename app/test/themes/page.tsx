@@ -8,11 +8,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 export default function ThemedEditorPage() {
 
-    
+
     return (
         <EditorProvider>
             <div className="container mx-auto p-4">
-                <h1 className="text-3xl font-bold mb-6">Themed Editor Demo</h1>
+                <h1 className="text-3xl font-bold mb-6">Themed Editor</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <h2 className="text-2xl font-semibold mb-4">Theme Controls</h2>
@@ -28,10 +28,6 @@ export default function ThemedEditorPage() {
                                 <ThemeEditor />
                             </TabsContent>
                         </Tabs>
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-semibold mb-4">Tiptap Editor</h2>
-                        <Tiptap />
                     </div>
                 </div>
             </div>

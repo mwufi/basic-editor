@@ -19,6 +19,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        custom: ['var(--font-family)'],
+      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",

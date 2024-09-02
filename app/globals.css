@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-input, textarea {
-  @apply bg-transparent;
-}
-
-a {
-  @apply cursor-pointer;
-}
 @layer base {
   :root {
     --background: hsl(0, 0%, 100%);
@@ -37,9 +30,11 @@ a {
     --chart-3: hsl(197, 37%, 24%);
     --chart-4: hsl(43, 74%, 66%);
     --chart-5: hsl(27, 87%, 67%);
+    --font-family: monospace;
   }
 
   .dark {
+    --font-family: monospace;
     --background: hsl(210, 20%, 10%);
     --foreground: hsl(0, 0%, 98%);
     --card: hsl(240, 10%, 3.9%);
@@ -70,6 +65,7 @@ a {
 body {
   background-color: var(--background);
   color: var(--foreground);
+  overscroll-behavior: none;
 }
 
 h1, h2, h3, h4, h5 {
@@ -112,6 +108,14 @@ h1, h2, h3, h4, h5 {
   }
 }
 
+input, textarea {
+  @apply bg-transparent;
+}
+
+a {
+  @apply cursor-pointer;
+}
+
 .tiptap .node-nextImage.ProseMirror-selectednode {
   outline: 3px solid var(--highlight-color);
 }
@@ -124,17 +128,10 @@ h1, h2, h3, h4, h5 {
   pointer-events: none;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    /* color: var(--text-color); */
-    overscroll-behavior: none;
-  }
-}
-
 /* Scoped to the editor */
+.tiptap {
+  font-family: var(--font-family);
+}
 
 .tiptap h1 {
   @apply text-4xl font-bold leading-tight mb-6;

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { saveThemeContent, themeContentAtom } from '../editor/atoms';
 import { useSetAtom } from 'jotai';
 import { hexToRgb, rgbToHsl } from '@/lib/utils';
 
+import FontPicker from 'react-fontpicker-ts-lite'
+import 'react-fontpicker-ts-lite/dist/index.css'
 
 const parseThemeContent = (css) => {
     const colors = {};
@@ -39,6 +41,7 @@ const ThemeEditor = () => {
         ring: 'hsl(240, 10%, 3.9%)',
         radius: '0.5rem',
     };
+    const [fontFamily, setFontFamily] = useState(initialColors.fontFamily);
 
     const [colors, setColors] = useState(initialColors);
 
@@ -58,36 +61,54 @@ const ThemeEditor = () => {
             ...prevColors,
             [name]: hslValue,
         }));
-        setThemeContent(`:root{${colorsAsCSSString}}`);
+        const fontFamilyAsCSSString = `--font-family: ${fontFamily};`;
+        setThemeContent(`:root{${colorsAsCSSString}\n${fontFamilyAsCSSString}}`);
 
         // directly write to local storage!!
-        saveThemeContent(`:root{${colorsAsCSSString}}`);
+        saveThemeContent(`:root{${colorsAsCSSString}\n${fontFamilyAsCSSString}}`);
     };
+
+    const updateFontFamily = (font) => {
+        setFontFamily(font);
+        const fontFamilyAsCSSString = `--font-family: ${font};`;
+        const updatedThemeContent = `:root{${colorsAsCSSString}\n${fontFamilyAsCSSString}}`;
+        setThemeContent(updatedThemeContent);
+        saveThemeContent(updatedThemeContent);
+    }
 
     return (
         <div className="theme-editor">
-            <div className="flex">
-                <div className="shrink-0 flex flex-col gap-2">
-                    {Object.entries(colors).map(([key, value]) => (
-                        <div key={key} className="color-input flex items-center">
-                            <label htmlFor={key} className="mr-2">{key}</label>
-                            <div
-                                style={{ backgroundColor: value }}
-                                className="w-6 h-6 rounded-full border cursor-pointer"
-                                onClick={() => document.getElementById(key)?.click()}
-                            />
-                            <input
-                                type="color"
-                                id={key}
-                                name={key}
-                                value={value}
-                                onChange={handleChange}
-                                className="hidden absolute top-0 left-0"
-                            />
-                        </div>
-                    ))}
+            <div className="mb-4">
+                <h2 className="text-2xl font-semibold mb-4">Font</h2>
+                <FontPicker autoLoad value={(font) => updateFontFamily(font)} />
+                <p className="text-lg font-custom">{JSON.stringify(fontFamily, null, 2)}</p>
+            </div>
+            <div className="mb-4">
+                <h2 className="text-2xl font-semibold mb-4">Colors</h2>
+                <div className="flex">
+                    <div className="shrink-0 flex flex-col gap-2">
+                        {Object.entries(colors).map(([key, value]) => (
+                            <div key={key} className="color-input flex items-center">
+                                <label htmlFor={key} className="mr-2">{key}</label>
+                                <div
+                                    style={{ backgroundColor: value }}
+                                    className="w-6 h-6 rounded-full border cursor-pointer"
+                                    onClick={() => document.getElementById(key)?.click()}
+                                />
+                                <input
+                                    type="color"
+                                    id={key}
+                                    name={key}
+                                    value={value}
+                                    onChange={handleChange}
+                                    className="hidden absolute top-0 left-0"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    <pre className="text-sm max-w-1/2">{JSON.stringify(parseThemeContent(themeContent), null, 2)}</pre>
                 </div>
-                <pre className="text-sm max-w-1/2">{JSON.stringify(parseThemeContent(themeContent), null, 2)}</pre>
+
             </div>
         </div>
     );
