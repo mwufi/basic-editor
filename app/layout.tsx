@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import JotaiProvider from "@/components/providers/JotaiProvider";
 import { ThemeProvider } from "./test/themes/themeContext";
 import { FontLoader } from "./FontLoader";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Playground V0",
@@ -32,6 +33,7 @@ export default function RootLayout({
       <JotaiProvider>
         <ThemeProvider>
           <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
+            <Toaster richColors position="top-center" expand={true} />
             {children}
             <MobileMenu />
             <FontLoader />

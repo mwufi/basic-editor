@@ -13,7 +13,7 @@ export type Outline = {
 
 export type Theme = {
     name: string;
-    content: Record<string, any>;
+    content: string;
 }
 
 export interface Note {

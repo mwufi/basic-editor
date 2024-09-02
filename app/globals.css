@@ -121,7 +121,7 @@ a {
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  color: var(--strong-bold-color);
+  color: var(--primary);
   content: attr(data-placeholder);
   float: left;
   height: 0;
@@ -184,8 +184,8 @@ a {
 }
 
 .tiptap a {
-  color: var(--link-color);
-  text-decoration-color: var(--link-text-decoration-color);
+  color: var(--primary);
+  text-decoration-color: var(--primary);
   @apply hover:underline;
 }
 
@@ -196,7 +196,7 @@ a {
 
 .tiptap pre {
   @apply p-4 my-6;
-  background-color: var(--code-background-color);
+  background-color: var(--muted);
 }
 
 .tiptap hr {
