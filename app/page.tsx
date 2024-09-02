@@ -34,7 +34,7 @@ const BlogPost = ({ post, index, onDelete }) => (
     <motion.li initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: index * 0.1 }}>
         <Link href={`/blog/${post.id}`} className="block hover:bg-accent p-2 rounded-md transition-colors duration-200">
             <div className="flex justify-start items-center gap-4">
-                <h2 className={`text-lg font-semibold ${post.isPublished ? 'text-primary' : 'text-foreground'}`}>{post.title}</h2>
+                <h2 className={`text-lg font-body font-semibold text-primary`}>{post.title}</h2>
                 <p className="mr-auto text-sm text-gray-600">
                     {new Date(post.updatedAt).toLocaleString('en-US', {
                         year: 'numeric',
@@ -67,7 +67,7 @@ const BlogSection = ({ title, posts, onDelete }) => (
         transition={{ duration: 0.5 }}
         className="mb-8"
     >
-        <h2 className="text-2xl font-semibold mb-4 text-primary">{title}</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-primary font-body">{title}</h2>
         <ul className="list-none">
             {posts.map((post, index) => (
                 <BlogPost key={post.id} post={post} index={index} onDelete={onDelete} />

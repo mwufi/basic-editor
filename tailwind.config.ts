@@ -20,7 +20,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        custom: ['var(--font-family)'],
+        body: ['var(--font-body)'],
+        heading: ['var(--font-heading)'],
       },
       colors: {
         border: "var(--border)",

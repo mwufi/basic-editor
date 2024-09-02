@@ -126,11 +126,17 @@ a {
   float: left;
   height: 0;
   pointer-events: none;
+  opacity: 0.5;
 }
 
 /* Scoped to the editor */
 .tiptap {
-  font-family: var(--font-family);
+  /* font-family: var(--font-family); */
+}
+
+.title {
+  font-family: var(--font-heading);
+  color: var(--primary);
 }
 
 .tiptap h1 {
