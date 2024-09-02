@@ -32,9 +32,9 @@ const EmptyState = () => {
 
 const BlogPost = ({ post, index, onDelete }) => (
     <motion.li initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-        <Link href={`/blog/${post.id}`} className="block hover:bg-gray-100 p-2 rounded-md transition-colors duration-200">
+        <Link href={`/blog/${post.id}`} className="block hover:bg-accent p-2 rounded-md transition-colors duration-200">
             <div className="flex justify-start items-center gap-4">
-                <h2 className={`text-lg font-semibold ${post.isPublished ? 'text-[var(--primary)]' : 'text-[var(--secondary)]'}`}>{post.title}</h2>
+                <h2 className={`text-lg font-semibold ${post.isPublished ? 'text-primary' : 'text-foreground'}`}>{post.title}</h2>
                 <p className="mr-auto text-sm text-gray-600">
                     {new Date(post.updatedAt).toLocaleString('en-US', {
                         year: 'numeric',
@@ -67,7 +67,7 @@ const BlogSection = ({ title, posts, onDelete }) => (
         transition={{ duration: 0.5 }}
         className="mb-8"
     >
-        <h2 className="text-2xl font-semibold mb-4 text-[var(--primary)]">{title}</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-primary]">{title}</h2>
         <ul className="list-none">
             {posts.map((post, index) => (
                 <BlogPost key={post.id} post={post} index={index} onDelete={onDelete} />
@@ -121,7 +121,7 @@ const BlogHome = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl font-bold my-14 text-center text-orange-800"
+                className="text-4xl font-bold my-14 text-center text-primary"
             >
                 Notebook
             </motion.h1>

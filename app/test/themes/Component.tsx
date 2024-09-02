@@ -7,21 +7,13 @@ import { saveThemeContent, themeContentAtom } from '@/components/editor/atoms';
 import { useAtom } from 'jotai';
 
 const YourComponent = () => {
-    const { changeTheme, loadCustomStylesheet } = useTheme();
-    const [customUrl, setCustomUrl] = useState('');
+    const { changeTheme } = useTheme();
     const [themeContent, setThemeContent] = useAtom(themeContentAtom);
-    console.log('themeContent', themeContent);
-
-    const handleCustomTheme = (e) => {
-        e.preventDefault();
-        if (customUrl) {
-            loadCustomStylesheet(customUrl);
-        }
-    };
 
     const handleCustomCSS = (e) => {
         e.preventDefault();
         setThemeContent(e.target.value);
+        saveThemeContent(e.target.value);
     };
 
     return (

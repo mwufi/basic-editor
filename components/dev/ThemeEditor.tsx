@@ -1,10 +1,23 @@
 import { useState } from 'react';
-import { themeContentAtom } from '../editor/atoms';
+import { saveThemeContent, themeContentAtom } from '../editor/atoms';
 import { useSetAtom } from 'jotai';
+import { hexToRgb, rgbToHsl } from '@/lib/utils';
+
+
+const parseThemeContent = (css) => {
+    const colors = {};
+    const regex = /--(.*?):\s*(.*?);/g;
+    let match;
+    while ((match = regex.exec(css)) !== null) {
+        colors[match[1]] = match[2];
+    }
+    return colors;
+};
 
 const ThemeEditor = () => {
     const setThemeContent = useSetAtom(themeContentAtom);
-    const initialColors = {
+    const themeContent = localStorage.getItem('themeContent'); // Assuming themeContent is stored in local storage
+    const initialColors = themeContent ? parseThemeContent(themeContent) : {
         background: 'hsl(0, 0%, 100%)',
         foreground: 'hsl(240, 10%, 3.9%)',
         card: 'hsl(0, 0%, 100%)',
@@ -32,33 +45,50 @@ const ThemeEditor = () => {
     const colorsAsCSSString = Object.entries(colors).map(([key, value]) => `--${key}: ${value};`).join('\n');
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        const updateHslValue = (name, value) => {
+            const [r, g, b] = hexToRgb(value);
+            const [h, s, l] = rgbToHsl(r, g, b);
+            console.log(`HSL for ${name}: h=${h}, s=${s}%, l=${l}%`);
+            return `hsl(${h}, ${s}%, ${l}%)`;
+        };
+
+        const hslValue = updateHslValue(name, value);
         setColors((prevColors) => ({
             ...prevColors,
-            [name]: value,
+            [name]: hslValue,
         }));
         setThemeContent(`:root{${colorsAsCSSString}}`);
+
+        // directly write to local storage!!
+        saveThemeContent(`:root{${colorsAsCSSString}}`);
     };
 
     return (
         <div className="theme-editor">
             <h2>Edit Theme Colors</h2>
             <div className="flex">
-                <div>
+                <div className="shrink-0 flex flex-col gap-2">
                     {Object.entries(colors).map(([key, value]) => (
-                        <div key={key} className="color-input">
-                            <label htmlFor={key}>{key}</label>
+                        <div key={key} className="color-input flex items-center">
+                            <label htmlFor={key} className="mr-2">{key}</label>
+                            <div
+                                style={{ backgroundColor: value }}
+                                className="w-6 h-6 rounded-full border cursor-pointer"
+                                onClick={() => document.getElementById(key)?.click()}
+                            />
                             <input
                                 type="color"
                                 id={key}
                                 name={key}
                                 value={value}
                                 onChange={handleChange}
-                                className="border p-1"
+                                className="hidden absolute top-0 left-0"
                             />
                         </div>
                     ))}
                 </div>
-                <pre>{colorsAsCSSString}</pre>
+                <pre className="text-sm max-w-1/2">{JSON.stringify(parseThemeContent(themeContent), null, 2)}</pre>
             </div>
         </div>
     );
