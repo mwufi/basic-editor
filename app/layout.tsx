@@ -32,7 +32,7 @@ export default function RootLayout({
       </head>
       <JotaiProvider>
         <ThemeProvider>
-          <body className="min-h-full max-w-full overflow-x-hidden md:overflow-x-auto flex flex-col">
+          <body className="min-h-full max-w-full overflow-x-hidden flex flex-col">
             <Toaster richColors position="top-center" expand={true} />
             {children}
             <MobileMenu />

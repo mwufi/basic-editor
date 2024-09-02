@@ -6,16 +6,14 @@ import { noteMetadataAtom } from '@/components/editor/atoms'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-export const HeaderImgDisplay = () => {
+export const HeaderImgDisplay = ({ url }: { url?: string }) => {
     const metadata = useAtomValue(noteMetadataAtom)
-    if (!metadata?.headerImg) {
-        return null
-    }
-    return (
+    const imgUrl = url || metadata?.headerImg
+    return imgUrl && (
         <img
-            src={metadata.headerImg}
+            src={imgUrl}
             alt="Header"
-            className="w-full h-64 object-cover mb-2"
+            className="full-width h-64 object-cover mb-2"
         />
     )
 }
@@ -36,27 +34,29 @@ const HeaderImgEditor = () => {
     }
 
     return (
-        <div className="mb-6">
+        <div className="relative">
             {metadata?.headerImg ? (
                 <div>
                     <img
                         src={metadata.headerImg}
                         alt="Header"
-                        className="w-full h-64 object-cover mb-2"
+                        className="full-width h-64 object-cover mb-2"
                     />
-                    <Button onClick={handleRemoveImage} variant="outline" size="sm">
-                        Remove Header Image
-                    </Button>
+                    <div className="absolute right-4 top-4 z-10">
+                        <Button onClick={handleRemoveImage} variant="outline" size="sm">
+                            Remove Header Image
+                        </Button>
+                    </div>
                 </div>
             ) : (
-                <div className="flex flex-col space-y-2 max-w-3xl mx-auto">
+                <div className="flex gap-2 items-center max-w-3xl mx-auto pt-4">
                     <Input
                         type="text"
                         placeholder="Enter header image URL"
                         value={inputUrl}
                         onChange={(e) => setInputUrl(e.target.value)}
                     />
-                    <Button onClick={handleAddImage} size="sm">
+                    <Button onClick={handleAddImage} variant="secondary" size="sm">
                         Add Header Image
                     </Button>
                 </div>

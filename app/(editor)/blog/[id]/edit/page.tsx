@@ -6,6 +6,7 @@ import IndexedDBNotesManager from "@/lib/IndexedDBNotesManager"
 import Tiptap from "@/components/TipTap"
 import { useAtom, useSetAtom } from 'jotai'
 import { noteAtom, uiStateAtom, updatedAtAtom } from '@/components/editor/atoms'
+import HeaderImgEditor from '@/components/editor/HeaderImgEditor'
 
 const BlogPost = () => {
     const [note, setNote] = useAtom(noteAtom)
@@ -38,7 +39,10 @@ const BlogPost = () => {
     }
 
     return (
-        <Tiptap />
+        <>
+            <HeaderImgEditor />
+            <Tiptap />
+        </>
     )
 }
 

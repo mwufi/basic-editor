@@ -11,7 +11,7 @@ export default function EditorLayout({
   return (
     <EditorProvider>
       <TopBar />
-      <main className="flex-grow min-h-full p-3 relative w-full">
+      <main className="flex-grow min-h-full px-3 relative w-full">
         {children}
         <div className="fixed right-6 bottom-20 md:bottom-6 md:right-6 z-10 md:w-fit">
           <SettingsButton />

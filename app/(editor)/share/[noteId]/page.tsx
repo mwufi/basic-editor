@@ -4,6 +4,7 @@ import ReadOnlyEditor from '@/components/editor/ReadOnlyEditor'
 import NoteHeader from '@/components/editor/NoteHeader'
 import { useEffect } from 'react'
 import { getPost } from '@/lib/instantdb/mutations'
+import { HeaderImgDisplay } from '@/components/editor/HeaderImgEditor'
 
 interface PageProps {
     params: {
@@ -28,11 +29,14 @@ export default function ShareNotePage({ params }: PageProps) {
 
 
     return (
-        <div className="max-w-3xl mx-auto">
-            <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
-            <main>
-                <ReadOnlyEditor initialContent={note.text} font="serif" />
-            </main>
-        </div>
+        <>
+            <HeaderImgDisplay url={note?.metadata?.headerImg} />
+            <div className="max-w-3xl mx-auto">
+                <NoteHeader title={note.title} createdAt={note.createdAt} author={note.author?.handle} />
+                <main>
+                    <ReadOnlyEditor initialContent={note.text} font="serif" />
+                </main>
+            </div>
+        </>
     )
 }
