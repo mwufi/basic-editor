@@ -4,7 +4,7 @@
 
 @font-face {
   font-family:"circular";
-  src: url("/public/circular.ttf") format("truetype");
+  src: url("/circular.ttf") format("truetype");
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
