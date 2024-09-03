@@ -19,6 +19,8 @@ import CustomButton from './CustomButton';
 import CustomImageGallery from './CustomImageGallery';
 import Placeholder from '@tiptap/extension-placeholder';
 import Focus from '@tiptap/extension-focus';
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 import { WelcomeMessage } from '../WelcomeText';
 import { useAtom, useSetAtom } from 'jotai';
 import { noteAtom, updateContentAtom } from './atoms';
@@ -130,6 +132,10 @@ const Editor = ({ editable = true, initialContent = null, font = 'serif' }) => {
             NextImage,
             Link,
             CustomButton,
+            TaskList,
+            TaskItem.configure({
+                nested: true,
+            }),
             CustomImageGallery,
             Youtube.configure({
                 controls: false,
