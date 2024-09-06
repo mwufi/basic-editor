@@ -12,7 +12,7 @@ export default function TopBar() {
     return (
         <div className="p-4 flex justify-between">
             <div className="flex items-center">
-                <Link href="/" className="flex items-center text-sm font-medium rounded-md p-2 px-4">
+                <Link href="/app" className="flex items-center text-sm font-medium rounded-md p-2 px-4">
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Back
                 </Link>

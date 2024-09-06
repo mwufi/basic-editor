@@ -32,7 +32,7 @@ export default function PageHeader() {
                     <nav className="grid gap-6 text-lg font-medium p-4">
                         <DrawerClose asChild>
                             <Link
-                                href="/"
+                                href="/app"
                                 className="flex items-center gap-2 text-lg font-semibold"
                             >
                                 <FileText className="h-6 w-6" />
@@ -40,7 +40,7 @@ export default function PageHeader() {
                         </DrawerClose>
                         <DrawerClose asChild>
                             <Link
-                                href="/"
+                                href="/app"
                                 className="text-muted-foreground hover:text-foreground"
                             >
                                 Dashboard

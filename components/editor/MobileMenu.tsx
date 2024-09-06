@@ -6,7 +6,7 @@ import { Home, PlusCircle, Settings } from 'lucide-react'
 const MobileMenu = () => {
     return (
         <nav className="sticky bottom-0 z-50 bg-white border-t border-gray-200 py-2 px-4 flex justify-around items-center md:hidden">
-            <Link href="/" className="flex flex-col items-center">
+            <Link href="/app" className="flex flex-col items-center">
                 <Home size={24} />
                 <span className="text-xs mt-1">Home</span>
             </Link>

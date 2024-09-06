@@ -146,6 +146,11 @@ const BlogHome = () => {
                     {localPosts.length > 0 && <BlogSection title="Local" posts={localPosts} onDelete={handleDelete} />}
                 </>
             )}
+            <div className="mt-8 text-center">
+                <Link href="/" className="text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                    Visit Wordy landing page
+                </Link>
+            </div>
         </main>
     )
 }

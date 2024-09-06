@@ -6,7 +6,7 @@ const HomeButton = () => {
     return (
         <div className="absolute left-0 p-3">
             <Button size="sm" variant="ghost" asChild>
-                <Link href="/">
+                <Link href="/app">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Home
                 </Link>
