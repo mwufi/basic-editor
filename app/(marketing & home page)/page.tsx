@@ -1,6 +1,7 @@
 import FeatureCard from "@/components/editor/website/Card";
 import Image from "next/image";
 
+
 export default function LandingPage() {
     return (
         <div>

@@ -9,7 +9,7 @@ import { FontLoader } from "./FontLoader";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "Home - ",
+  title: "Welcome to Wordy",
   description: "make your ideas come to life",
 };
 
