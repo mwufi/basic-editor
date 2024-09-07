@@ -62,14 +62,19 @@ const Tiptap = ({ wordcount = true }) => {
             <Buttons />
             <Center>
                 <div className="mb-6">
-                    <input
-                        type="text"
+                    <textarea
                         value={title}
                         onChange={(e) => {
                             setTitle(e.target.value);
                         }}
-                        className="w-full text-5xl font-bold focus:outline-none title"
+                        className="w-full text-5xl font-bold focus:outline-none title resize-none overflow-hidden"
                         placeholder="Enter title..."
+                        rows={Math.max(2, Math.ceil(title.length / 50))}
+                        style={{ minHeight: '1.2em' }}
+                        onInput={(e) => {
+                            e.currentTarget.style.height = 'auto';
+                            e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+                        }}
                     />
                 </div>
                 {editorComponent}
