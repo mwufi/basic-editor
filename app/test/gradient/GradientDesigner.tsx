@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button'; // Import the Button component
+import { toast } from 'sonner';
 
 const GradientDesigner = () => {
   const [color1, setColor1] = useState('#ff9a9e');
@@ -18,11 +20,22 @@ const GradientDesigner = () => {
     marginBottom: '20px',
   };
 
+  const copyToClipboard = () => {
+    const gradient = `linear-gradient(${angle}deg, ${color1}${Math.round(opacity * 255).toString(16)} 0%, ${color2}${Math.round(opacity * 255).toString(16)} 100%)`;
+    navigator.clipboard.writeText(gradient).then(() => {
+      toast.success('Gradient copied to clipboard!');
+    }, (err) => {
+      toast.error('Could not copy text: ', err);
+    });
+  };
+
   return (
     <div className="p-4 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">CSS Gradient Designer</h1>
 
       <div style={gradientStyle}></div>
+
+      <Button onClick={copyToClipboard} className="mb-4">Copy Gradient</Button> {/* Add the copy button */}
 
       <div className="space-y-4">
         <div>
